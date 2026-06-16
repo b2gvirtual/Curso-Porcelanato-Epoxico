@@ -48,38 +48,35 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #546
 .whatsapp-btn { background: #25D366; color: white; }
 .whatsapp-btn:hover { background: #128C7E; }
 
-/* BOTÓN FLOTANTE AYUDA - Altamente llamativo */
-.ayuda-floating-btn {
+/* ASISTENTE VIRTUAL - Botón Flotante */
+.asistente-floating-btn {
     position: fixed;
     bottom: 24px;
     right: 24px;
-    min-width: 90px;
-    height: 70px;
-    background: linear-gradient(135deg, #8CB64E 0%, #6a8c3d 100%);
-    border-radius: 35px;
+    width: 75px;
+    height: 75px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    font-weight: 900;
-    font-size: 18px;
-    letter-spacing: 1px;
+    font-size: 32px;
     cursor: pointer;
-    box-shadow: 0 8px 24px rgba(140, 182, 78, 0.5), 0 0 0 0 rgba(140, 182, 78, 0.7);
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5), 0 0 0 0 rgba(102, 126, 234, 0.7);
     z-index: 100;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    animation: pulse-ayuda 2.5s infinite;
+    animation: pulse-asistente 2.5s infinite;
     border: 3px solid white;
-    padding: 0 20px;
 }
-.ayuda-floating-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 12px 32px rgba(140, 182, 78, 0.7);
+.asistente-floating-btn:hover {
+    transform: scale(1.1) rotate(10deg);
+    box-shadow: 0 12px 32px rgba(102, 126, 234, 0.7);
 }
-.ayuda-floating-btn::after {
-    content: '¿Necesitas ayuda?';
+.asistente-floating-btn::after {
+    content: 'Asistente Virtual';
     position: absolute;
-    right: 100px;
+    right: 85px;
     background: #1E4B96;
     color: white;
     padding: 8px 14px;
@@ -90,40 +87,150 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #546
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s;
-    letter-spacing: 0;
 }
-.ayuda-floating-btn:hover::after { opacity: 1; }
-@keyframes pulse-ayuda {
-    0% { box-shadow: 0 8px 24px rgba(140, 182, 78, 0.5), 0 0 0 0 rgba(140, 182, 78, 0.7); }
-    70% { box-shadow: 0 8px 24px rgba(140, 182, 78, 0.5), 0 0 0 20px rgba(140, 182, 78, 0); }
-    100% { box-shadow: 0 8px 24px rgba(140, 182, 78, 0.5), 0 0 0 0 rgba(140, 182, 78, 0); }
+.asistente-floating-btn:hover::after { opacity: 1; }
+@keyframes pulse-asistente {
+    0% { box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5), 0 0 0 0 rgba(102, 126, 234, 0.7); }
+    70% { box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5), 0 0 0 20px rgba(102, 126, 234, 0); }
+    100% { box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5), 0 0 0 0 rgba(102, 126, 234, 0); }
 }
 @media (max-width: 640px) {
-    .ayuda-floating-btn { min-width: 75px; height: 60px; font-size: 15px; bottom: 16px; right: 16px; padding: 0 15px; }
+    .asistente-floating-btn { width: 65px; height: 65px; font-size: 28px; bottom: 16px; right: 16px; }
 }
 
-.chat-container { max-height: 400px; overflow-y: auto; }
-.chat-message { padding: 12px; margin: 8px 0; border-radius: 12px; max-width: 85%; }
-.chat-message.user { background: #1E4B96; color: white; margin-left: auto; }
-.chat-message.bot { background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0; }
-.chat-input { border: 2px solid #e2e8f0; border-radius: 8px; padding: 12px; width: 100%; outline: none; }
-.chat-input:focus { border-color: #8CB64E; }
-.suggestion-chip { background: #e0e7ff; color: #1E4B96; padding: 6px 12px; border-radius: 20px; font-size: 11px; cursor: pointer; margin: 4px; display: inline-block; transition: all 0.2s; border: 1px solid #c7d2fe; }
-.suggestion-chip:hover { background: #1E4B96; color: white; }
-.typing-indicator { display: inline-flex; gap: 4px; padding: 8px 12px; }
-.typing-indicator span { width: 8px; height: 8px; background: #94a3b8; border-radius: 50%; animation: typing 1.4s infinite; }
+/* Chat del Asistente */
+.chat-modal-content {
+    max-width: 500px;
+    width: 90%;
+    max-height: 85vh;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+.chat-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.chat-avatar {
+    width: 48px;
+    height: 48px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+.chat-body {
+    padding: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+    background: #f8fafc;
+}
+.chat-message {
+    margin-bottom: 16px;
+    display: flex;
+    gap: 12px;
+}
+.chat-message.user {
+    flex-direction: row-reverse;
+}
+.chat-bubble {
+    max-width: 75%;
+    padding: 12px 16px;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+.chat-message.bot .chat-bubble {
+    background: white;
+    border: 1px solid #e2e8f0;
+    color: #334155;
+}
+.chat-message.user .chat-bubble {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+.chat-footer {
+    padding: 16px;
+    background: white;
+    border-top: 1px solid #e2e8f0;
+}
+.chat-input-container {
+    display: flex;
+    gap: 8px;
+}
+.chat-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 24px;
+    outline: none;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+.chat-input:focus {
+    border-color: #667eea;
+}
+.chat-send-btn {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+}
+.chat-send-btn:hover {
+    transform: scale(1.1);
+}
+.suggestion-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+.suggestion-chip {
+    background: #e0e7ff;
+    color: #667eea;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid #c7d2fe;
+}
+.suggestion-chip:hover {
+    background: #667eea;
+    color: white;
+}
+.typing-indicator {
+    display: flex;
+    gap: 4px;
+    padding: 12px 16px;
+}
+.typing-indicator span {
+    width: 8px;
+    height: 8px;
+    background: #94a3b8;
+    border-radius: 50%;
+    animation: typing 1.4s infinite;
+}
 .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
 .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-@keyframes typing { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-8px); } }
-
-/* Estilos para instrucciones de ayuda */
-.instruction-section { border-left: 4px solid #8CB64E; padding-left: 16px; margin-bottom: 20px; }
-.instruction-section h3 { color: #1E4B96; font-weight: 700; font-size: 1rem; margin-bottom: 8px; }
-.instruction-section p, .instruction-section li { font-size: 0.9rem; line-height: 1.6; color: #334155; }
-.instruction-section ul, .instruction-section ol { margin-left: 1.5rem; margin-top: 4px; }
-.instruction-section li { margin-bottom: 4px; }
-.tip-box { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 12px; margin: 12px 0; border-radius: 4px; }
-.tip-box strong { color: #92400e; }
+@keyframes typing {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-8px); }
+}
 </style>
 </head>
 <body class="p-0 md:p-4">
@@ -363,118 +470,48 @@ ENTREGAR PRESUPUESTO
 </div>
 </div>
 
-<!-- BOTÓN FLOTANTE AYUDA -->
-<button onclick="showModal('ayudaModal')" class="ayuda-floating-btn" aria-label="Abrir Ayuda">AYUDA</button>
+<!-- BOTÓN FLOTANTE ASISTENTE VIRTUAL -->
+<button onclick="showModal('asistenteModal')" class="asistente-floating-btn" aria-label="Abrir Asistente Virtual">🤖</button>
 
-<!-- MODAL AYUDA COMPLETO -->
-<div id="ayudaModal" class="modal fixed inset-0 bg-black/50 z-50 items-center justify-center p-4">
-<div class="bg-white max-w-3xl w-full rounded-2xl p-6 md:p-8 relative max-h-[90vh] overflow-y-auto">
-<button onclick="closeModal('ayudaModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold text-2xl">X</button>
-
-<div class="flex items-center gap-3 mb-6">
-    <div class="w-12 h-12 bg-gradient-to-br from-[#8CB64E] to-[#6a8c3d] rounded-xl flex items-center justify-center text-white font-black text-xl">?</div>
-    <div>
-        <h2 class="text-2xl font-bold text-campre-blue">Manual de Usuario CAMPRE</h2>
-        <p class="text-sm text-slate-500">Instrucciones completas para usar la aplicación</p>
-    </div>
-</div>
-
-<div class="space-y-6">
-    <div class="instruction-section">
-        <h3>1. CÁLCULO TÉCNICO</h3>
-        <p>Esta pestaña calcula automáticamente la cantidad exacta de resina y catalizador que necesitas para tu proyecto.</p>
-        <ul>
-            <li><strong>Selector de unidad:</strong> Elige entre centímetros (cm) o metros (m) según tus medidas.</li>
-            <li><strong>Largo y Ancho:</strong> Ingresa las dimensiones de tu superficie.</li>
-            <li><strong>Espesor:</strong> Especifica el espesor en milímetros (mm). Por defecto 1mm.</li>
-            <li><strong>Nº de Capas:</strong> Indica cuántas capas de resina aplicarás (1 a 5).</li>
-        </ul>
-        <div class="tip-box">
-            <strong> Fórmula utilizada:</strong> Área (m²) × 1000 × espesor (mm) × capas × 1.05 (5% seguridad) = gramos totales
+<!-- MODAL ASISTENTE VIRTUAL -->
+<div id="asistenteModal" class="modal fixed inset-0 bg-black/50 z-50 items-center justify-center p-4">
+<div class="chat-modal-content">
+    <div class="chat-header">
+        <div class="chat-avatar">🤖</div>
+        <div>
+            <h3 class="font-bold text-lg">Asistente Virtual CAMPRE</h3>
+            <p class="text-xs opacity-90">Experto en curso y empresa</p>
         </div>
-        <p><strong>Resultados que obtendrás:</strong></p>
-        <ul>
-            <li>Área Total en metros cuadrados (m²)</li>
-            <li>Total Base sin margen de seguridad</li>
-            <li>Total con 5% de seguridad (redondeado al alza)</li>
-            <li>Gramos de Resina Epoxi (A) - 2/3 del total</li>
-            <li>Gramos de Catalizador (B) - 1/3 del total</li>
-            <li>Total de material a mezclar</li>
-        </ul>
+        <button onclick="closeModal('asistenteModal')" class="ml-auto text-white hover:text-gray-200 text-2xl">×</button>
     </div>
-
-    <div class="instruction-section">
-        <h3>2. PRESUPUESTO</h3>
-        <p>Genera presupuestos profesionales completos con todos los costos detallados.</p>
-        <ul>
-            <li><strong>Costos Base de Materiales:</strong> Ingresa el precio por kilogramo de Resina A, Catalizador B y Pigmento. Estos valores se multiplican automáticamente por los gramos calculados en la pestaña técnica.</li>
-            <li><strong>Materiales Adicionales:</strong> Agrega insumos complementarios como sellador, rodillos, guantes, lija, etc. Usa "+ Ejemplos" para cargar items predefinidos o "+ Agregar" para items personalizados. Especifica concepto, cantidad y precio unitario.</li>
-            <li><strong>Mano de Obra:</strong> Registra los servicios y trabajos necesarios. Ejemplos: preparación de superficie, aplicación de imprimación, aplicación de resina, lijado entre capas.</li>
-            <li><strong>Parámetros Financieros:</strong> Configura margen de ganancia (%), impuestos (%), descuento (%), anticipo (%), transporte ($), plazo de entrega (días), garantía (meses) y validez del presupuesto (días).</li>
-        </ul>
-        <div class="tip-box">
-            <strong> Cálculo automático:</strong> Subtotal + Ganancia - Descuento + Impuestos = Total Final. El anticipo y saldo se calculan automáticamente según el porcentaje de anticipo configurado.
-        </div>
-        <p><strong>Botón ENTREGAR PRESUPUESTO:</strong> Al finalizar, haz clic en este botón para abrir el cuestionario de entrega donde ingresarás los datos del cliente y contratista. Podrás descargar el presupuesto en PDF o enviarlo directamente por WhatsApp.</p>
-    </div>
-
-    <div class="instruction-section">
-        <h3>3. CATÁLOGO CAMPRE</h3>
-        <p>Consulta el catálogo completo de productos reales de CAMPRE con precios actualizados.</p>
-        <ul>
-            <li><strong>Productos Terminados:</strong> Kayaks PRFV ($450), Botes PRFV ($850), Cavas Térmicas ($120), Autopartes PRFV ($180).</li>
-            <li><strong>Materias Primas:</strong> Fibra de Vidrio Roving ($95/25kg), Mat ($110/50kg), Gel Coat ($45/galón).</li>
-            <li><strong>Resinas:</strong> Resina Epoxi A ($60/kit 3kg), Catalizador B ($40/kit 3kg), Resina Poliéster ($35/galón).</li>
-            <li><strong>Aditivos:</strong> Pigmentos en Pasta ($15/250g), Alcohol Isopropílico >95% ($12/litro).</li>
-        </ul>
-        <p><strong>Cómo usar:</strong> Para cada producto, usa los botones + y - para ajustar la cantidad o escribe directamente el número. El total se calcula automáticamente y se muestra en la parte inferior de la página.</p>
-        <div class="tip-box">
-            <strong> Nota:</strong> El total del catálogo es independiente del presupuesto de servicios. Son cálculos separados.
+    
+    <div class="chat-body" id="chatBody">
+        <div class="chat-message bot">
+            <div class="chat-bubble">
+                ¡Hola! Soy el Asistente Virtual de CAMPRE. Puedo responder tus preguntas sobre:
+                <ul class="mt-2 ml-4 list-disc">
+                    <li>El curso de Resina Epoxi</li>
+                    <li>La empresa CAMPRE</li>
+                    <li>Productos y servicios</li>
+                    <li>Técnicas de aplicación</li>
+                </ul>
+                <p class="mt-2">¿En qué puedo ayudarte?</p>
+            </div>
         </div>
     </div>
-
-    <div class="instruction-section">
-        <h3>4. CONTACTO</h3>
-        <p>Botón en la barra superior para acceder a los canales de comunicación de CAMPRE.</p>
-        <ul>
-            <li><strong>Ventas:</strong> +58 424-6579531 (WhatsApp directo)</li>
-            <li><strong>Gerencia de Ventas:</strong> +58 424-6832430 (WhatsApp directo)</li>
-            <li><strong>Asesorías Técnicas:</strong> +58 412-8422026 (WhatsApp directo)</li>
-            <li><strong>Email:</strong> info@campre.net</li>
-            <li><strong>Ubicación:</strong> Circunvalación No 2, Av. 58, calles 98 y 99, Edif. CAMPRE No 98D-274, Maracaibo, Venezuela (con enlace a Google Maps)</li>
-        </ul>
-    </div>
-
-    <div class="instruction-section">
-        <h3>5. CURSO COMPLETO</h3>
-        <p>Accede al curso completo de Resina Epoxi de Alto Tránsito directamente desde la barra superior.</p>
-        <p>El curso incluye 17 secciones completas con toda la información técnica: especificaciones, proporciones, tiempos de curado, aplicaciones en pisos/madera/concreto, seguridad, y más. Disponible para descargar en PDF o Word.</p>
-    </div>
-
-    <div class="instruction-section">
-        <h3>6. CONSEJOS TÉCNICOS IMPORTANTES</h3>
-        <ul>
-            <li><strong>Temperatura ideal:</strong> 20-30°C</li>
-            <li><strong>Humedad ideal:</strong> 40-60%</li>
-            <li><strong>Proporción Epoxi:</strong> 2:1 (Resina:Catalizador) SIEMPRE por PESO con balanza digital</li>
-            <li><strong>Pot Life:</strong> 30-40 minutos a 25°C</li>
-            <li><strong>Consumo:</strong> 1 litro de mezcla por m² por 1mm de espesor</li>
-            <li><strong>Curado total:</strong> 48+ horas</li>
-            <li><strong>Eliminar burbujas:</strong> Alcohol isopropílico >95% o pistola de calor</li>
-        </ul>
-        <div class="tip-box">
-            <strong>⚠️ Error más común:</strong> Si la mezcla no es uniforme o la proporción es incorrecta, aparecerán zonas pegajosas que NO curarán. Solución: remoción mecánica total y nueva aplicación.
+    
+    <div class="chat-footer">
+        <div class="chat-input-container">
+            <input type="text" id="chatInput" class="chat-input" placeholder="Escribe tu pregunta..." onkeypress="if(event.key==='Enter') sendMessage()">
+            <button onclick="sendMessage()" class="chat-send-btn">➤</button>
+        </div>
+        <div class="suggestion-chips">
+            <span class="suggestion-chip" onclick="askQuestion('¿Qué es CAMPRE?')">¿Qué es CAMPRE?</span>
+            <span class="suggestion-chip" onclick="askQuestion('¿Qué incluye el curso?')">Curso</span>
+            <span class="suggestion-chip" onclick="askQuestion('¿Cómo contacto a CAMPRE?')">Contacto</span>
+            <span class="suggestion-chip" onclick="askQuestion('¿Qué productos tienen?')">Productos</span>
         </div>
     </div>
-
-    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
-        <h3 class="font-bold text-campre-blue mb-2">¿Necesitas más ayuda?</h3>
-        <p class="text-sm text-slate-700 mb-3">Contacta directamente a nuestro equipo de asesorías técnicas:</p>
-        <a href="https://wa.me/584128422026" target="_blank" class="inline-flex items-center gap-2 bg-[#8CB64E] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#6a8c3d] transition">
-            <span>💬</span> Asesorías: +58 412-8422026
-        </a>
-    </div>
-</div>
 </div>
 </div>
 
@@ -488,7 +525,7 @@ ENTREGAR PRESUPUESTO
     <div class="p-4 bg-green-50 rounded-xl border border-green-200">
         <h3 class="font-bold text-green-800 mb-2">Ventas</h3>
         <a href="https://wa.me/584246579531" target="_blank" class="flex items-center gap-2 text-green-700 hover:text-green-900">
-            <span class="text-2xl"></span>
+            <span class="text-2xl">💬</span>
             <span>+58 424-6579531</span>
         </a>
     </div>
@@ -502,7 +539,7 @@ ENTREGAR PRESUPUESTO
     <div class="p-4 bg-purple-50 rounded-xl border border-purple-200">
         <h3 class="font-bold text-purple-800 mb-2">Asesorías Técnicas</h3>
         <a href="https://wa.me/584128422026" target="_blank" class="flex items-center gap-2 text-purple-700 hover:text-purple-900">
-            <span class="text-2xl"></span>
+            <span class="text-2xl">💬</span>
             <span>+58 412-8422026</span>
         </a>
     </div>
@@ -681,6 +718,154 @@ const productosCAMPRE = [
     { id: 10, nombre: "Resina Poliéster", descripcion: "Pre-acelerada para laminado general.", precio: 35.00, unidad: "Galón", categoria: "Resinas" },
     { id: 11, nombre: "Pigmento en Pasta (250g)", descripcion: "Alta concentración, varios colores.", precio: 15.00, unidad: "Unidad", categoria: "Aditivos" },
     { id: 12, nombre: "Alcohol Isopropílico (>95%)", descripcion: "Eliminador de burbujas. 1 Litro.", precio: 12.00, unidad: "Litro", categoria: "Aditivos" }
+];
+
+// Base de conocimiento del Asistente Virtual - SOLO sobre CAMPRE y el curso
+const baseConocimiento = [
+    {
+        keywords: ['campre', 'empresa', 'qué es campre', 'que es campre'],
+        respuesta: 'CAMPRE (C.A. Medina Plásticos Reforzados) es una empresa venezolana con más de 30 años de trayectoria en la industria de polímeros y plásticos reforzados. Nos especializamos en la fabricación de artículos en PRFV (Plástico Reforzado con Fibra de Vidrio), distribución de materias primas, y asesoramiento técnico especializado. Nuestra sede está en Maracaibo, Venezuela.'
+    },
+    {
+        keywords: ['ubicación', 'ubicacion', 'dirección', 'direccion', 'dónde están', 'donde estan'],
+        respuesta: 'CAMPRE está ubicado en: Circunvalación No 2, Av. 58, calles 98 y 99, Edif. CAMPRE No 98D-274, Maracaibo, Estado Zulia, Venezuela.'
+    },
+    {
+        keywords: ['contacto', 'teléfono', 'telefono', 'whatsapp', 'llamar'],
+        respuesta: 'Puedes contactar a CAMPRE por: Ventas: +58 424-6579531 (WhatsApp), Gerencia de Ventas: +58 424-6832430 (WhatsApp), Asesorías Técnicas: +58 412-8422026 (WhatsApp), Email: info@campre.net'
+    },
+    {
+        keywords: ['productos', 'qué fabrican', 'que fabrican', 'catálogo', 'catalogo'],
+        respuesta: 'CAMPRE fabrica y distribuye: PRODUCTOS TERMINADOS: Kayaks PRFV ($450), Botes PRFV ($850), Cavas Térmicas PRFV ($120), Autopartes PRFV ($180). MATERIAS PRIMAS: Fibra de Vidrio Roving ($95/rollo 25kg), Mat ($110/rollo 50kg), Gel Coat ($45/galón). RESINAS: Resina Epoxi A ($60/kit 3kg), Catalizador B ($40/kit 3kg), Resina Poliéster ($35/galón). ADITIVOS: Pigmentos en Pasta ($15/250g), Alcohol Isopropílico >95% ($12/litro).'
+    },
+    {
+        keywords: ['kayak', 'kayaks'],
+        respuesta: 'CAMPRE fabrica Kayaks PRFV a $450 por unidad. Son kayaks de alta resistencia y durabilidad, fabricados en plástico reforzado con fibra de vidrio. Ideales para recreación y deportes acuáticos.'
+    },
+    {
+        keywords: ['bote', 'botes', 'barco', 'embarcación'],
+        respuesta: 'CAMPRE fabrica Botes PRFV a $850 por unidad. Son embarcaciones ligeras en plástico reforzado con fibra de vidrio, ideales para pesca y recreación. Ofrecen excelente durabilidad, bajo mantenimiento y resistencia al agua salada.'
+    },
+    {
+        keywords: ['cava', 'cavas', 'térmica', 'termica'],
+        respuesta: 'CAMPRE fabrica Cavas Térmicas PRFV a $120 por unidad. Son cavas con excelente aislamiento térmico, ideales para conservación de alimentos y bebidas. Mantienen la temperatura por períodos prolongados y son muy resistentes.'
+    },
+    {
+        keywords: ['autoparte', 'autopartes', 'carro', 'automotriz'],
+        respuesta: 'CAMPRE produce Autopartes PRFV a $180 por unidad. Incluye parachoques, spoilers, deflectores y otras piezas automotrices en plástico reforzado. Ofrecen excelente relación peso-resistencia y pueden ser personalizadas.'
+    },
+    {
+        keywords: ['fibra', 'fibra de vidrio', 'roving', 'mat'],
+        respuesta: 'CAMPRE distribuye Fibra de Vidrio en dos presentaciones: Roving a $95 por rollo de 25kg para refuerzo estructural, y Mat a $110 por rollo de 50kg que es un fieltro para laminado. Ambas son esenciales para la fabricación de productos PRFV.'
+    },
+    {
+        keywords: ['gel coat', 'gelcoat'],
+        respuesta: 'CAMPRE ofrece Gel Coat a $45 por galón. Es un acabado superficial de alta resistencia UV y química, disponible en varios colores. Se utiliza como capa final protectora y decorativa en productos PRFV.'
+    },
+    {
+        keywords: ['resina epoxi', 'epoxi', 'epoxy'],
+        respuesta: 'CAMPRE distribuye Resina Epoxi A a $60 por kit de 3kg. Es de alta resistencia con acabado brillante, ideal para pisos, mesas y proyectos de alto tránsito. El Catalizador B cuesta $40 por kit de 3kg. La proporción de mezcla es 2:1 (2 partes de resina por 1 de catalizador) SIEMPRE por peso.'
+    },
+    {
+        keywords: ['resina poliéster', 'poliester', 'poliéster'],
+        respuesta: 'CAMPRE ofrece Resina Poliéster a $35 por galón. Es pre-acelerada y se usa para laminado general. Requiere catalizador MEKP en proporción de 1-2% según la temperatura ambiente. Tiene caducidad de aproximadamente 6 meses.'
+    },
+    {
+        keywords: ['pigmento', 'pigmentos', 'color'],
+        respuesta: 'CAMPRE ofrece Pigmentos en Pasta a $15 por envase de 250g. Son de alta concentración, disponibles en varios colores. La dosificación recomendada es del 5% del material total.'
+    },
+    {
+        keywords: ['alcohol', 'isopropílico', 'isopropilico'],
+        respuesta: 'CAMPRE vende Alcohol Isopropílico al 95% o superior a $12 por litro. Es esencial para eliminar burbujas en la superficie de la resina epoxi recién aplicada.'
+    },
+    {
+        keywords: ['prfv', 'qué es prfv', 'que es prfv'],
+        respuesta: 'PRFV significa Plástico Reforzado con Fibra de Vidrio (también conocido como FRP en inglés). Es un material compuesto formado por una matriz de resina (poliéster, epoxi o viniléster) reforzada con fibras de vidrio. CAMPRE es especialista en este material.'
+    },
+    {
+        keywords: ['servicios', 'asesoría', 'asesoria', 'consultoría'],
+        respuesta: 'CAMPRE ofrece: 1) Asesoramiento técnico especializado en aplicación de resinas y fabricación PRFV, 2) Cursos de formación (como el Curso de Resina Epoxi de Alto Tránsito), 3) Consultoría para proyectos específicos, 4) Distribución de materias primas con soporte técnico.'
+    },
+    {
+        keywords: ['curso', 'cursos', 'formación', 'formacion', 'capacitación'],
+        respuesta: 'CAMPRE ofrece el Curso de Resina Epoxi de Alto Tránsito. El curso cubre: especificaciones técnicas de la resina epoxi, proporciones de mezcla, tiempos de curado, aplicación en pisos/madera/concreto, uso de pigmentos, seguridad, y más. Está disponible completo en esta aplicación (botón "Curso Completo") y también puedes descargarlo en PDF o Word.'
+    },
+    {
+        keywords: ['proporción', 'proporcion', 'mezcla', '2:1'],
+        respuesta: 'La proporción estándar para Resina Epoxi es 2:1 (2 partes de Resina A por 1 parte de Catalizador B) SIEMPRE por PESO usando balanza digital. Para Resina Poliéster, la proporción es 1-2% de catalizador MEKP, variando según la temperatura ambiente.'
+    },
+    {
+        keywords: ['mezclar', 'mezclado', 'homogeneizar'],
+        respuesta: 'Procedimiento correcto de mezclado: 1) Vierte el componente A (resina) en un recipiente limpio, 2) Añade el componente B (catalizador) en la proporción exacta, 3) Mezcla intensa y vigorosamente durante 2-3 minutos con espátula plana, 4) Realiza movimientos envolventes raspando especialmente el fondo y paredes del recipiente, 5) EVITA batidos de alta velocidad que introduzcan microburbujas.'
+    },
+    {
+        keywords: ['secar', 'secado', 'curado', 'tiempo', 'tiempos'],
+        respuesta: 'Tiempos de curado de Resina Epoxi: 0-40 min: Estado líquido y autonivelante; 40 min - 2 hrs: Pierde fluidez pero aún manejable; 2-4 hrs: Muy viscoso, pegajoso, sensible al polvo e insectos; 6-24 hrs: No pegajoso al tacto pero puede marcarse; 24-48 hrs: Apta para tránsito ligero; 48 hrs+: Curado total.'
+    },
+    {
+        keywords: ['burbuja', 'burbujas', 'eliminar burbujas'],
+        respuesta: 'Para eliminar burbujas en resina epoxi: 1) Rocía alcohol isopropílico >95% sobre la superficie (método más común), 2) Aplica calor con pistola de calor o soplete rápidamente a distancia segura, 3) Usa rodillo de púas para masas grandes. PREVENCIÓN: No batas muy rápido al mezclar, deja reposar la mezcla 2-3 minutos antes de verter.'
+    },
+    {
+        keywords: ['temperatura', 'clima', 'ambiente'],
+        respuesta: 'Temperatura ideal de aplicación: 20-30°C. Humedad ideal: 40-60%. Fuera de estos rangos el curado puede verse afectado. Almacena las resinas entre 18-30°C en lugar seco y fresco.'
+    },
+    {
+        keywords: ['peso', 'balanza', 'medir', 'gramos'],
+        respuesta: 'IMPORTANTE: SIEMPRE mide por PESO (gramos) usando una balanza digital, NUNCA por volumen (mililitros). La densidad del componente B (catalizador) es diferente a la del A (resina), por lo que medir por volumen daría proporciones incorrectas.'
+    },
+    {
+        keywords: ['pot life', 'vida útil', 'vida util'],
+        respuesta: 'Pot Life (vida útil de la mezcla): aproximadamente 30-40 minutos a 25°C. Una vez unidos A y B, el tiempo de trabajo es limitado. PREPARA SOLO la cantidad que puedas aplicar en ese rango de tiempo.'
+    },
+    {
+        keywords: ['preparación', 'preparacion', 'superficie', 'limpieza'],
+        respuesta: 'La preparación representa más del 50% del éxito del trabajo. Pasos: 1) Limpia la superficie eliminando grasas con desengrasante industrial o mezcla de ácido muriático (1 parte de ácido por 4 de agua), 2) Lijs la superficie, 3) Repara grietas con resina + carga inerte, 4) Aplica sellador con rodillo de pelo corto, 5) Deja secar 8 horas.'
+    },
+    {
+        keywords: ['seguridad', 'epp', 'protección', 'guantes'],
+        respuesta: 'Equipo de protección obligatorio: Guantes de goma, gafas protectoras, camisa de manga larga, pantalones largos, botas cerradas. Ventilación adecuada. NO fumar. Almacenar resinas entre 18-30°C, lejos de fuentes de calor y fuego.'
+    },
+    {
+        keywords: ['error', 'pegajoso', 'no cura'],
+        respuesta: 'Error más común: Si la mezcla no es uniforme o la proporción es incorrecta, aparecerán zonas pegajosas ("tacky") que NO curarán tras 48 horas. SOLUCIÓN: Requiere remoción mecánica total. PREVENCIÓN: Mide SIEMPRE por peso, mezcla vigorosamente 2-3 minutos raspando paredes y fondo.'
+    },
+    {
+        keywords: ['madera', 'aplicar en madera'],
+        respuesta: 'Aplicación de resina en madera: 1) Limpieza: superficie libre de polvo, 2) Sellado: barnizar/curar la madera para sellar poros, 3) Base nivelada con encintado o cera, 4) Encofrado sellado con silicona, 5) Desmoldante, 6) Prensas para evitar fugas, 7) Cálculo de cantidad, 8) Vertido y calor para burbujas, 9) Desmolde final después de 48+ horas.'
+    },
+    {
+        keywords: ['piso', 'pisos', 'porcelanato'],
+        respuesta: 'Aplicación en pisos (porcelanato líquido): 1) Reparar grietas y lijar, 2) Desengrasar con ácido muriático diluido 1:4, 3) Aplicar Pintura Epoxi con rodillo de pelo corto y secar 8 horas, 4) Fijar inclusiones 3D/Vinilos, 5) Verter mezcla y extender con secador dentado, 6) Eliminar burbujas con alcohol isopropílico >95% o pistola de calor.'
+    },
+    {
+        keywords: ['concreto', 'cemento'],
+        respuesta: 'Para mesas de cemento/concreto: el proceso es similar al de pisos. Para bordes verticales, usar cinta/tirro si el vaciado es de 1mm. Aplicar capas muy finas con pincel para evitar que el producto se chorree o "descuelgue".'
+    },
+    {
+        keywords: ['almacenamiento', 'almacenar', 'caducidad'],
+        respuesta: 'Almacenamiento correcto: lugar seco y fresco, entre 18-30°C, lejos de fuentes de calor, fuego y luz solar directa. Resina Poliéster: caducidad aproximada de 6 meses. Mantener envases bien cerrados.'
+    },
+    {
+        keywords: ['resistencia', 'térmica', 'termica'],
+        respuesta: 'Resistencia de la Resina Epoxi curada: Térmica: hasta 70°C en exposiciones ocasionales, 45°C en exposición prolongada. Física: soporta 65 N de fuerza por metro cuadrado. Además: alta resistencia química, eléctrica, flexibilidad, adherencia óptima, brillo, contracción casi nula.'
+    },
+    {
+        keywords: ['calculadora', 'calcular', 'cálculo'],
+        respuesta: 'Esta calculadora te ayuda a determinar exactamente cuánta resina necesitas. Ingresa las dimensiones (largo, ancho, espesor, número de capas) y selecciona la unidad (cm o m). El sistema calcula automáticamente el área, gramos necesarios con 5% de margen, y desglosa cuántos gramos de Resina A y Catalizador B necesitas según la proporción 2:1.'
+    },
+    {
+        keywords: ['presupuesto', 'cotización', 'precio'],
+        respuesta: 'Puedes generar presupuestos profesionales usando la pestaña PRESUPUESTO. Ingresa los costos base de materiales, agrega materiales adicionales y mano de obra, configura margen de ganancia, impuestos, descuentos y anticipo. Al finalizar, presiona "ENTREGAR PRESUPUESTO" para descargar el PDF o enviarlo por WhatsApp.'
+    },
+    {
+        keywords: ['hola', 'buenos días', 'buenas tardes', 'saludos'],
+        respuesta: '¡Hola! Soy el Asistente Virtual de CAMPRE. Puedo responder tus preguntas sobre el curso de Resina Epoxi, la empresa CAMPRE, productos, servicios y técnicas de aplicación. ¿En qué puedo ayudarte?'
+    },
+    {
+        keywords: ['gracias', 'thank'],
+        respuesta: '¡Con gusto! Si tienes más preguntas sobre CAMPRE o el curso, no dudes en consultarme. También puedes contactar directamente a nuestro equipo: Ventas +58 424-6579531, Gerencia +58 424-6832430, Asesorías +58 412-8422026.'
+    }
 ];
 
 function showModal(id) { document.getElementById(id).classList.add('active'); }
@@ -874,6 +1059,80 @@ function calcular() {
         catalogoTotal += qty * prod.precio;
     });
     document.getElementById('catalogoTotalDisplay').textContent = '$' + catalogoTotal.toFixed(2);
+}
+
+// Funciones del Asistente Virtual
+function askQuestion(question) {
+    document.getElementById('chatInput').value = question;
+    sendMessage();
+}
+
+function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const message = input.value.trim();
+    if (!message) return;
+    
+    const chatBody = document.getElementById('chatBody');
+    
+    // Agregar mensaje del usuario
+    const userMsg = document.createElement('div');
+    userMsg.className = 'chat-message user';
+    userMsg.innerHTML = `<div class="chat-bubble">${message}</div>`;
+    chatBody.appendChild(userMsg);
+    
+    input.value = '';
+    chatBody.scrollTop = chatBody.scrollHeight;
+    
+    // Mostrar indicador de escritura
+    const typingMsg = document.createElement('div');
+    typingMsg.className = 'chat-message bot';
+    typingMsg.id = 'typingMsg';
+    typingMsg.innerHTML = `<div class="chat-bubble"><div class="typing-indicator"><span></span><span></span><span></span></div></div>`;
+    chatBody.appendChild(typingMsg);
+    chatBody.scrollTop = chatBody.scrollHeight;
+    
+    // Simular delay y buscar respuesta
+    setTimeout(() => {
+        const typingEl = document.getElementById('typingMsg');
+        if (typingEl) typingEl.remove();
+        
+        const respuesta = buscarRespuesta(message.toLowerCase());
+        
+        const botMsg = document.createElement('div');
+        botMsg.className = 'chat-message bot';
+        botMsg.innerHTML = `<div class="chat-bubble">${respuesta}</div>`;
+        chatBody.appendChild(botMsg);
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }, 800);
+}
+
+function buscarRespuesta(pregunta) {
+    // Normalizar pregunta (quitar acentos)
+    const preguntaNormalizada = pregunta.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    
+    let mejorMatch = null;
+    let mejorScore = 0;
+    
+    // Buscar en base de conocimiento
+    for (const entry of baseConocimiento) {
+        for (const keyword of entry.keywords) {
+            const keywordNormalizada = keyword.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+            if (preguntaNormalizada.includes(keywordNormalizada)) {
+                const score = keywordNormalizada.length;
+                if (score > mejorScore) {
+                    mejorScore = score;
+                    mejorMatch = entry;
+                }
+            }
+        }
+    }
+    
+    if (mejorMatch) {
+        return mejorMatch.respuesta;
+    }
+    
+    // Si no encuentra respuesta, mensaje de restricción
+    return 'Lo siento, solo puedo responder preguntas sobre el curso de Resina Epoxi de CAMPRE y la empresa CAMPRE (productos, servicios, contacto, técnicas de aplicación). ¿Tienes alguna pregunta sobre estos temas?';
 }
 
 function downloadPresupuestoPDF() {
