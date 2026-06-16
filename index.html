@@ -1,314 +1,1106 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora CAMPRE | Profesional</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #54667A; }
-        .bg-campre-blue { background-color: #1E4B96; }
-        .text-campre-blue { color: #1E4B96; }
-        .bg-campre-green { background-color: #8CB64E; }
-        .border-campre-green { border-color: #8CB64E; }
-        
-        .bevel-btn {
-            border-bottom: 6px solid #6a8c3d;
-            transition: all 0.1s ease;
-        }
-        .bevel-btn:active {
-            border-bottom: 0px;
-            transform: translateY(6px);
-        }
-        .modal { display: none; }
-        .modal.active { display: flex; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora CAMPRE | Profesional</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #54667A; background: #f1f5f9; }
+.bg-campre-blue { background-color: #1E4B96; }
+.text-campre-blue { color: #1E4B96; }
+.bg-campre-green { background-color: #8CB64E; }
+.border-campre-green { border-color: #8CB64E; }
+.modal { display: none; }
+.modal.active { display: flex; }
+.tab-btn { transition: all 0.2s ease; }
+.tab-btn.active { background: #1E4B96; color: white; }
+.collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+.collapsible-content.open { max-height: 5000px; }
+.param-card { transition: all 0.2s ease; }
+.param-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.priority-badge { font-size: 9px; padding: 2px 6px; border-radius: 10px; font-weight: 700; }
+.priority-high { background: #fee2e2; color: #991b1b; }
+.priority-med { background: #fef3c7; color: #92400e; }
+.priority-low { background: #dbeafe; color: #1e40af; }
+.course-section { margin-bottom: 2rem; padding: 1.5rem; border-left: 4px solid #8CB64E; background: #f8fafc; }
+.course-section h3 { color: #1E4B96; font-weight: 700; font-size: 1.1rem; margin-bottom: 1rem; border-bottom: 2px solid #8CB64E; padding-bottom: 0.5rem; }
+.course-section h4 { color: #1E4B96; font-weight: 600; font-size: 1rem; margin-top: 1rem; margin-bottom: 0.5rem; }
+.course-section p, .course-section li { font-size: 0.9rem; line-height: 1.6; color: #334155; }
+.course-section ul, .course-section ol { margin-left: 1.5rem; margin-top: 0.5rem; }
+.course-section li { margin-bottom: 0.4rem; }
+
+.top-bar { position: sticky; top: 0; z-index: 40; background: white; border-bottom: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+.top-bar-inner { max-width: 72rem; margin: 0 auto; padding: 0.75rem 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.brand-mini { display: flex; align-items: center; gap: 0.75rem; }
+.brand-logo { width: 36px; height: 36px; background: #1E4B96; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 14px; letter-spacing: -0.5px; }
+.brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+.brand-text strong { color: #1E4B96; font-size: 14px; font-weight: 700; }
+.brand-text span { color: #94a3b8; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+.nav-actions { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+.nav-btn { padding: 0.5rem 1rem; border-radius: 8px; font-size: 12px; font-weight: 600; transition: all 0.2s ease; border: 1px solid transparent; cursor: pointer; white-space: nowrap; }
+.nav-btn-ghost { background: transparent; color: #64748b; border-color: #e2e8f0; }
+.nav-btn-ghost:hover { background: #f1f5f9; color: #1E4B96; border-color: #1E4B96; }
+@media (max-width: 640px) {
+    .top-bar-inner { padding: 0.5rem 1rem; }
+    .nav-btn { padding: 0.4rem 0.75rem; font-size: 11px; }
+    .brand-text strong { font-size: 12px; }
+    .brand-text span { font-size: 9px; }
+    .brand-logo { width: 32px; height: 32px; font-size: 12px; }
+}
+.whatsapp-btn { background: #25D366; color: white; }
+.whatsapp-btn:hover { background: #128C7E; }
+</style>
 </head>
-<body class="bg-slate-50 p-4 md:p-8">
+<body class="p-0 md:p-4">
 
-    <div class="max-w-4xl mx-auto shadow-2xl rounded-3xl overflow-hidden border border-slate-200 bg-white">
-        <header class="bg-campre-blue p-8 text-center text-white">
-            <h1 class="text-3xl font-bold tracking-tight">Calculadora de Materiales y Servicios</h1>
-            <p class="text-white/80 font-medium mt-2">C.A. Medina Plásticos Reforzados | CAMPRE</p>
-        </header>
+<!-- BARRA SUPERIOR STICKY -->
+<div class="top-bar">
+<div class="top-bar-inner">
+<div class="brand-mini">
+<div class="brand-logo">C</div>
+<div class="brand-text">
+<strong>CAMPRE</strong>
+<span>Calculadora Profesional</span>
+</div>
+</div>
+<div class="nav-actions">
+<button onclick="showModal('contactModal')" class="nav-btn whatsapp-btn">Contacto</button>
+<button onclick="showModal('helpModal')" class="nav-btn nav-btn-ghost">Ayuda</button>
+<button onclick="showModal('courseModal')" class="nav-btn nav-btn-ghost">Curso Completo</button>
+</div>
+</div>
+</div>
 
-        <div class="p-8">
-            <div class="mb-6 flex justify-center">
-                <button id="toggleBudgetBtn" onclick="toggleBudget()" class="bg-campre-green text-white px-8 py-3 rounded-full font-bold bevel-btn shadow-lg hover:opacity-90">
-                    Cálculo de Materiales
-                </button>
-            </div>
+<div class="max-w-5xl mx-auto shadow-2xl rounded-3xl overflow-hidden border border-slate-200 bg-white mt-4 md:mt-6">
+<header class="bg-campre-blue p-8 text-center text-white">
+<h1 class="text-3xl font-bold tracking-tight">Calculadora de Materiales y Servicios</h1>
+<p class="text-white/80 font-medium mt-2">C.A. Medina Plásticos Reforzados | CAMPRE</p>
+</header>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                <div class="space-y-6">
-                    <h2 class="text-xl font-semibold text-campre-blue border-b-2 border-campre-green pb-2">Datos Base</h2>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-semibold mb-1">Largo (cm)</label>
-                            <input type="number" id="largo" value="61" class="w-full p-3 border rounded-xl border-slate-300 focus:ring-2 focus:ring-campre-green outline-none" oninput="calcular()">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold mb-1">Ancho (cm)</label>
-                            <input type="number" id="ancho" value="80" class="w-full p-3 border rounded-xl border-slate-300 focus:ring-2 focus:ring-campre-green outline-none" oninput="calcular()">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold mb-1">Espesor (mm)</label>
-                        <input type="number" id="espesor" value="1" step="0.5" class="w-full p-3 border rounded-xl border-slate-300 focus:ring-2 focus:ring-campre-green outline-none" oninput="calcular()">
-                    </div>
-                </div>
+<!-- TABS PRINCIPALES -->
+<div class="flex border-b border-slate-200 bg-slate-50">
+<button onclick="switchTab('tabTecnico')" id="btnTabTecnico" class="tab-btn active flex-1 py-4 font-bold text-sm">CÁLCULO TÉCNICO</button>
+<button onclick="switchTab('tabPresupuesto')" id="btnTabPresupuesto" class="tab-btn flex-1 py-4 font-bold text-sm text-slate-500">PRESUPUESTO</button>
+<button onclick="switchTab('tabCatalogo')" id="btnTabCatalogo" class="tab-btn flex-1 py-4 font-bold text-sm text-slate-500">CATÁLOGO CAMPRE</button>
+</div>
 
-                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 shadow-inner">
-                    <h2 class="text-xl font-semibold text-campre-blue mb-6">Desglose de Materiales</h2>
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center py-2 border-b border-slate-200">
-                            <span class="font-medium">Resina (A):</span>
-                            <span id="valResina" class="font-bold text-lg text-campre-blue">0.00 kg</span>
-                        </div>
-                        <div class="flex justify-between items-center py-2 border-b border-slate-200">
-                            <span class="font-medium">Catalizador (B):</span>
-                            <span id="valCatalizador" class="font-bold text-lg text-campre-blue">0.00 kg</span>
-                        </div>
-                        <div class="flex justify-between items-center py-2">
-                            <span class="font-medium">Material Total (5% inc):</span>
-                            <span id="displayTotal" class="font-bold text-xl text-campre-green">0.00 kg</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="p-6 md:p-8">
 
-            <div id="budgetSection" class="hidden mt-10 border-t pt-10 border-slate-200 space-y-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="p-4 bg-white border border-slate-200 rounded-xl">
-                        <label class="block text-sm font-bold text-campre-blue mb-1">Costo Resina A ($/kg)</label>
-                        <input type="number" id="costoResina" value="20" class="w-full p-2 border rounded-lg" oninput="calcular()">
-                    </div>
-                    <div class="p-4 bg-white border border-slate-200 rounded-xl">
-                        <label class="block text-sm font-bold text-campre-blue mb-1">Costo Catalizador B ($/kg)</label>
-                        <input type="number" id="costoCatalizador" value="40" class="w-full p-2 border rounded-lg" oninput="calcular()">
-                    </div>
-                </div>
+<!-- ============ TAB 1: CÁLCULO TÉCNICO ============ -->
+<div id="tabTecnico" class="tab-content">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+    <h2 class="text-lg font-bold text-campre-blue border-b-2 border-campre-green pb-2">Dimensiones</h2>
+    <select id="unidadMedida" onchange="actualizarUnidadesUI(); calcular();" class="text-sm border rounded-lg p-2 bg-white focus:ring-2 focus:ring-campre-green outline-none">
+        <option value="cm">Centímetros (cm)</option>
+        <option value="m">Metros (m)</option>
+    </select>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div>
+<label id="labelLargo" class="block text-sm font-semibold mb-1">Largo (cm)</label>
+<input type="number" id="largo" value="61" class="w-full p-3 border rounded-xl border-slate-300 focus:ring-2 focus:ring-campre-green outline-none" oninput="calcular()">
+</div>
+<div>
+<label id="labelAncho" class="block text-sm font-semibold mb-1">Ancho (cm)</label>
+<input type="number" id="ancho" value="80" class="w-full p-3 border rounded-xl border-slate-300 focus:ring-2 focus:ring-campre-green outline-none" oninput="calcular()">
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div>
+<label class="block text-sm font-semibold mb-1">Espesor (mm)</label>
+<input type="number" id="espesor" value="1" step="0.5" class="w-full p-3 border rounded-xl border-slate-300 focus:ring-2 focus:ring-campre-green outline-none" oninput="calcular()">
+</div>
+<div>
+<label class="block text-sm font-semibold mb-1">Nº de Capas</label>
+<input type="number" id="capas" value="1" min="1" max="5" class="w-full p-3 border rounded-xl border-slate-300 focus:ring-2 focus:ring-campre-green outline-none" oninput="calcular()">
+</div>
+</div>
+</div>
 
-                <div>
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-lg font-bold text-campre-blue">Otros Materiales</h2>
-                        <button onclick="addRow('materials')" class="bg-campre-green text-white px-3 py-1 rounded text-sm font-bold">+ Agregar</button>
-                    </div>
-                    <div id="materialsList" class="space-y-2"></div>
-                </div>
+<!-- RESULTADOS -->
+<div class="bg-slate-50 p-5 rounded-2xl border border-slate-100 shadow-inner">
+<h2 class="text-lg font-bold text-campre-blue mb-4">Desglose de Materiales (por peso)</h2>
+<div class="space-y-2">
+<div class="flex justify-between items-center py-2 border-b border-slate-200">
+<span class="font-medium text-sm">Área Total:</span>
+<span id="valArea" class="font-bold text-campre-blue">0.00 m²</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-slate-200 bg-blue-50 -mx-2 px-2 rounded">
+<span class="font-medium text-sm">Total Base (sin seguridad):</span>
+<span id="valBase" class="font-bold text-campre-blue">0 g</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-slate-200 bg-yellow-50 -mx-2 px-2 rounded">
+<span class="font-medium text-sm">Total con 5% seguridad (redondeo al alza):</span>
+<span id="valTotal" class="font-bold text-campre-blue text-lg">0 g</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-slate-200">
+<span class="font-medium text-sm" id="labelComponente1">Resina Epoxi (A) - 2/3:</span>
+<span id="valResina" class="font-bold text-campre-blue">0 g</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-slate-200">
+<span class="font-medium text-sm" id="labelComponente2">Catalizador (B) - 1/3:</span>
+<span id="valCatalizador" class="font-bold text-campre-blue">0 g</span>
+</div>
+<div class="flex justify-between items-center py-2 bg-campre-green/10 -mx-2 px-2 rounded">
+<span class="font-bold">TOTAL MATERIAL A MEZCLAR:</span>
+<span id="displayTotal" class="font-bold text-xl text-campre-green">0 g</span>
+</div>
+</div>
+</div>
+</div>
+</div>
 
-                <div>
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-lg font-bold text-campre-blue">Mano de Obra</h2>
-                        <button onclick="addRow('services')" class="bg-campre-green text-white px-3 py-1 rounded text-sm font-bold">+ Agregar</button>
-                    </div>
-                    <div id="servicesList" class="space-y-2"></div>
-                </div>
+<!-- ============ TAB 2: PRESUPUESTO ============ -->
+<div id="tabPresupuesto" class="tab-content hidden">
 
-                <div class="bg-campre-blue p-6 rounded-2xl text-white text-center">
-                    <p class="text-sm opacity-80">Total Presupuesto</p>
-                    <div id="totalPresupuesto" class="text-4xl font-bold">$0.00</div>
-                </div>
-            </div>
+<!-- COSTOS BASE -->
+<div class="mb-6">
+<div class="flex items-center gap-2 mb-3">
+<span class="priority-badge priority-high">ALTA PRIORIDAD</span>
+<h2 class="text-lg font-bold text-campre-blue">Costos Base de Materiales</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+<div class="param-card bg-white p-4 rounded-xl border border-slate-200">
+<label class="text-xs font-bold text-slate-500 uppercase block mb-1">Costo Resina A ($/kg)</label>
+<input type="number" id="costoResina" value="20" class="w-full p-2 border rounded-lg" oninput="calcular()">
+</div>
+<div class="param-card bg-white p-4 rounded-xl border border-slate-200">
+<label class="text-xs font-bold text-slate-500 uppercase block mb-1">Costo Catalizador B ($/kg)</label>
+<input type="number" id="costoCatalizador" value="40" class="w-full p-2 border rounded-lg" oninput="calcular()">
+</div>
+<div class="param-card bg-white p-4 rounded-xl border border-slate-200">
+<label class="text-xs font-bold text-slate-500 uppercase block mb-1">Costo Pigmento ($/kg)</label>
+<input type="number" id="costoPigmento" value="30" class="w-full p-2 border rounded-lg" oninput="calcular()">
+</div>
+</div>
+</div>
+
+<!-- MATERIALES ADICIONALES -->
+<div class="mb-6">
+<div class="flex items-center gap-2 mb-3">
+<span class="priority-badge priority-med">MEDIA PRIORIDAD</span>
+<h2 class="text-lg font-bold text-campre-blue">Materiales Adicionales</h2>
+</div>
+<div class="bg-white p-4 rounded-xl border border-slate-200">
+<div class="flex justify-between items-center mb-3">
+<span class="text-sm font-semibold">Insumos complementarios</span>
+<div class="flex gap-2">
+<button onclick="addExampleMaterials()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded text-xs font-bold">+ Ejemplos</button>
+<button onclick="addRow('materials')" class="bg-campre-green text-white px-3 py-1 rounded text-xs font-bold">+ Agregar</button>
+</div>
+</div>
+<div id="materialsList" class="space-y-2"></div>
+</div>
+</div>
+
+<!-- MANO DE OBRA -->
+<div class="mb-6">
+<div class="flex items-center gap-2 mb-3">
+<span class="priority-badge priority-med">MEDIA PRIORIDAD</span>
+<h2 class="text-lg font-bold text-campre-blue">Mano de Obra</h2>
+</div>
+<div class="bg-white p-4 rounded-xl border border-slate-200">
+<div class="flex justify-between items-center mb-3">
+<span class="text-sm font-semibold">Servicios y trabajos</span>
+<div class="flex gap-2">
+<button onclick="addExampleServices()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded text-xs font-bold">+ Ejemplos</button>
+<button onclick="addRow('services')" class="bg-campre-green text-white px-3 py-1 rounded text-xs font-bold">+ Agregar</button>
+</div>
+</div>
+<div id="servicesList" class="space-y-2"></div>
+</div>
+</div>
+
+<!-- PARÁMETROS FINANCIEROS -->
+<div class="mb-6">
+<button onclick="toggleCollapsible('colFinancieros')" class="w-full flex justify-between items-center bg-slate-100 p-3 rounded-xl hover:bg-slate-200 transition">
+<span class="font-bold text-campre-blue text-sm flex items-center gap-2"><span class="priority-badge priority-med">MEDIA</span> Parámetros Financieros</span>
+<span id="arrowColFinancieros" class="text-slate-400">▼</span>
+</button>
+<div id="colFinancieros" class="collapsible-content">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3">
+<div class="param-card bg-white p-3 rounded-xl border border-slate-200">
+<label class="text-xs font-bold text-slate-500 uppercase block mb-1">Margen Ganancia (%)</label>
+<input type="number" id="margenGanancia" value="30" class="w-full p-2 border rounded-lg text-sm" oninput="calcular()">
+</div>
+<div class="param-card bg-white p-3 rounded-xl border border-slate-200">
+<label class="text-xs font-bold text-slate-500 uppercase block mb-1">Impuestos (%)</label>
+<input type="number" id="impuestos" value="16" class="w-full p-2 border rounded-lg text-sm" oninput="calcular()">
+</div>
+<div class="param-card bg-white p-3 rounded-xl border border-slate-200">
+<label class="text-xs font-bold text-slate-500 uppercase block mb-1">Descuento (%)</label>
+<input type="number" id="descuento" value="0" class="w-full p-2 border rounded-lg text-sm" oninput="calcular()">
+</div>
+<div class="param-card bg-white p-3 rounded-xl border border-slate-200">
+<label class="text-xs font-bold text-slate-500 uppercase block mb-1">Anticipo (%)</label>
+<input type="number" id="anticipo" value="50" class="w-full p-2 border rounded-lg text-sm" oninput="calcular()">
+</div>
+<div class="param-card bg-white p-3 rounded-xl border border-slate-200">
+<label class="text-xs font-bold text-slate-500 uppercase block mb-1">Transporte ($)</label>
+<input type="number" id="transporte" value="0" class="w-full p-2 border rounded-lg text-sm" oninput="calcular()">
+</div>
+<div class="param-card bg-white p-3 rounded-xl border border-slate-200">
+<label class="text-xs font-bold text-slate-500 uppercase block mb-1">Plazo (días)</label>
+<input type="number" id="plazo" value="7" class="w-full p-2 border rounded-lg text-sm">
+</div>
+<div class="param-card bg-white p-3 rounded-xl border border-slate-200">
+<label class="text-xs font-bold text-slate-500 uppercase block mb-1">Garantía (meses)</label>
+<input type="number" id="garantia" value="12" class="w-full p-2 border rounded-lg text-sm">
+</div>
+<div class="param-card bg-white p-3 rounded-xl border border-slate-200">
+<label class="text-xs font-bold text-slate-500 uppercase block mb-1">Validez (días)</label>
+<input type="number" id="validez" value="15" class="w-full p-2 border rounded-lg text-sm">
+</div>
+</div>
+</div>
+</div>
+
+<!-- TOTAL PRESUPUESTO -->
+<div class="bg-gradient-to-br from-campre-blue to-blue-900 p-6 rounded-2xl text-white text-center shadow-xl mb-6">
+<p class="text-xs uppercase tracking-widest opacity-70">Subtotal</p>
+<div id="subtotalDisplay" class="text-2xl font-bold">$0.00</div>
+<div class="grid grid-cols-3 gap-2 my-4 text-xs">
+<div class="bg-white/10 p-2 rounded"><span class="opacity-70">Ganancia:</span><br><span id="displayGanancia" class="font-bold">$0</span></div>
+<div class="bg-white/10 p-2 rounded"><span class="opacity-70">Impuestos:</span><br><span id="displayImpuestos" class="font-bold">$0</span></div>
+<div class="bg-white/10 p-2 rounded"><span class="opacity-70">Descuento:</span><br><span id="displayDescuento" class="font-bold">-$0</span></div>
+</div>
+<p class="text-xs uppercase tracking-widest opacity-70 mt-4">Total Final</p>
+<div id="totalPresupuesto" class="text-5xl font-black my-2">$0.00</div>
+<div class="grid grid-cols-2 gap-2 mt-4 text-sm">
+<div class="bg-green-500/30 p-2 rounded"><span class="opacity-80">Anticipo:</span><br><span id="displayAnticipo" class="font-bold">$0</span></div>
+<div class="bg-orange-500/30 p-2 rounded"><span class="opacity-80">Saldo:</span><br><span id="displaySaldo" class="font-bold">$0</span></div>
+</div>
+</div>
+
+<!-- BOTÓN PARA ABRIR CUESTIONARIO DE ENTREGA -->
+<button onclick="showModal('entregaModal')" class="w-full bg-campre-green hover:bg-[#6a8c3d] text-white py-4 rounded-xl font-bold text-lg shadow-lg transition-all flex items-center justify-center gap-2">
+ENTREGAR PRESUPUESTO
+</button>
+
+</div>
+
+<!-- ============ TAB 3: CATÁLOGO CAMPRE ============ -->
+<div id="tabCatalogo" class="tab-content hidden">
+<div class="mb-6">
+<div class="flex items-center gap-2 mb-3">
+<span class="priority-badge priority-high">PRODUCTOS REALES</span>
+<h2 class="text-lg font-bold text-campre-blue">Catálogo de Productos CAMPRE</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="catalogoCAMPRE">
+</div>
+
+<!-- TOTAL DEL CATÁLOGO -->
+<div class="mt-8 bg-campre-blue p-6 rounded-2xl text-white text-center shadow-xl sticky bottom-4">
+<p class="text-xs uppercase tracking-widest opacity-70">Total de Productos Seleccionados</p>
+<div id="catalogoTotalDisplay" class="text-4xl font-black my-2">$0.00</div>
+<p class="text-xs opacity-70">Este total es independiente del presupuesto de servicios</p>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ============ MODAL CONTACTO ============ -->
+<div id="contactModal" class="modal fixed inset-0 bg-black/50 z-50 items-center justify-center p-4">
+<div class="bg-white max-w-md w-full rounded-2xl p-6 relative">
+<button onclick="closeModal('contactModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold text-2xl">X</button>
+<h2 class="text-2xl font-bold text-campre-blue mb-6">Contacto CAMPRE</h2>
+
+<div class="space-y-4">
+    <div class="p-4 bg-green-50 rounded-xl border border-green-200">
+        <h3 class="font-bold text-green-800 mb-2">Ventas</h3>
+        <a href="https://wa.me/584246579531" target="_blank" class="flex items-center gap-2 text-green-700 hover:text-green-900">
+            <span class="text-2xl">💬</span>
+            <span>+58 424-6579531</span>
+        </a>
+    </div>
+
+    <div class="p-4 bg-blue-50 rounded-xl border border-blue-200">
+        <h3 class="font-bold text-blue-800 mb-2">Gerencia de Ventas</h3>
+        <a href="https://wa.me/584246832430" target="_blank" class="flex items-center gap-2 text-blue-700 hover:text-blue-900">
+            <span class="text-2xl">💬</span>
+            <span>+58 424-6832430</span>
+        </a>
+    </div>
+
+    <div class="p-4 bg-purple-50 rounded-xl border border-purple-200">
+        <h3 class="font-bold text-purple-800 mb-2">Asesorías Técnicas</h3>
+        <a href="https://wa.me/584128422026" target="_blank" class="flex items-center gap-2 text-purple-700 hover:text-purple-900">
+            <span class="text-2xl"></span>
+            <span>+58 412-8422026</span>
+        </a>
+    </div>
+
+    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+        <h3 class="font-bold text-slate-800 mb-2">Información General</h3>
+        <p class="text-sm text-slate-600">
+            <strong>Email:</strong> info@campre.net<br>
+            <strong>Ubicación:</strong> Maracaibo, Venezuela
+        </p>
+    </div>
+</div>
+</div>
+</div>
+
+<!-- ============ MODAL ENTREGA ============ -->
+<div id="entregaModal" class="modal fixed inset-0 bg-black/50 z-50 items-center justify-center p-4">
+<div class="bg-white max-w-3xl w-full rounded-2xl p-6 md:p-8 max-h-[90vh] overflow-y-auto relative">
+<button onclick="closeModal('entregaModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold text-2xl">X</button>
+<h2 class="text-2xl font-bold text-campre-blue mb-6 border-b pb-4">Cuestionario de Entrega de Presupuesto</h2>
+
+<div class="space-y-6">
+    <div>
+        <h3 class="font-bold text-campre-blue mb-3 flex items-center gap-2"><span class="priority-badge priority-low">CLIENTE</span> Datos del Cliente</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <input type="text" id="clientName" placeholder="Nombre del Cliente *" class="p-3 border-2 border-slate-200 rounded-xl focus:border-campre-green outline-none">
+            <input type="text" id="clientPhone" placeholder="Teléfono / WhatsApp *" class="p-3 border-2 border-slate-200 rounded-xl focus:border-campre-green outline-none">
+            <input type="email" id="clientEmail" placeholder="Email (Opcional)" class="p-3 border-2 border-slate-200 rounded-xl focus:border-campre-green outline-none">
+            <input type="text" id="clientAddress" placeholder="Dirección del Proyecto" class="p-3 border-2 border-slate-200 rounded-xl focus:border-campre-green outline-none">
         </div>
     </div>
 
-    <!-- Fixed Buttons -->
-    <button onclick="showModal('courseModal')" class="fixed bottom-6 left-6 bg-slate-700 text-white p-4 rounded-full shadow-xl hover:scale-105 transition-transform font-bold border-2 border-white z-40">
-        📖 Curso
-    </button>
-    <button onclick="showModal('helpModal')" class="fixed bottom-6 right-6 bg-campre-blue text-white p-4 rounded-full shadow-xl hover:scale-105 transition-transform font-bold border-2 border-white z-40">
-        ? Ayuda
-    </button>
-    <button onclick="showModal('aiModal')" class="fixed bottom-6 right-24 bg-purple-600 text-white p-4 rounded-full shadow-xl hover:scale-105 transition-transform font-bold border-2 border-white z-40">
-        🤖
-    </button>
-
-    <!-- AI Consultant Modal -->
-    <div id="aiModal" class="modal fixed inset-0 bg-black/50 z-50 items-center justify-center p-4">
-        <div class="bg-white max-w-2xl w-full rounded-2xl p-6 max-h-[80vh] flex flex-col">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold text-purple-700">Consultor Técnico CAMPRE AI</h2>
-                <button onclick="closeModal('aiModal')" class="text-slate-400 font-bold text-xl">X</button>
-            </div>
-            <div id="chatHistory" class="flex-1 overflow-y-auto mb-4 space-y-3 bg-slate-50 p-4 rounded-xl h-64 border">
-                <div class="text-sm text-slate-600 bg-white p-3 rounded-lg border">¡Hola! Soy tu asistente técnico de CAMPRE. Pregúntame sobre resina epóxica, tiempos de curado o preparación de superficies.</div>
-            </div>
-            <div class="flex gap-2">
-                <input type="text" id="aiInput" placeholder="Ej: ¿Cómo eliminar burbujas?" class="flex-1 p-3 border rounded-xl outline-none focus:ring-2 focus:ring-purple-500">
-                <button onclick="handleAiChat()" class="bg-purple-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-purple-700">Enviar</button>
-            </div>
+    <div>
+        <h3 class="font-bold text-campre-blue mb-3 flex items-center gap-2"><span class="priority-badge priority-low">CONTRATISTA</span> Datos del Contratista</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <input type="text" id="contractorName" placeholder="Nombre de la Empresa" class="p-3 border-2 border-slate-200 rounded-xl">
+            <input type="text" id="contractorRIF" placeholder="RIF / ID Fiscal" class="p-3 border-2 border-slate-200 rounded-xl">
+            <input type="text" id="contractorPhone" placeholder="Teléfono de contacto" class="p-3 border-2 border-slate-200 rounded-xl">
+            <input type="text" id="contractorEmail" placeholder="Email de contacto" class="p-3 border-2 border-slate-200 rounded-xl">
         </div>
     </div>
 
-    <!-- Help Modal: Comprehensive -->
-    <div id="helpModal" class="modal fixed inset-0 bg-black/50 z-50 items-center justify-center p-4">
-        <div class="bg-white max-w-2xl w-full rounded-2xl p-8 max-h-[80vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-6 border-b pb-4">
-                <h2 class="text-2xl font-bold text-campre-blue">Manual de Usuario CAMPRE Pro</h2>
-                <button onclick="closeModal('helpModal')" class="text-slate-400 font-bold text-xl">X</button>
-            </div>
-            
-            <div class="space-y-6 text-slate-700">
-                <section>
-                    <h3 class="font-bold text-lg text-campre-blue">1. Cálculo de Materiales (Base)</h3>
-                    <p class="text-sm mt-2">Esta sección calcula automáticamente la cantidad de resina y catalizador necesaria según el área (largo x ancho) y el espesor deseado. El sistema aplica un margen de error del 5% automáticamente para evitar faltantes.</p>
-                </section>
-
-                <section>
-                    <h3 class="font-bold text-lg text-campre-blue">2. Presupuesto Integral</h3>
-                    <p class="text-sm mt-2">Al activar el botón "Presupuesto Integral", se habilitan herramientas financieras:</p>
-                    <ul class="list-disc list-inside text-sm space-y-1 mt-2">
-                        <li><strong>Costos de Insumos:</strong> Define el precio unitario de resina y catalizador.</li>
-                        <li><strong>Otros Materiales:</strong> Agrega pigmentos, solventes o herramientas mediante el botón "+ Agregar".</li>
-                        <li><strong>Mano de Obra:</strong> Detalla servicios adicionales para obtener un costo final del proyecto.</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h3 class="font-bold text-lg text-campre-blue">3. Asistente Técnico (IA)</h3>
-                    <p class="text-sm mt-2">¿Tienes dudas técnicas? Usa el botón del robot 🤖 para consultar:</p>
-                    <ul class="list-disc list-inside text-sm space-y-1 mt-2">
-                        <li>Protocolos de aplicación de resina.</li>
-                        <li>Consejos para eliminar burbujas.</li>
-                        <li>Tiempos de secado según condiciones climáticas.</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h3 class="font-bold text-lg text-campre-blue">4. Material Educativo</h3>
-                    <p class="text-sm mt-2">Presiona el botón 📖 para acceder al curso técnico completo de CAMPRE. Incluye especificaciones de resina epóxica y poliéster, guías de aplicación en madera y concreto, y normas de seguridad industrial.</p>
-                </section>
-            </div>
-        </div>
+    <div>
+        <label class="text-xs font-bold text-slate-500 uppercase block mb-2">Notas y Observaciones</label>
+        <textarea id="notas" rows="3" placeholder="Condiciones especiales, garantías adicionales, detalles del proyecto..." class="w-full p-3 border-2 border-slate-200 rounded-xl focus:border-campre-green outline-none"></textarea>
     </div>
 
-    <!-- Course Modal: Full Content -->
-    <div id="courseModal" class="modal fixed inset-0 bg-black/50 z-50 items-center justify-center p-4">
-        <div class="bg-white max-w-2xl w-full rounded-2xl p-8 max-h-[80vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-campre-blue">Curso Completo CAMPRE</h2>
-                <div class="flex gap-2">
-                    <button onclick="downloadCourse()" class="bg-campre-green text-white px-4 py-2 rounded-lg font-bold text-sm">Descargar PDF</button>
-                    <button onclick="closeModal('courseModal')" class="text-slate-400 font-bold text-xl">X</button>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-4">
+        <button onclick="downloadPresupuestoPDF()" class="bg-campre-blue text-white py-4 rounded-xl font-bold hover:bg-blue-800 transition">Descargar PDF Completo</button>
+        <button onclick="enviarWhatsApp()" class="bg-green-500 text-white py-4 rounded-xl font-bold hover:bg-green-600 transition">Enviar por WhatsApp</button>
+    </div>
+</div>
+</div>
+</div>
+
+<!-- ============ MODAL AYUDA ============ -->
+<div id="helpModal" class="modal fixed inset-0 bg-black/50 z-50 items-center justify-center p-4">
+<div class="bg-white max-w-2xl w-full rounded-2xl p-8 max-h-[80vh] overflow-y-auto">
+<div class="flex justify-between items-center mb-6 border-b pb-4">
+<h2 class="text-2xl font-bold text-campre-blue">Manual de Usuario</h2>
+<button onclick="closeModal('helpModal')" class="text-slate-400 font-bold text-xl">X</button>
+</div>
+<div class="space-y-5 text-slate-700 text-sm">
+<section>
+<h3 class="font-bold text-campre-blue text-base">1. Cálculo Técnico</h3>
+<p>Selecciona la unidad de medida (cm o m). Ingresa las dimensiones y el sistema calculará automáticamente los materiales en gramos, aplicando la fórmula: m² × 1000 × espesor × capas, con 5% de seguridad y redondeo al alza. El desglose sigue la proporción 2:1 (Resina:Catalizador).</p>
+</section>
+<section>
+<h3 class="font-bold text-campre-blue text-base">2. Presupuesto</h3>
+<p>Asigna costos a materiales, agrega insumos adicionales y mano de obra. Configura margen de ganancia, impuestos, descuentos y anticipo. Al finalizar, presiona "ENTREGAR PRESUPUESTO".</p>
+</section>
+<section>
+<h3 class="font-bold text-campre-blue text-base">3. Catálogo CAMPRE</h3>
+<p>Consulta el catálogo interactivo de productos reales de CAMPRE: kayaks, botes, cavas térmicas, autopartes PRFV, fibra de vidrio y gel coat. El total de la compra se calcula automáticamente.</p>
+</section>
+<section class="bg-blue-50 p-4 rounded-xl border border-blue-200">
+<h3 class="font-bold text-campre-blue text-base">Consejos Pro</h3>
+<ul class="list-disc ml-4 space-y-1 mt-2">
+<li>Temperatura ideal de aplicación: 20-30°C</li>
+<li>Humedad ideal: 40-60%</li>
+<li>Proporción estándar Epoxi: 2:1 (Resina:Catalizador) por PESO</li>
+<li>Usar balanza digital, no medir por volumen</li>
+<li>Pot Life: 30-40 min a 25°C</li>
+</ul>
+</section>
+</div>
+</div>
+</div>
+
+<!-- ============ MODAL CURSO COMPLETO ============ -->
+<div id="courseModal" class="modal fixed inset-0 bg-black/50 z-50 items-center justify-center p-4">
+<div class="bg-white max-w-4xl w-full rounded-2xl p-8 max-h-[90vh] overflow-y-auto">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-campre-blue">CURSO COMPLETO CAMPRE</h2>
+<button onclick="closeModal('courseModal')" class="text-slate-400 font-bold text-xl">X</button>
+</div>
+
+<div class="space-y-6 text-slate-700">
+<div class="course-section">
+<h3>I. Curso de Resina Epoxi de Alto Tránsito</h3>
+<p><strong>Objetivo:</strong> Abordar técnicas para el manejo y aplicación de porcelanato líquido en diferentes superficies, incluyendo pisos 3D, garantizando seguridad y correcta aplicación.</p>
+<p><strong>Red de apoyo:</strong> Se invita a participar en grupos de debate y mantener contacto con el capacitador.</p>
+</div>
+<div class="course-section">
+<h3>II. Resina Epoxi: Especificaciones Técnicas</h3>
+<p><strong>Definición:</strong> Polímero que requiere un agente catalizador para endurecer.</p>
+<h4>Resistencia:</h4>
+<ul>
+<li><strong>Térmica:</strong> Hasta 70°C en exposiciones ocasionales; 45°C en exposición prolongada.</li>
+<li><strong>Física:</strong> Soporta 65 N de fuerza por metro cuadrado.</li>
+</ul>
+<h4>Propiedades:</h4>
+<p>Alta resistencia química, facilidad de aplicación, gran capacidad de humectación, flexibilidad, adherencia óptima, limpieza sencilla, textura homogénea.</p>
+<h4>Tiempos y características:</h4>
+<ul>
+<li>Secado superior al resto: 8 horas aproximadamente.</li>
+<li>No desprende olor durante la aplicación.</li>
+<li>Presenta muy poca o nula contracción al secar.</li>
+</ul>
+<h4>Normas de seguridad:</h4>
+<ul>
+<li>Almacenar en lugar seco y fresco (entre 18°C y 30°C).</li>
+<li>Prohibido fumar al trabajar.</li>
+<li>No exponer a fuentes de calor o fuego.</li>
+<li>Evitar contacto con la piel, especialmente tras mezclar con el catalizador.</li>
+<li>Ventilación adecuada.</li>
+<li>Lavado de manos posterior al uso.</li>
+<li>No desechar en el fuego.</li>
+</ul>
+</div>
+<div class="course-section">
+<h3>III. Recomendaciones de Trabajo (Resina Epoxi)</h3>
+<ul>
+<li><strong>Proporción:</strong> 2:1 (por cada parte de catalizador, dos partes de resina).</li>
+<li><strong>Medición:</strong> Usar balanza para precisión.</li>
+<li><strong>Mezclado:</strong> Realizar en envases limpios, mezclar intensa y vigorosamente durante 2 a 3 minutos, asegurando integrar paredes y bordes del envase para evitar vetas.</li>
+<li><strong>Eliminación de burbujas:</strong> Tras aplicar (brocha o espátula), rociar con alcohol de más de 95% de pureza o aplicar calor (pistola de calor/soplete).</li>
+</ul>
+<h4>Tiempos de curado (referenciales):</h4>
+<ul>
+<li><strong>0 - 40 min:</strong> Estado líquido y autonivelante.</li>
+<li><strong>40 min - 2 hrs:</strong> Pierde fluidez, condición autonivelante disminuye; manejable pero sensible al calor.</li>
+<li><strong>2 - 4 hrs:</strong> Muy viscoso; sigue pegajoso, sensible al polvo, insectos o partículas.</li>
+<li><strong>6 - 24 hrs:</strong> No pegajoso al tacto, pero puede marcarse o abollarse ante presión; riesgo de manchas.</li>
+<li><strong>24 - 48 hrs:</strong> Apta para tránsito ligero.</li>
+<li><strong>48 hrs+:</strong> Transitable, pero no apta para peso excesivo ni lijado.</li>
+</ul>
+</div>
+<div class="course-section">
+<h3>IV. Aplicaciones y Pigmentos</h3>
+<p><strong>Aplicación principal:</strong> Revestimiento de grandes suelos continuos (cubre juntas, evita hongos/bacterias, aporta brillo y nivelación).</p>
+<p><strong>Usos adicionales:</strong> Mesas, mesadas, bisutería, inclusión de objetos/luces.</p>
+<h4>Pigmentos:</h4>
+<ul>
+<li><strong>Tipos:</strong> Inorgánicos (óxido de titanio, negro de humo, cromatos), colorantes, perlados, nacarados, translúcidos, fosforescentes, opacos.</li>
+<li><strong>Presentación:</strong> Pasta, líquido, polvo.</li>
+<li><strong>Dosificación:</strong> 5% del material total.</li>
+<li><strong>Aplicación:</strong> Añadir durante el proceso de remoción hasta obtener la tonalidad deseada.</li>
+</ul>
+</div>
+<div class="course-section">
+<h3>V. Guía de Aplicación en Pisos</h3>
+<p><strong>Preparación (Enrazado):</strong> Reparar ranuras, grietas y juntas. Si son pequeñas, usar resina/pintura epoxi con carga inerte (carbonato de calcio, talco, sílice). Si son grandes, usar cemento. Lijar y limpiar el polvo tras secar.</p>
+<p><strong>Preparación de superficies:</strong> Limpiar grasas. Usar desengrasante industrial o mezcla de ácido muriático (1 parte de ácido por 4 de agua).</p>
+<p><strong>Sellado/Imprimación:</strong> Aplicar Pintura Epoxi con rodillo de pelo corto (evitar residuos). Secar por 8 hrs aprox.</p>
+<p><strong>Inclusiones 3D/Vinilos:</strong> Deben fijarse firmemente al piso sellado antes del vaciado para evitar desplazamientos.</p>
+<h4>Aplicación de Resina Epoxi (Paso 4):</h4>
+<ul>
+<li><strong>Cálculo:</strong> Largo x Ancho = Metros cuadrados.</li>
+<li><strong>Consumo:</strong> 1 litro (mezcla total) por m² para 1mm de espesor.</li>
+<li><strong>Mezcla:</strong> Producto A (pigmentado) + Producto B (catalizador), agitar vigorosamente 2-3 minutos.</li>
+<li><strong>Extendido:</strong> Secador dentado o espátula dentada.</li>
+<li><strong>Acabado:</strong> Alcohol isopropílico (>95%), pistola de calor o soplete para burbujas.</li>
+</ul>
+</div>
+<div class="course-section">
+<h3>VI. Aplicación en Madera</h3>
+<ol>
+<li><strong>Limpieza:</strong> Superficie libre de polvo.</li>
+<li><strong>Sellado:</strong> Barnizar/curar la madera para sellar poros.</li>
+<li><strong>Base:</strong> Nivelar la base de trabajo; usar encintado o cera.</li>
+<li><strong>Encofrado:</strong> Sellado de bordes con silicona o tirro.</li>
+<li><strong>Desmolde:</strong> Aplicar desmoldante en todo el encofrado.</li>
+<li><strong>Sujeción:</strong> Usar prensas para evitar fugas.</li>
+<li><strong>Cálculo:</strong> Determinar cantidad necesaria.</li>
+<li><strong>Vertido:</strong> Verter resina y aplicar calor para burbujas.</li>
+<li><strong>Desmolde:</strong> Retirar una vez seco.</li>
+</ol>
+</div>
+<div class="course-section">
+<h3>VII. Mesas de Cemento/Concreto</h3>
+<p>Proceso similar a pisos.</p>
+<p><strong>Bordes:</strong> Usar cinta/tirro si el vaciado es de 1mm. Para bordes verticales, aplicar capas muy finas con pincel para evitar el "descolgamiento".</p>
+</div>
+<div class="course-section">
+<h3>VIII. Consejos y Advertencias Finales</h3>
+<ul>
+<li><strong>Preparación:</strong> Representa más de la mitad del éxito del trabajo.</li>
+<li><strong>Contaminación:</strong> Tras el vaciado, limitar la circulación de aire y la presencia de personas para evitar caída de partículas.</li>
+<li><strong>Equipo de protección:</strong> Botas, guantes de goma, gafas protectoras, camisa de manga larga, pantalones largos.</li>
+<li><strong>Asistencia:</strong> Leer etiquetas de seguridad y contactar al fabricante ante dudas.</li>
+</ul>
+</div>
+<div class="course-section">
+<h3>IX. Resina Poliéster</h3>
+<ul>
+<li><strong>Estado:</strong> Líquida a temperatura ambiente, se vuelve sólida al usar un catalizador (pre-aceleradas o aceleradas).</li>
+<li><strong>Caducidad:</strong> Aproximadamente 6 meses.</li>
+<li><strong>Almacenamiento:</strong> Evitar humedad, alta temperatura y luz.</li>
+<li><strong>Seguridad:</strong> Tiene punto de ebullición inferior a 60°C y su disolvente (estireno) tiene un punto de inflamación de 33°C, por lo que debe guardarse lejos de focos inflamables.</li>
+<li><strong>Catalizador:</strong> La cantidad depende de la temperatura; se recomienda entre 1% y 2% a temperaturas cercanas a los 30°C.</li>
+<li><strong>Condiciones ambientales:</strong> Humedad ideal entre 40% y 54%.</li>
+<li><strong>Molde:</strong> Se debe tener en cuenta que la reacción exotérmica puede deformar o romper el molde.</li>
+</ul>
+</div>
+<div class="course-section">
+<h3>X. Aplicación en Madera (Resina Poliéster)</h3>
+<ol>
+<li><strong>Paso 1:</strong> Limpiar la superficie de polvo.</li>
+<li><strong>Paso 2:</strong> Barnizar o curar para sellar poros y evitar absorción.</li>
+<li><strong>Paso 3:</strong> Usar base nivelada, encintar o encerar.</li>
+<li><strong>Paso 4:</strong> Armar encofrado y sellar bordes con silicona o tirro.</li>
+<li><strong>Paso 5:</strong> Aplicar desmoldante en toda la superficie del encofrado.</li>
+<li><strong>Paso 6:</strong> Sujetar maderas al cajón con prensas.</li>
+<li><strong>Paso 7:</strong> Calcular cantidad de resina.</li>
+<li><strong>Paso 8:</strong> Verter resina y usar calor para eliminar burbujas.</li>
+<li><strong>Paso 9:</strong> Desmoldar una vez seca.</li>
+</ol>
+</div>
+<div class="course-section">
+<h3>XI. Consejos y Advertencias (Resina Poliéster)</h3>
+<p><strong>Consejos:</strong> La preparación es más de la mitad del trabajo. Limitar la circulación de aire tras el vaciado reduce el riesgo de contaminación por partículas.</p>
+<p><strong>Advertencias:</strong> Usar equipo de protección (botas, guantes, gafas, mangas largas). Leer siempre la información técnica y de seguridad de la etiqueta.</p>
+<p><strong>Cemento:</strong> Para mesas de cemento, si se busca un borde vertical, aplicar capas muy finas con pincel para evitar que el producto se chorree o descuelgue.</p>
+</div>
+<div class="course-section">
+<h3>XII. Aplicación de Resina Epoxi (Pisos) - Resumen</h3>
+<ul>
+<li><strong>Cálculo:</strong> 1 litro de resina con su catalizador por metro cuadrado para una capa de 1mm.</li>
+<li><strong>Mezclado:</strong> 2 a 3 minutos vigorosamente a velocidad moderada.</li>
+<li><strong>Aplicación:</strong> Usar espátula o secador dentado; usar alcohol isopropílico (>95%), soplete o pistola de calor para burbujas.</li>
+<li><strong>Tiempos:</strong> "Blanda" las primeras 24 horas; se puede caminar sobre ella tras 24 horas y colocar muebles tras 48 horas.</li>
+</ul>
+</div>
+<div class="course-section">
+<h3>XIII. Preparación y Sellado</h3>
+<ul>
+<li><strong>Desengrasado:</strong> Usar desengrasante industrial o una taza de ácido muriático mezclada con 4 partes de agua.</li>
+<li><strong>Imprimación:</strong> Usar Pintura Epoxi con rodillo de pelo corto para asegurar adherencia; dejar secar 8 horas.</li>
+<li><strong>Fijación:</strong> Elementos como vinilos 3D deben fijarse con materiales que no contengan grasas para evitar desprendimientos.</li>
+</ul>
+</div>
+<div class="course-section">
+<h3>XIV. Reparación de Pisos</h3>
+<ul>
+<li><strong>Enrazado:</strong> Tapar ranuras, grietas o juntas.</li>
+<li><strong>Mezcla de reparación:</strong> Resina o pintura epoxi con carga inerte (carbonato de calcio, talco o sílice) para lograr viscosidad adecuada.</li>
+</ul>
+</div>
+<div class="course-section">
+<h3>XV. Pigmentos y Aplicaciones</h3>
+<ul>
+<li><strong>Pigmentos:</strong> Inorgánicos, perlados, nacarados, etc., dosificados al 5% del material total.</li>
+<li><strong>Usos:</strong> Pisos continuos, mesas, mesadas y bisutería.</li>
+</ul>
+</div>
+<div class="course-section">
+<h3>XVI. Curso y Seguridad</h3>
+<ul>
+<li><strong>Resistencia:</strong> Hasta 70°C (ocasional) y 45°C (prolongada); soporta 65 N de fuerza por m².</li>
+<li><strong>Seguridad:</strong> Almacenar entre 18°C y 30°C, prohibido fumar y prohibido tirar al fuego.</li>
+</ul>
+</div>
+<div class="course-section">
+<h3>XVII. Resumen de Tiempos de Curado</h3>
+<ul>
+<li><strong>0-40 min:</strong> Líquido, autonivelante.</li>
+<li><strong>40 min-2 hrs:</strong> Pierde fluidez, no autonivelante.</li>
+<li><strong>2-4 hrs:</strong> Muy viscoso.</li>
+<li><strong>6-24 hrs:</strong> No pegajoso, pero propenso a marcarse.</li>
+<li><strong>24-48 hrs:</strong> Apta para tránsito ligero.</li>
+<li><strong>48 hrs+:</strong> Terminado (no aplicar presión excesiva ni lijar).</li>
+</ul>
+</div>
+<div class="grid grid-cols-2 gap-3 pt-4">
+<button onclick="downloadCoursePDF()" class="bg-red-500 text-white py-3 rounded-xl font-bold hover:bg-red-600">Descargar PDF</button>
+<button onclick="downloadCourseWord()" class="bg-blue-500 text-white py-3 rounded-xl font-bold hover:bg-blue-600">Descargar Word</button>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+let currentTab = 'tabTecnico';
+
+const productosCAMPRE = [
+    { id: 1, nombre: "Kayak PRFV", descripcion: "Fabricación de kayaks en plástico reforzado con fibra de vidrio. Alta resistencia y durabilidad.", precio: 450.00, unidad: "Unidad", categoria: "Productos Terminados" },
+    { id: 2, nombre: "Bote PRFV", descripcion: "Embarcaciones ligeras en plástico reforzado. Ideal para pesca y recreación.", precio: 850.00, unidad: "Unidad", categoria: "Productos Terminados" },
+    { id: 3, nombre: "Cava Térmica PRFV", descripcion: "Cavas en PRFV para conservación de temperatura. Excelente aislamiento térmico.", precio: 120.00, unidad: "Unidad", categoria: "Productos Terminados" },
+    { id: 4, nombre: "Autoparte PRFV", descripcion: "Piezas automotrices en plástico reforzado. Parachoques, spoilers y más.", precio: 180.00, unidad: "Unidad", categoria: "Productos Terminados" },
+    { id: 5, nombre: "Fibra de Vidrio (Roving)", descripcion: "Fibra de vidrio tipo roving para refuerzo estructural. Presentación 25kg.", precio: 95.00, unidad: "Rollo", categoria: "Materias Primas" },
+    { id: 6, nombre: "Fibra de Vidrio (Mat)", descripcion: "Fieltro de fibra de vidrio para laminado. Presentación 50kg.", precio: 110.00, unidad: "Rollo", categoria: "Materias Primas" },
+    { id: 7, nombre: "Gel Coat", descripcion: "Acabado superficial de alta resistencia UV y química. Varios colores disponibles.", precio: 45.00, unidad: "Galón", categoria: "Materias Primas" },
+    { id: 8, nombre: "Resina Epoxi A (Kit 3kg)", descripcion: "Resina de alta resistencia, acabado brillante. Ideal para pisos y mesas.", precio: 60.00, unidad: "Kit", categoria: "Resinas" },
+    { id: 9, nombre: "Catalizador B (Kit 3kg)", descripcion: "Endurecedor de secado rápido. Proporción 2:1 con la resina.", precio: 40.00, unidad: "Kit", categoria: "Resinas" },
+    { id: 10, nombre: "Resina Poliéster (Galón)", descripcion: "Resina poliéster pre-acelerada para laminado general.", precio: 35.00, unidad: "Galón", categoria: "Resinas" },
+    { id: 11, nombre: "Pigmento en Pasta (250g)", descripcion: "Colorante de alta concentración. Disponible en varios colores.", precio: 15.00, unidad: "Unidad", categoria: "Aditivos" },
+    { id: 12, nombre: "Alcohol Isopropílico (>95%)", descripcion: "Eliminador de burbujas en superficie. Presentación de 1 Litro.", precio: 12.00, unidad: "Litro", categoria: "Aditivos" }
+];
+
+function showModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+function switchTab(tab) {
+    currentTab = tab;
+    ['tabTecnico', 'tabPresupuesto', 'tabCatalogo'].forEach(t => {
+        document.getElementById(t).classList.toggle('hidden', t !== tab);
+        document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('active', t === tab);
+        document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('text-slate-500', t !== tab);
+    });
+    calcular();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleCollapsible(id) {
+    const el = document.getElementById(id);
+    el.classList.toggle('open');
+    const arrow = document.getElementById('arrow' + id.charAt(0).toUpperCase() + id.slice(1));
+    arrow.textContent = el.classList.contains('open') ? '▲' : '▼';
+}
+
+function actualizarUnidadesUI() {
+    const unidad = document.getElementById('unidadMedida').value;
+    document.getElementById('labelLargo').textContent = unidad === 'cm' ? 'Largo (cm)' : 'Largo (m)';
+    document.getElementById('labelAncho').textContent = unidad === 'cm' ? 'Ancho (cm)' : 'Ancho (m)';
+}
+
+function renderizarCatalogo() {
+    const grid = document.getElementById('catalogoCAMPRE');
+    grid.innerHTML = '';
+    productosCAMPRE.forEach(prod => {
+        const card = document.createElement('div');
+        card.className = 'param-card bg-white p-4 rounded-xl border border-slate-200 flex flex-col justify-between';
+        card.innerHTML = `
+            <div>
+                <span class="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded mb-2">${prod.categoria}</span>
+                <h3 class="font-bold text-campre-blue text-sm mb-1">${prod.nombre}</h3>
+                <p class="text-xs text-slate-500 mb-3 min-h-[40px]">${prod.descripcion}</p>
+            </div>
+            <div class="flex items-center justify-between mt-2 pt-3 border-t border-slate-100">
+                <span class="font-bold text-campre-green text-lg">$${prod.precio.toFixed(2)}</span>
+                <div class="flex items-center border rounded-lg overflow-hidden">
+                    <button onclick="updateQty(${prod.id}, -1)" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold">-</button>
+                    <input type="number" id="qty-${prod.id}" value="0" min="0" class="w-12 text-center text-sm border-x py-1 outline-none" onchange="calcular()">
+                    <button onclick="updateQty(${prod.id}, 1)" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold">+</button>
                 </div>
             </div>
-            <div id="courseContent" class="space-y-6 text-slate-700 text-sm">
-                <!-- Content here -->
-                <section><h3 class="font-bold text-lg text-campre-blue border-b border-campre-green pb-1">I. Curso de Resina Epoxi de Alto Tránsito</h3>
-                <p><strong>Objetivo:</strong> Abordar técnicas para el manejo y aplicación de porcelanato líquido en diferentes superficies, garantizando seguridad y correcta aplicación.</p></section>
-                <section><h3 class="font-bold text-lg text-campre-blue border-b border-campre-green pb-1 mt-4">II. Resina Epoxi: Especificaciones Técnicas</h3>
-                <ul class="list-disc list-inside ml-4 space-y-1"><li>Térmica: Hasta 70°C.</li><li>Propiedades: Alta resistencia química, facilidad de aplicación, flexibilidad, adherencia.</li></ul></section>
-                <section><h3 class="font-bold text-lg text-campre-blue border-b border-campre-green pb-1 mt-4">III. Recomendaciones de Trabajo</h3>
-                <p><strong>Proporción:</strong> 2:1. Mezclar 2-3 minutos integrando paredes del envase. Alcohol isopropílico para burbujas.</p></section>
-                <section><h3 class="font-bold text-lg text-campre-blue border-b border-campre-green pb-1 mt-4">IV. Aplicaciones y Pigmentos</h3>
-                <p>Dosificación de pigmentos: 5% del material total.</p></section>
-                <section><h3 class="font-bold text-lg text-campre-blue border-b border-campre-green pb-1 mt-4">V. Guía de Aplicación en Pisos</h3>
-                <p>Preparación: Lijado y limpieza. Imprimación con Pintura Epoxi (8 hrs secado).</p></section>
-                <section><h3 class="font-bold text-lg text-campre-blue border-b border-campre-green pb-1 mt-4">VI. Aplicación en Madera</h3>
-                <ol class="list-decimal list-inside space-y-1"><li>Limpieza. <li>Sellado. <li>Encofrado. <li>Vertido. <li>Desmolde.</li></ol></section>
-                <section><h3 class="font-bold text-lg text-campre-blue border-b border-campre-green pb-1 mt-4">IX. Resina Poliéster</h3>
-                <p>Catalizador: 1% a 2%. Disolvente estireno inflamable (33°C).</p></section>
-                <section><h3 class="font-bold text-lg text-campre-blue border-b border-campre-green pb-1 mt-4">X. Resumen de Tiempos</h3>
-                <ul class="list-disc list-inside space-y-1"><li>0-40 min: Autonivelante.</li><li>24-48 hrs: Tránsito ligero.</li><li>48 hrs+: Terminado.</li></ul></section>
-            </div>
-        </div>
-    </div>
+            <p class="text-xs text-slate-400 text-right mt-1">por ${prod.unidad}</p>
+        `;
+        grid.appendChild(card);
+    });
+}
 
-    <script>
-        let isIntegral = false;
-        function showModal(id) { document.getElementById(id).classList.add('active'); }
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+function updateQty(id, change) {
+    const input = document.getElementById(`qty-${id}`);
+    let newVal = parseInt(input.value) + change;
+    if (newVal < 0) newVal = 0;
+    input.value = newVal;
+    calcular();
+}
 
-        function toggleBudget() {
-            isIntegral = !isIntegral;
-            document.getElementById('budgetSection').classList.toggle('hidden', !isIntegral);
-            document.getElementById('toggleBudgetBtn').innerText = isIntegral ? "Cálculo Simple" : "Presupuesto Integral";
-            document.getElementById('toggleBudgetBtn').classList.toggle('bg-campre-blue', isIntegral);
-            document.getElementById('toggleBudgetBtn').classList.toggle('bg-campre-green', !isIntegral);
-            calcular();
-        }
+function addRow(type) {
+    const list = document.getElementById(type + 'List');
+    const row = document.createElement('div');
+    row.className = 'grid grid-cols-12 gap-2 p-2 bg-slate-50 rounded items-center';
+    row.innerHTML = `<input type="text" placeholder="Concepto" class="col-span-6 p-2 border rounded text-sm">
+    <input type="number" placeholder="Cant" class="col-span-2 p-2 border rounded qty text-sm" oninput="calcular()">
+    <input type="number" placeholder="$" class="col-span-3 p-2 border rounded price text-sm" oninput="calcular()">
+    <button onclick="this.parentElement.remove(); calcular();" class="col-span-1 text-red-500 font-bold">X</button>`;
+    list.appendChild(row);
+}
 
-        function addRow(type) {
-            const list = document.getElementById(type + 'List');
-            const row = document.createElement('div');
-            row.className = 'grid grid-cols-12 gap-2 p-2 bg-slate-50 rounded';
-            row.innerHTML = `
-                <input type="text" placeholder="Concepto" class="col-span-6 p-1 border rounded">
-                <input type="number" placeholder="Cant" class="col-span-2 p-1 border rounded qty" oninput="calcular()">
-                <input type="number" placeholder="$" class="col-span-3 p-1 border rounded price" oninput="calcular()">
-                <button onclick="this.parentElement.remove(); calcular();" class="col-span-1 text-red-500 font-bold">X</button>
-            `;
-            list.appendChild(row);
-        }
+function addExampleMaterials() {
+    const examples = [
+        {name:'Sellador/Imprimación', qty:1, price:25},
+        {name:'Rodillo de púas', qty:1, price:15},
+        {name:'Guantes y EPP', qty:1, price:10},
+        {name:'Lija industrial', qty:2, price:5}
+    ];
+    examples.forEach(ex => {
+        const row = document.createElement('div');
+        row.className = 'grid grid-cols-12 gap-2 p-2 bg-slate-50 rounded items-center';
+        row.innerHTML = `<input type="text" value="${ex.name}" class="col-span-6 p-2 border rounded text-sm">
+        <input type="number" value="${ex.qty}" class="col-span-2 p-2 border rounded qty text-sm" oninput="calcular()">
+        <input type="number" value="${ex.price}" class="col-span-3 p-2 border rounded price text-sm" oninput="calcular()">
+        <button onclick="this.parentElement.remove(); calcular();" class="col-span-1 text-red-500 font-bold">X</button>`;
+        document.getElementById('materialsList').appendChild(row);
+    });
+    calcular();
+}
 
-        function calcular() {
-            const largo = parseFloat(document.getElementById('largo').value) || 0;
-            const ancho = parseFloat(document.getElementById('ancho').value) || 0;
-            const espesor = parseFloat(document.getElementById('espesor').value) || 1;
-            
-            const areaM2 = (largo * ancho) / 10000;
-            const totalKg = (areaM2 * espesor) * 1.05; 
-            const catalizador = totalKg / 3;
-            const resina = totalKg - catalizador;
+function addExampleServices() {
+    const examples = [
+        {name:'Preparación de superficie', qty:1, price:50},
+        {name:'Aplicación de imprimación', qty:1, price:30},
+        {name:'Aplicación de resina', qty:1, price:80},
+        {name:'Lijado entre capas', qty:1, price:20}
+    ];
+    examples.forEach(ex => {
+        const row = document.createElement('div');
+        row.className = 'grid grid-cols-12 gap-2 p-2 bg-slate-50 rounded items-center';
+        row.innerHTML = `<input type="text" value="${ex.name}" class="col-span-6 p-2 border rounded text-sm">
+        <input type="number" value="${ex.qty}" class="col-span-2 p-2 border rounded qty text-sm" oninput="calcular()">
+        <input type="number" value="${ex.price}" class="col-span-3 p-2 border rounded price text-sm" oninput="calcular()">
+        <button onclick="this.parentElement.remove(); calcular();" class="col-span-1 text-red-500 font-bold">X</button>`;
+        document.getElementById('servicesList').appendChild(row);
+    });
+    calcular();
+}
 
-            document.getElementById('displayTotal').innerText = `${totalKg.toFixed(3)} kg`;
-            document.getElementById('valResina').innerText = `${resina.toFixed(3)} kg`;
-            document.getElementById('valCatalizador').innerText = `${catalizador.toFixed(3)} kg`;
+function calcular() {
+    const unidad = document.getElementById('unidadMedida').value;
+    const largo = parseFloat(document.getElementById('largo').value) || 0;
+    const ancho = parseFloat(document.getElementById('ancho').value) || 0;
+    const espesor = parseFloat(document.getElementById('espesor').value) || 1;
+    const capas = parseInt(document.getElementById('capas').value) || 1;
+    
+    let areaM2 = 0;
+    if (unidad === 'cm') {
+        areaM2 = (largo / 100) * (ancho / 100);
+    } else {
+        areaM2 = largo * ancho;
+    }
+    
+    const gramosBase = areaM2 * 1000 * espesor * capas;
+    const gramosTotal = Math.ceil(gramosBase * 1.05);
+    
+    const catalizadorB = Math.ceil(gramosTotal / 3);
+    const resinaA = gramosTotal - catalizadorB;
 
-            if (isIntegral) {
-                const cResina = parseFloat(document.getElementById('costoResina').value) || 0;
-                const cCatalizador = parseFloat(document.getElementById('costoCatalizador').value) || 0;
-                let total = (resina * cResina) + (catalizador * cCatalizador);
-                
-                ['materials', 'services'].forEach(type => {
-                    document.getElementById(type + 'List').querySelectorAll('.grid').forEach(row => {
-                        const qty = parseFloat(row.querySelector('.qty').value) || 0;
-                        const price = parseFloat(row.querySelector('.price').value) || 0;
-                        total += (qty * price);
-                    });
-                });
-                document.getElementById('totalPresupuesto').innerText = `$${total.toFixed(2)}`;
-            }
-        }
+    document.getElementById('valArea').textContent = areaM2.toFixed(4) + ' m²';
+    document.getElementById('valBase').textContent = Math.round(gramosBase) + ' g';
+    document.getElementById('valTotal').textContent = gramosTotal + ' g';
+    document.getElementById('labelComponente1').textContent = 'Resina Epoxi (A) - 2/3:';
+    document.getElementById('labelComponente2').textContent = 'Catalizador (B) - 1/3:';
+    document.getElementById('valResina').textContent = resinaA + ' g';
+    document.getElementById('valCatalizador').textContent = catalizadorB + ' g';
+    document.getElementById('displayTotal').textContent = gramosTotal + ' g';
 
-        async function handleAiChat() {
-            const inputField = document.getElementById('aiInput');
-            const chatHistory = document.getElementById('chatHistory');
-            const prompt = inputField.value.trim();
-            if (!prompt) return;
+    if (currentTab === 'tabPresupuesto') {
+        let subtotal = 0;
+        const cR = parseFloat(document.getElementById('costoResina').value) || 0;
+        const cC = parseFloat(document.getElementById('costoCatalizador').value) || 0;
+        const cP = parseFloat(document.getElementById('costoPigmento').value) || 0;
+        
+        const resinaKg = resinaA / 1000;
+        const catalizadorKg = catalizadorB / 1000;
+        
+        subtotal += (resinaKg * cR) + (catalizadorKg * cC);
 
-            chatHistory.innerHTML += `<div class="text-sm bg-purple-100 p-3 rounded-lg text-right">${prompt}</div>`;
-            inputField.value = '';
+        ['materials', 'services'].forEach(type => {
+            document.getElementById(type + 'List').querySelectorAll('div').forEach(row => {
+                const qty = parseFloat(row.querySelector('.qty')?.value) || 0;
+                const price = parseFloat(row.querySelector('.price')?.value) || 0;
+                subtotal += qty * price;
+            });
+        });
 
-            const loadingId = 'loading-' + Date.now();
-            chatHistory.innerHTML += `<div id="${loadingId}" class="text-sm text-slate-400 italic">Pensando...</div>`;
-            chatHistory.scrollTop = chatHistory.scrollHeight;
+        const transporte = parseFloat(document.getElementById('transporte').value) || 0;
+        subtotal += transporte;
 
-            try {
-                const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=", {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-                });
-                const data = await response.json();
-                document.getElementById(loadingId).remove();
-                chatHistory.innerHTML += `<div class="text-sm bg-slate-100 p-3 rounded-lg border border-slate-200">${data.candidates[0].content.parts[0].text}</div>`;
-            } catch (err) {
-                document.getElementById(loadingId).innerText = "Error al conectar con la IA.";
-            }
-            chatHistory.scrollTop = chatHistory.scrollHeight;
-        }
+        const margen = parseFloat(document.getElementById('margenGanancia').value) || 0;
+        const ganancia = subtotal * (margen / 100);
+        const conGanancia = subtotal + ganancia;
 
-        function downloadCourse() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            const content = document.getElementById('courseContent').innerText;
-            doc.setFontSize(10);
-            doc.text(content, 20, 20, { maxWidth: 170 });
-            doc.save("Curso_Completo_CAMPRE.pdf");
-        }
-    </script>
+        const desc = parseFloat(document.getElementById('descuento').value) || 0;
+        const montoDesc = conGanancia * (desc / 100);
+        const conDescuento = conGanancia - montoDesc;
+
+        const imp = parseFloat(document.getElementById('impuestos').value) || 0;
+        const montoImp = conDescuento * (imp / 100);
+        const totalFinal = conDescuento + montoImp;
+
+        const ant = parseFloat(document.getElementById('anticipo').value) || 0;
+        const anticipo = totalFinal * (ant / 100);
+        const saldo = totalFinal - anticipo;
+
+        document.getElementById('subtotalDisplay').textContent = '$' + subtotal.toFixed(2);
+        document.getElementById('displayGanancia').textContent = '$' + ganancia.toFixed(2);
+        document.getElementById('displayImpuestos').textContent = '$' + montoImp.toFixed(2);
+        document.getElementById('displayDescuento').textContent = '-$' + montoDesc.toFixed(2);
+        document.getElementById('totalPresupuesto').textContent = '$' + totalFinal.toFixed(2);
+        document.getElementById('displayAnticipo').textContent = '$' + anticipo.toFixed(2);
+        document.getElementById('displaySaldo').textContent = '$' + saldo.toFixed(2);
+    }
+
+    let catalogoTotal = 0;
+    productosCAMPRE.forEach(prod => {
+        const qty = parseInt(document.getElementById(`qty-${prod.id}`).value) || 0;
+        catalogoTotal += qty * prod.precio;
+    });
+    document.getElementById('catalogoTotalDisplay').textContent = '$' + catalogoTotal.toFixed(2);
+}
+
+function downloadPresupuestoPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const clientName = document.getElementById('clientName').value || 'Cliente';
+    const clientPhone = document.getElementById('clientPhone').value || '';
+    const total = document.getElementById('totalPresupuesto').textContent;
+
+    doc.setFillColor(30, 75, 150);
+    doc.rect(0, 0, 210, 40, 'F');
+    doc.setTextColor(255);
+    doc.setFontSize(22);
+    doc.text('PRESUPUESTO CAMPRE', 105, 20, {align:'center'});
+    doc.setFontSize(10);
+    doc.text('C.A. Medina Plásticos Reforzados', 105, 30, {align:'center'});
+
+    doc.setTextColor(30, 75, 150);
+    doc.setFontSize(14);
+    doc.text('DATOS DEL CLIENTE', 20, 55);
+    doc.setDrawColor(140, 182, 78);
+    doc.line(20, 58, 190, 58);
+    doc.setFontSize(11);
+    doc.setTextColor(50);
+    doc.text(`Cliente: ${clientName}`, 20, 68);
+    doc.text(`Teléfono: ${clientPhone}`, 20, 76);
+    doc.text(`Fecha: ${new Date().toLocaleDateString('es')}`, 20, 84);
+
+    doc.setTextColor(30, 75, 150);
+    doc.setFontSize(14);
+    doc.text('RESUMEN FINANCIERO', 20, 100);
+    doc.line(20, 103, 190, 103);
+    doc.setFontSize(11);
+    doc.setTextColor(50);
+    doc.text(`Subtotal: ${document.getElementById('subtotalDisplay').textContent}`, 20, 115);
+    doc.text(`Impuestos: ${document.getElementById('displayImpuestos').textContent}`, 20, 125);
+    doc.text(`Descuento: ${document.getElementById('displayDescuento').textContent}`, 20, 135);
+
+    doc.setFillColor(140, 182, 78);
+    doc.rect(20, 150, 170, 30, 'F');
+    doc.setTextColor(255);
+    doc.setFontSize(14);
+    doc.text('TOTAL:', 30, 168);
+    doc.setFontSize(20);
+    doc.text(total, 180, 170, {align:'right'});
+
+    doc.setTextColor(100);
+    doc.setFontSize(9);
+    doc.text(`Validez: ${document.getElementById('validez').value} días | Plazo: ${document.getElementById('plazo').value} días | Garantía: ${document.getElementById('garantia').value} meses`, 105, 245, {align:'center'});
+    doc.text(`Anticipo: ${document.getElementById('displayAnticipo').textContent} | Saldo: ${document.getElementById('displaySaldo').textContent}`, 105, 252, {align:'center'});
+
+    const notas = document.getElementById('notas').value;
+    if (notas) {
+        doc.setFontSize(9);
+        doc.setTextColor(80);
+        doc.text('Observaciones:', 20, 265);
+        doc.text(notas.substring(0, 100), 20, 272);
+    }
+
+    doc.save(`Presupuesto_${clientName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`);
+    closeModal('entregaModal');
+}
+
+function enviarWhatsApp() {
+    const name = document.getElementById('clientName').value || 'Cliente';
+    const phone = document.getElementById('clientPhone').value || '';
+    const total = document.getElementById('totalPresupuesto').textContent;
+    const antic = document.getElementById('displayAnticipo').textContent;
+    const saldo = document.getElementById('displaySaldo').textContent;
+    const area = document.getElementById('valArea').textContent;
+
+    const msg = `*PRESUPUESTO CAMPRE*%0A%0A*Cliente:* ${name}%0A*Área del proyecto:* ${area}%0A%0A*TOTAL:* ${total}%0A*Anticipo:* ${antic}%0A*Saldo:* ${saldo}%0A%0A_Validez: ${document.getElementById('validez').value} días_`;
+
+    const url = phone ? `https://wa.me/${phone.replace(/\D/g, '')}?text=${msg}` : `https://wa.me/?text=${msg}`;
+    window.open(url, '_blank');
+    closeModal('entregaModal');
+}
+
+function downloadCoursePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFillColor(30, 75, 150);
+    doc.rect(0, 0, 210, 50, 'F');
+    doc.setTextColor(255);
+    doc.setFontSize(26);
+    doc.text('CURSO COMPLETO CAMPRE', 105, 25, {align:'center'});
+    doc.setFontSize(11);
+    doc.text('Domina la Resina Epóxica de Principio a Fin', 105, 38, {align:'center'});
+    doc.setTextColor(150);
+    doc.setFontSize(8);
+    doc.text('© 2026 CAMPRE · C.A. Medina Plásticos Reforzados', 105, 285, {align:'center'});
+    doc.save('Curso_Completo_CAMPRE.pdf');
+}
+
+function downloadCourseWord() {
+    const content = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head><meta charset='utf-8'><title>Curso Completo CAMPRE</title></head>
+<body style="font-family: Calibri, sans-serif;">
+<h1 style="color: #1E4B96; text-align: center;">CURSO COMPLETO CAMPRE</h1>
+<h3 style="text-align: center; color: #666;">Domina la Resina Epóxica de Principio a Fin</h3>
+<hr style="border: 2px solid #8CB64E;">
+<h2 style="color: #1E4B96;">I. Curso de Resina Epoxi de Alto Tránsito</h2>
+<p><strong>Objetivo:</strong> Abordar técnicas para el manejo y aplicación de porcelanato líquido en diferentes superficies, incluyendo pisos 3D, garantizando seguridad y correcta aplicación.</p>
+<p><strong>Red de apoyo:</strong> Se invita a participar en grupos de debate y mantener contacto con el capacitador.</p>
+<h2 style="color: #1E4B96;">II. Resina Epoxi: Especificaciones Técnicas</h2>
+<p><strong>Definición:</strong> Polímero que requiere un agente catalizador para endurecer.</p>
+<h3>Resistencia:</h3>
+<ul>
+<li><strong>Térmica:</strong> Hasta 70°C en exposiciones ocasionales; 45°C en exposición prolongada.</li>
+<li><strong>Física:</strong> Soporta 65 N de fuerza por metro cuadrado.</li>
+</ul>
+<h3>Propiedades:</h3>
+<p>Alta resistencia química, facilidad de aplicación, gran capacidad de humectación, flexibilidad, adherencia óptima, limpieza sencilla, textura homogénea.</p>
+<h3>Tiempos y características:</h3>
+<ul>
+<li>Secado superior al resto: 8 horas aproximadamente.</li>
+<li>No desprende olor durante la aplicación.</li>
+<li>Presenta muy poca o nula contracción al secar.</li>
+</ul>
+<h3>Normas de seguridad:</h3>
+<ul>
+<li>Almacenar en lugar seco y fresco (entre 18°C y 30°C).</li>
+<li>Prohibido fumar al trabajar.</li>
+<li>No exponer a fuentes de calor o fuego.</li>
+<li>Evitar contacto con la piel, especialmente tras mezclar con el catalizador.</li>
+<li>Ventilación adecuada.</li>
+<li>Lavado de manos posterior al uso.</li>
+<li>No desechar en el fuego.</li>
+</ul>
+<h2 style="color: #1E4B96;">III. Recomendaciones de Trabajo (Resina Epoxi)</h2>
+<ul>
+<li><strong>Proporción:</strong> 2:1 (por cada parte de catalizador, dos partes de resina).</li>
+<li><strong>Medición:</strong> Usar balanza para precisión.</li>
+<li><strong>Mezclado:</strong> Realizar en envases limpios, mezclar intensa y vigorosamente durante 2 a 3 minutos, asegurando integrar paredes y bordes del envase para evitar vetas.</li>
+<li><strong>Eliminación de burbujas:</strong> Tras aplicar (brocha o espátula), rociar con alcohol de más de 95% de pureza o aplicar calor (pistola de calor/soplete).</li>
+</ul>
+<h3>Tiempos de curado (referenciales):</h3>
+<ul>
+<li><strong>0 - 40 min:</strong> Estado líquido y autonivelante.</li>
+<li><strong>40 min - 2 hrs:</strong> Pierde fluidez, condición autonivelante disminuye; manejable pero sensible al calor.</li>
+<li><strong>2 - 4 hrs:</strong> Muy viscoso; sigue pegajoso, sensible al polvo, insectos o partículas.</li>
+<li><strong>6 - 24 hrs:</strong> No pegajoso al tacto, pero puede marcarse o abollarse ante presión; riesgo de manchas.</li>
+<li><strong>24 - 48 hrs:</strong> Apta para tránsito ligero.</li>
+<li><strong>48 hrs+:</strong> Transitable, pero no apta para peso excesivo ni lijado.</li>
+</ul>
+<h2 style="color: #1E4B96;">IV. Aplicaciones y Pigmentos</h2>
+<p><strong>Aplicación principal:</strong> Revestimiento de grandes suelos continuos (cubre juntas, evita hongos/bacterias, aporta brillo y nivelación).</p>
+<p><strong>Usos adicionales:</strong> Mesas, mesadas, bisutería, inclusión de objetos/luces.</p>
+<h3>Pigmentos:</h3>
+<ul>
+<li><strong>Tipos:</strong> Inorgánicos (óxido de titanio, negro de humo, cromatos), colorantes, perlados, nacarados, translúcidos, fosforescentes, opacos.</li>
+<li><strong>Presentación:</strong> Pasta, líquido, polvo.</li>
+<li><strong>Dosificación:</strong> 5% del material total.</li>
+<li><strong>Aplicación:</strong> Añadir durante el proceso de remoción hasta obtener la tonalidad deseada.</li>
+</ul>
+<h2 style="color: #1E4B96;">V. Guía de Aplicación en Pisos</h2>
+<p><strong>Preparación (Enrazado):</strong> Reparar ranuras, grietas y juntas. Si son pequeñas, usar resina/pintura epoxi con carga inerte (carbonato de calcio, talco, sílice). Si son grandes, usar cemento. Lijar y limpiar el polvo tras secar.</p>
+<p><strong>Preparación de superficies:</strong> Limpiar grasas. Usar desengrasante industrial o mezcla de ácido muriático (1 parte de ácido por 4 de agua).</p>
+<p><strong>Sellado/Imprimación:</strong> Aplicar Pintura Epoxi con rodillo de pelo corto (evitar residuos). Secar por 8 hrs aprox.</p>
+<p><strong>Inclusiones 3D/Vinilos:</strong> Deben fijarse firmemente al piso sellado antes del vaciado para evitar desplazamientos.</p>
+<h3>Aplicación de Resina Epoxi (Paso 4):</h3>
+<ul>
+<li><strong>Cálculo:</strong> Largo x Ancho = Metros cuadrados.</li>
+<li><strong>Consumo:</strong> 1 litro (mezcla total) por m² para 1mm de espesor.</li>
+<li><strong>Mezcla:</strong> Producto A (pigmentado) + Producto B (catalizador), agitar vigorosamente 2-3 minutos.</li>
+<li><strong>Extendido:</strong> Secador dentado o espátula dentada.</li>
+<li><strong>Acabado:</strong> Alcohol isopropílico (>95%), pistola de calor o soplete para burbujas.</li>
+</ul>
+<h2 style="color: #1E4B96;">VI. Aplicación en Madera</h2>
+<ol>
+<li><strong>Limpieza:</strong> Superficie libre de polvo.</li>
+<li><strong>Sellado:</strong> Barnizar/curar la madera para sellar poros.</li>
+<li><strong>Base:</strong> Nivelar la base de trabajo; usar encintado o cera.</li>
+<li><strong>Encofrado:</strong> Sellado de bordes con silicona o tirro.</li>
+<li><strong>Desmolde:</strong> Aplicar desmoldante en todo el encofrado.</li>
+<li><strong>Sujeción:</strong> Usar prensas para evitar fugas.</li>
+<li><strong>Cálculo:</strong> Determinar cantidad necesaria.</li>
+<li><strong>Vertido:</strong> Verter resina y aplicar calor para burbujas.</li>
+<li><strong>Desmolde:</strong> Retirar una vez seco.</li>
+</ol>
+<h2 style="color: #1E4B96;">VII. Mesas de Cemento/Concreto</h2>
+<p>Proceso similar a pisos.</p>
+<p><strong>Bordes:</strong> Usar cinta/tirro si el vaciado es de 1mm. Para bordes verticales, aplicar capas muy finas con pincel para evitar el "descolgamiento".</p>
+<h2 style="color: #1E4B96;">VIII. Consejos y Advertencias Finales</h2>
+<ul>
+<li><strong>Preparación:</strong> Representa más de la mitad del éxito del trabajo.</li>
+<li><strong>Contaminación:</strong> Tras el vaciado, limitar la circulación de aire y la presencia de personas para evitar caída de partículas.</li>
+<li><strong>Equipo de protección:</strong> Botas, guantes de goma, gafas protectoras, camisa de manga larga, pantalones largos.</li>
+<li><strong>Asistencia:</strong> Leer etiquetas de seguridad y contactar al fabricante ante dudas.</li>
+</ul>
+<h2 style="color: #1E4B96;">IX. Resina Poliéster</h2>
+<ul>
+<li><strong>Estado:</strong> Líquida a temperatura ambiente, se vuelve sólida al usar un catalizador (pre-aceleradas o aceleradas).</li>
+<li><strong>Caducidad:</strong> Aproximadamente 6 meses.</li>
+<li><strong>Almacenamiento:</strong> Evitar humedad, alta temperatura y luz.</li>
+<li><strong>Seguridad:</strong> Tiene punto de ebullición inferior a 60°C y su disolvente (estireno) tiene un punto de inflamación de 33°C, por lo que debe guardarse lejos de focos inflamables.</li>
+<li><strong>Catalizador:</strong> La cantidad depende de la temperatura; se recomienda entre 1% y 2% a temperaturas cercanas a los 30°C.</li>
+<li><strong>Condiciones ambientales:</strong> Humedad ideal entre 40% y 54%.</li>
+<li><strong>Molde:</strong> Se debe tener en cuenta que la reacción exotérmica puede deformar o romper el molde.</li>
+</ul>
+<h2 style="color: #1E4B96;">X. Aplicación en Madera (Resina Poliéster)</h2>
+<ol>
+<li><strong>Paso 1:</strong> Limpiar la superficie de polvo.</li>
+<li><strong>Paso 2:</strong> Barnizar o curar para sellar poros y evitar absorción.</li>
+<li><strong>Paso 3:</strong> Usar base nivelada, encintar o encerar.</li>
+<li><strong>Paso 4:</strong> Armar encofrado y sellar bordes con silicona o tirro.</li>
+<li><strong>Paso 5:</strong> Aplicar desmoldante en toda la superficie del encofrado.</li>
+<li><strong>Paso 6:</strong> Sujetar maderas al cajón con prensas.</li>
+<li><strong>Paso 7:</strong> Calcular cantidad de resina.</li>
+<li><strong>Paso 8:</strong> Verter resina y usar calor para eliminar burbujas.</li>
+<li><strong>Paso 9:</strong> Desmoldar una vez seca.</li>
+</ol>
+<h2 style="color: #1E4B96;">XI. Consejos y Advertencias (Resina Poliéster)</h2>
+<p><strong>Consejos:</strong> La preparación es más de la mitad del trabajo. Limitar la circulación de aire tras el vaciado reduce el riesgo de contaminación por partículas.</p>
+<p><strong>Advertencias:</strong> Usar equipo de protección (botas, guantes, gafas, mangas largas). Leer siempre la información técnica y de seguridad de la etiqueta.</p>
+<p><strong>Cemento:</strong> Para mesas de cemento, si se busca un borde vertical, aplicar capas muy finas con pincel para evitar que el producto se chorree o descuelgue.</p>
+<h2 style="color: #1E4B96;">XII. Aplicación de Resina Epoxi (Pisos) - Resumen</h2>
+<ul>
+<li><strong>Cálculo:</strong> 1 litro de resina con su catalizador por metro cuadrado para una capa de 1mm.</li>
+<li><strong>Mezclado:</strong> 2 a 3 minutos vigorosamente a velocidad moderada.</li>
+<li><strong>Aplicación:</strong> Usar espátula o secador dentado; usar alcohol isopropílico (>95%), soplete o pistola de calor para burbujas.</li>
+<li><strong>Tiempos:</strong> "Blanda" las primeras 24 horas; se puede caminar sobre ella tras 24 horas y colocar muebles tras 48 horas.</li>
+</ul>
+<h2 style="color: #1E4B96;">XIII. Preparación y Sellado</h2>
+<ul>
+<li><strong>Desengrasado:</strong> Usar desengrasante industrial o una taza de ácido muriático mezclada con 4 partes de agua.</li>
+<li><strong>Imprimación:</strong> Usar Pintura Epoxi con rodillo de pelo corto para asegurar adherencia; dejar secar 8 horas.</li>
+<li><strong>Fijación:</strong> Elementos como vinilos 3D deben fijarse con materiales que no contengan grasas para evitar desprendimientos.</li>
+</ul>
+<h2 style="color: #1E4B96;">XIV. Reparación de Pisos</h2>
+<ul>
+<li><strong>Enrazado:</strong> Tapar ranuras, grietas o juntas.</li>
+<li><strong>Mezcla de reparación:</strong> Resina o pintura epoxi con carga inerte (carbonato de calcio, talco o sílice) para lograr viscosidad adecuada.</li>
+</ul>
+<h2 style="color: #1E4B96;">XV. Pigmentos y Aplicaciones</h2>
+<ul>
+<li><strong>Pigmentos:</strong> Inorgánicos, perlados, nacarados, etc., dosificados al 5% del material total.</li>
+<li><strong>Usos:</strong> Pisos continuos, mesas, mesadas y bisutería.</li>
+</ul>
+<h2 style="color: #1E4B96;">XVI. Curso y Seguridad</h2>
+<ul>
+<li><strong>Resistencia:</strong> Hasta 70°C (ocasional) y 45°C (prolongada); soporta 65 N de fuerza por m².</li>
+<li><strong>Seguridad:</strong> Almacenar entre 18°C y 30°C, prohibido fumar y prohibido tirar al fuego.</li>
+</ul>
+<h2 style="color: #1E4B96;">XVII. Resumen de Tiempos de Curado</h2>
+<ul>
+<li><strong>0-40 min:</strong> Líquido, autonivelante.</li>
+<li><strong>40 min-2 hrs:</strong> Pierde fluidez, no autonivelante.</li>
+<li><strong>2-4 hrs:</strong> Muy viscoso.</li>
+<li><strong>6-24 hrs:</strong> No pegajoso, pero propenso a marcarse.</li>
+<li><strong>24-48 hrs:</strong> Apta para tránsito ligero.</li>
+<li><strong>48 hrs+:</strong> Terminado (no aplicar presión excesiva ni lijar).</li>
+</ul>
+<hr>
+<p style="text-align: center; color: #999; font-size: 10px;">© 2026 CAMPRE · C.A. Medina Plásticos Reforzados · Material exclusivo</p>
+</body>
+</html>`;
+    const blob = new Blob(['\ufeff', content], {type:'application/msword'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'Curso_Completo_CAMPRE.doc';
+    a.click();
+}
+
+actualizarUnidadesUI();
+renderizarCatalogo();
+calcular();
+</script>
 </body>
 </html>
