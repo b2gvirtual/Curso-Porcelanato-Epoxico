@@ -51,6 +51,23 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #546
 }
 .whatsapp-btn { background: #25D366; color: white; }
 .whatsapp-btn:hover { background: #128C7E; }
+.ai-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+.ai-btn:hover { background: linear-gradient(135deg, #5568d3 0%, #6a3f8f 100%); }
+
+/* Chatbot styles */
+.chat-container { max-height: 400px; overflow-y: auto; }
+.chat-message { padding: 12px; margin: 8px 0; border-radius: 12px; max-width: 85%; }
+.chat-message.user { background: #1E4B96; color: white; margin-left: auto; }
+.chat-message.bot { background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0; }
+.chat-input { border: 2px solid #e2e8f0; border-radius: 8px; padding: 12px; width: 100%; outline: none; }
+.chat-input:focus { border-color: #1E4B96; }
+.suggestion-chip { background: #e0e7ff; color: #1E4B96; padding: 6px 12px; border-radius: 20px; font-size: 11px; cursor: pointer; margin: 4px; display: inline-block; transition: all 0.2s; border: 1px solid #c7d2fe; }
+.suggestion-chip:hover { background: #1E4B96; color: white; }
+.typing-indicator { display: inline-flex; gap: 4px; padding: 8px 12px; }
+.typing-indicator span { width: 8px; height: 8px; background: #94a3b8; border-radius: 50%; animation: typing 1.4s infinite; }
+.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typing { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-8px); } }
 </style>
 </head>
 <body class="p-0 md:p-4">
@@ -66,6 +83,7 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #546
 </div>
 </div>
 <div class="nav-actions">
+<button onclick="showModal('aiModal')" class="nav-btn ai-btn">Campre.AI</button>
 <button onclick="showModal('contactModal')" class="nav-btn whatsapp-btn">Contacto</button>
 <button onclick="showModal('helpModal')" class="nav-btn nav-btn-ghost">Ayuda</button>
 <button onclick="showModal('courseModal')" class="nav-btn nav-btn-ghost">Curso Completo</button>
@@ -305,6 +323,45 @@ ENTREGAR PRESUPUESTO
 </div>
 </div>
 
+<!-- ============ MODAL CAMPRE.AI ============ -->
+<div id="aiModal" class="modal fixed inset-0 bg-black/50 z-50 items-center justify-center p-4">
+<div class="bg-white max-w-2xl w-full rounded-2xl p-6 relative max-h-[90vh] flex flex-col">
+<button onclick="closeModal('aiModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold text-2xl">X</button>
+<div class="flex items-center gap-3 mb-2">
+    <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-xl">AI</div>
+    <div>
+        <h2 class="text-2xl font-bold text-campre-blue">Campre.AI</h2>
+        <p class="text-xs text-slate-500">Asistente virtual con conocimiento completo de CAMPRE</p>
+    </div>
+</div>
+
+<div class="chat-container flex-1 overflow-y-auto mb-4 space-y-3 pr-2" id="chatContainer">
+    <div class="chat-message bot">
+        <strong>Campre.AI:</strong> ¡Hola! Soy tu asistente virtual de CAMPRE. Tengo acceso a toda la información de la empresa, productos, servicios, cursos técnicos y conocimientos sobre resinas epóxicas y poliéster. ¿En qué puedo ayudarte hoy?
+    </div>
+</div>
+
+<div class="mb-3">
+    <p class="text-xs font-bold text-slate-500 mb-2">Preguntas frecuentes:</p>
+    <div class="flex flex-wrap gap-1">
+        <span class="suggestion-chip" onclick="askQuestion('¿Qué es CAMPRE?')">¿Qué es CAMPRE?</span>
+        <span class="suggestion-chip" onclick="askQuestion('¿Qué productos fabrican?')">Productos</span>
+        <span class="suggestion-chip" onclick="askQuestion('¿Qué es PRFV?')">¿Qué es PRFV?</span>
+        <span class="suggestion-chip" onclick="askQuestion('Proporción de mezcla')">Proporción mezcla</span>
+        <span class="suggestion-chip" onclick="askQuestion('Tiempos de curado')">Tiempos curado</span>
+        <span class="suggestion-chip" onclick="askQuestion('¿Cómo elimino burbujas?')">Eliminar burbujas</span>
+        <span class="suggestion-chip" onclick="askQuestion('¿Dónde están ubicados?')">Ubicación</span>
+        <span class="suggestion-chip" onclick="askQuestion('¿Cómo los contacto?')">Contacto</span>
+    </div>
+</div>
+
+<div class="flex gap-2">
+    <input type="text" id="chatInput" class="chat-input flex-1" placeholder="Escribe tu pregunta..." onkeypress="if(event.key==='Enter') sendMessage()">
+    <button onclick="sendMessage()" class="bg-campre-blue text-white px-6 py-2 rounded-lg font-bold hover:bg-blue-800 transition">Enviar</button>
+</div>
+</div>
+</div>
+
 <!-- ============ MODAL CONTACTO ============ -->
 <div id="contactModal" class="modal fixed inset-0 bg-black/50 z-50 items-center justify-center p-4">
 <div class="bg-white max-w-md w-full rounded-2xl p-6 relative">
@@ -331,17 +388,20 @@ ENTREGAR PRESUPUESTO
     <div class="p-4 bg-purple-50 rounded-xl border border-purple-200">
         <h3 class="font-bold text-purple-800 mb-2">Asesorías Técnicas</h3>
         <a href="https://wa.me/584128422026" target="_blank" class="flex items-center gap-2 text-purple-700 hover:text-purple-900">
-            <span class="text-2xl"></span>
+            <span class="text-2xl">💬</span>
             <span>+58 412-8422026</span>
         </a>
     </div>
 
     <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
         <h3 class="font-bold text-slate-800 mb-2">Información General</h3>
-        <p class="text-sm text-slate-600">
+        <p class="text-sm text-slate-600 mb-3">
             <strong>Email:</strong> info@campre.net<br>
             <strong>Ubicación:</strong> Maracaibo, Venezuela
         </p>
+        <a href="https://www.google.com/maps/search/?api=1&query=Circunvalación+No+2+Av+58+calles+98+y+99+Edif+CAMPRE+No+98D-274+Maracaibo+Venezuela" target="_blank" class="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-700 transition">
+            <span>📍</span> Ver ubicación en Google Maps
+        </a>
     </div>
 </div>
 </div>
@@ -642,6 +702,173 @@ const productosCAMPRE = [
     { id: 12, nombre: "Alcohol Isopropílico (>95%)", descripcion: "Eliminador de burbujas en superficie. Presentación de 1 Litro.", precio: 12.00, unidad: "Litro", categoria: "Aditivos" }
 ];
 
+// ==========================================
+// BASE DE CONOCIMIENTO COMPLETA DE CAMPRE.AI
+// ==========================================
+const knowledgeBase = [
+    // INFORMACIÓN DE LA EMPRESA
+    {
+        keywords: ['campre', 'empresa', 'quienes son', 'qué es campre', 'historia', 'sobre nosotros'],
+        response: 'CAMPRE (C.A. Medina Plásticos Reforzados) es una empresa venezolana con más de 30 años de trayectoria en la industria de polímeros y plásticos reforzados. Fundada por el Sr. Claudio Medina, nos especializamos en la fabricación de artículos en PRFV (Plástico Reforzado con Fibra de Vidrio), distribución de materias primas, y asesoramiento técnico especializado. Nuestra sede está en Maracaibo, Venezuela.'
+    },
+    {
+        keywords: ['ubicación', 'ubicacion', 'dirección', 'direccion', 'dónde están', 'donde estan', 'maps', 'mapa'],
+        response: 'Estamos ubicados en: Circunvalación No 2, Av. 58, calles 98 y 99, Edif. CAMPRE No 98D-274, Maracaibo, Estado Zulia, Venezuela. Puedes ver nuestra ubicación exacta en Google Maps desde el botón de Contacto. ¡Te esperamos!'
+    },
+    {
+        keywords: ['contacto', 'contactar', 'teléfono', 'telefono', 'whatsapp', 'comunicar', 'llamar'],
+        response: 'Puedes contactarnos por varios canales: Ventas: +58 424-6579531 (WhatsApp), Gerencia de Ventas: +58 424-6832430 (WhatsApp), Asesorías Técnicas: +58 412-8422026 (WhatsApp), Email: info@campre.net. Todos los números de WhatsApp tienen enlace directo desde el botón de Contacto en la app.'
+    },
+    {
+        keywords: ['trayectoria', 'años', 'antigüedad', 'experiencia', 'fundador'],
+        response: 'CAMPRE tiene más de 30 años de experiencia en el mercado venezolano de polímeros y plásticos reforzados. Esta larga trayectoria nos ha permitido consolidarnos como referentes en el sector, ofreciendo productos de calidad y asesoramiento técnico especializado a nuestros clientes.'
+    },
+
+    // PRODUCTOS Y SERVICIOS
+    {
+        keywords: ['productos', 'qué fabrican', 'que fabrican', 'catálogo', 'catalogo', 'ofrecen'],
+        response: 'En CAMPRE fabricamos y distribuimos: PRODUCTOS TERMINADOS: Kayaks PRFV ($450), Botes PRFV ($850), Cavas Térmicas PRFV ($120), Autopartes PRFV ($180). MATERIAS PRIMAS: Fibra de Vidrio Roving ($95/rollo), Fibra de Vidrio Mat ($110/rollo), Gel Coat ($45/galón). RESINAS: Resina Epoxi A ($60/kit 3kg), Catalizador B ($40/kit 3kg), Resina Poliéster ($35/galón). ADITIVOS: Pigmentos en pasta ($15/250g), Alcohol Isopropílico >95% ($12/litro).'
+    },
+    {
+        keywords: ['kayak', 'kayaks', 'embarcación', 'embarcacion'],
+        response: 'Fabricamos Kayaks PRFV (Plástico Reforzado con Fibra de Vidrio) de alta resistencia y durabilidad. Precio: $450 por unidad. Son ideales para recreación y deportes acuáticos. También fabricamos Botes PRFV ($850) para pesca y navegación.'
+    },
+    {
+        keywords: ['bote', 'botes', 'barco', 'embarcación'],
+        response: 'Nuestros Botes PRFV ($850) son embarcaciones ligeras en plástico reforzado con fibra de vidrio. Son ideales para pesca y recreación. Ofrecen excelente durabilidad, bajo mantenimiento y resistencia al agua salada.'
+    },
+    {
+        keywords: ['cava', 'cavas', 'térmica', 'termica', 'nevera', 'hielera'],
+        response: 'Fabricamos Cavas Térmicas PRFV ($120 por unidad) con excelente aislamiento térmico. Son ideales para conservación de alimentos y bebidas, manteniendo la temperatura por períodos prolongados. Muy resistentes y duraderas.'
+    },
+    {
+        keywords: ['autoparte', 'autopartes', 'carro', 'automotriz', 'parachoques'],
+        response: 'Producimos Autopartes PRFV ($180 por unidad) incluyendo parachoques, spoilers, deflectores y otras piezas automotrices en plástico reforzado. Ofrecen excelente relación peso-resistencia y pueden ser personalizadas.'
+    },
+    {
+        keywords: ['fibra', 'fibra de vidrio', 'vidrio', 'roving', 'mat'],
+        response: 'Distribuimos Fibra de Vidrio en dos presentaciones: Roving ($95 por rollo de 25kg) para refuerzo estructural, y Mat ($110 por rollo de 50kg) que es un fieltro para laminado. Ambas son esenciales para la fabricación de productos PRFV.'
+    },
+    {
+        keywords: ['gel coat', 'gelcoat', 'acabado', 'superficial'],
+        response: 'El Gel Coat ($45 por galón) es un acabado superficial de alta resistencia UV y química. Está disponible en varios colores y se utiliza como capa final protectora y decorativa en productos PRFV. Proporciona brillo y protección contra los elementos.'
+    },
+    {
+        keywords: ['resina epoxi', 'epoxi', 'epoxy', 'epóxica'],
+        response: 'Distribuimos Resina Epoxi A ($60 por kit de 3kg) de alta resistencia con acabado brillante, ideal para pisos, mesas y proyectos de alto tránsito. El Catalizador B ($40 por kit de 3kg) se mezcla en proporción 2:1 (2 partes de resina por 1 de catalizador) SIEMPRE por peso.'
+    },
+    {
+        keywords: ['resina poliéster', 'poliester', 'poliéster'],
+        response: 'La Resina Poliéster ($35 por galón) es pre-acelerada y se usa para laminado general. Requiere catalizador MEKP en proporción de 1-2% según la temperatura ambiente. Tiene caducidad de aproximadamente 6 meses y debe almacenarse lejos de humedad, calor y luz.'
+    },
+    {
+        keywords: ['pigmento', 'pigmentos', 'color', 'colorante', 'tinte'],
+        response: 'Ofrecemos Pigmentos en Pasta ($15 por envase de 250g) de alta concentración, disponibles en varios colores. La dosificación recomendada es del 5% del material total. Se añaden durante el proceso de mezcla hasta obtener la tonalidad deseada.'
+    },
+    {
+        keywords: ['alcohol', 'isopropílico', 'isopropilico', 'burbujas'],
+        response: 'El Alcohol Isopropílico al 95% o superior ($12 por litro) es esencial para eliminar burbujas en la superficie de la resina epoxi recién aplicada. Se rocía ligeramente sobre la superficie y las burbujas desaparecen al instante. También puedes usar pistola de calor o soplete.'
+    },
+    {
+        keywords: ['prfv', 'qué es prfv', 'que es prfv', 'plástico reforzado', 'plastico reforzado'],
+        response: 'PRFV significa Plástico Reforzado con Fibra de Vidrio (también conocido como FRP en inglés: Fiberglass Reinforced Plastic). Es un material compuesto formado por una matriz de resina (poliéster, epoxi o viniléster) reforzada con fibras de vidrio. Combina la ligereza del plástico con la resistencia de la fibra de vidrio, siendo usado en kayaks, botes, autopartes, tanques, piscinas y mucho más.'
+    },
+    {
+        keywords: ['servicios', 'asesoría', 'asesoria', 'consultoría', 'consultoria'],
+        response: 'CAMPRE ofrece: 1) Asesoramiento técnico especializado en aplicación de resinas y fabricación PRFV, 2) Cursos de formación (como el Curso de Resina Epoxi de Alto Tránsito disponible en esta app), 3) Consultoría para proyectos específicos, 4) Distribución de materias primas con soporte técnico. Contáctanos al +58 412-8422026 para asesorías técnicas.'
+    },
+    {
+        keywords: ['curso', 'cursos', 'formación', 'formacion', 'capacitación', 'capacitacion', 'entrenamiento'],
+        response: 'Ofrecemos el Curso de Resina Epoxi de Alto Tránsito, disponible completo en esta app (botón "Curso Completo"). El curso cubre: especificaciones técnicas, proporciones de mezcla, tiempos de curado, aplicación en pisos/madera/concreto, uso de pigmentos, seguridad y más. También puedes descargar el curso en PDF o Word. Además, ofrecemos red de apoyo con grupos de debate y contacto directo con el capacitador.'
+    },
+
+    // CONOCIMIENTO TÉCNICO - RESINAS
+    {
+        keywords: ['proporción', 'proporcion', 'proporciones', 'mezcla', 'ratio', '2:1', 'dos a uno'],
+        response: 'La proporción estándar para Resina Epoxi es 2:1 (2 partes de Resina A por 1 parte de Catalizador B) SIEMPRE por PESO usando balanza digital. Para Resina Poliéster, la proporción es 1-2% de catalizador MEKP, variando según la temperatura ambiente (más catalizador si hace frío, menos si hace calor).'
+    },
+    {
+        keywords: ['mezclar', 'mezclado', 'homogeneizar', 'homogeneización', 'cómo mezclar', 'como mezclar'],
+        response: 'Procedimiento correcto de mezclado: 1) Vierte el componente A (resina) en un recipiente limpio, 2) Añade el componente B (catalizador) en la proporción exacta, 3) Mezcla intensa y vigorosamente durante 2-3 minutos con espátula plana, 4) Realiza movimientos envolventes raspando especialmente el fondo y paredes del recipiente, 5) EVITA batidos de alta velocidad que introduzcan microburbujas. La mezcla debe ser completamente uniforme para evitar zonas pegajosas.'
+    },
+    {
+        keywords: ['secar', 'secado', 'curado', 'curar', 'tiempo', 'tiempos', 'cuánto tarda', 'cuanto tarda'],
+        response: 'Tiempos de curado de Resina Epoxi: 0-40 min: Estado líquido y autonivelante; 40 min - 2 hrs: Pierde fluidez pero aún manejable (sensible al calor); 2-4 hrs: Muy viscoso, pegajoso, sensible al polvo e insectos; 6-24 hrs: No pegajoso al tacto pero puede marcarse con presión; 24-48 hrs: Apta para tránsito ligero; 48 hrs+: Curado total (no aplicar peso excesivo ni lijar). El secado completo superior es de aproximadamente 8 horas.'
+    },
+    {
+        keywords: ['burbuja', 'burbujas', 'eliminar burbujas', 'quitar burbujas'],
+        response: 'Para eliminar burbujas en resina epoxi: 1) Rocía alcohol isopropílico >95% sobre la superficie (método más común), 2) Aplica calor con pistola de calor o soplete rápidamente a distancia segura, 3) Usa rodillo de púas para masas grandes, 4) PREVENCIÓN: No batas muy rápido al mezclar, deja reposar la mezcla 2-3 minutos antes de verter, trabaja en ambiente cálido. Las burbujas son el error más común en aplicaciones de resina.'
+    },
+    {
+        keywords: ['temperatura', 'temperaturas', 'clima', 'ambiente', 'grados'],
+        response: 'Temperatura ideal de aplicación: 20-30°C. Humedad ideal: 40-60%. Fuera de estos rangos el curado puede verse afectado: con frío extremo la resina no cura correctamente, con calor extremo el tiempo de trabajo (Pot Life) se reduce drásticamente. Almacena las resinas entre 18-30°C en lugar seco y fresco.'
+    },
+    {
+        keywords: ['peso', 'balanza', 'medir', 'medición', 'medicion', 'volumen', 'gramos', 'kilos'],
+        response: 'IMPORTANTE: SIEMPRE mide por PESO (gramos) usando una balanza digital, NUNCA por volumen (mililitros). La densidad del componente B (catalizador) es diferente a la del A (resina), por lo que medir por volumen daría proporciones incorrectas. Esta calculadora te da los gramos exactos que necesitas para tu proyecto.'
+    },
+    {
+        keywords: ['pot life', 'potlife', 'vida útil', 'vida util', 'gelación', 'gelacion', 'tiempo trabajo'],
+        response: 'Pot Life (vida útil de la mezcla): aproximadamente 30-40 minutos a 25°C. Una vez unidos A y B, el tiempo de trabajo es limitado antes de que la resina comience a gelificar. PREPARA SOLO la cantidad que puedas aplicar en ese rango de tiempo. Si hace más calor, el Pot Life se reduce; si hace frío, se alarga ligeramente.'
+    },
+    {
+        keywords: ['preparación', 'preparacion', 'preparar', 'superficie', 'limpieza', 'lija', 'lijado'],
+        response: 'La preparación representa más del 50% del éxito del trabajo. Pasos: 1) Limpia la superficie eliminando grasas con desengrasante industrial o mezcla de ácido muriático (1 parte de ácido por 4 de agua), 2) Lijs la superficie para crear adherencia mecánica, 3) Repara grietas y juntas (enrazado) con resina + carga inerte (carbonato de calcio, talco o sílice), 4) Aplica sellador/imprimación con Pintura Epoxi usando rodillo de pelo corto, 5) Deja secar 8 horas antes de aplicar la resina.'
+    },
+    {
+        keywords: ['espesor', 'grosor', 'capa', 'capas', 'consumo', 'rendimiento'],
+        response: 'Consumo estándar: 1 litro de mezcla total (resina + catalizador) por metro cuadrado para 1mm de espesor. Para múltiples capas, multiplica por el número de capas. Esta calculadora te da los gramos exactos según tus dimensiones. Recuerda aplicar el 5% adicional por seguridad y desperdicio.'
+    },
+    {
+        keywords: ['seguridad', 'epp', 'equipo', 'protección', 'proteccion', 'guantes', 'gafas', 'mascarilla'],
+        response: 'Equipo de protección obligatorio: Guantes de goma, gafas protectoras, camisa de manga larga, pantalones largos, botas cerradas. Ventilación adecuada en el área de trabajo. NO fumar durante la aplicación. Almacenar resinas entre 18-30°C, lejos de fuentes de calor, fuego y luz solar directa. Lavar manos después del uso. No desechar residuos al fuego.'
+    },
+    {
+        keywords: ['error', 'errores', 'problema', 'problemas', 'pegajoso', 'tacky', 'no cura', 'falla'],
+        response: 'Error más común: Si la mezcla no es uniforme o la proporción es incorrecta, el piso presentará zonas pegajosas ("tacky") que NO curarán tras 48 horas. SOLUCIÓN: Requiere remoción mecánica total de la zona afectada y nueva aplicación. PREVENCIÓN: Mide SIEMPRE por peso, mezcla vigorosamente 2-3 minutos raspando paredes y fondo del recipiente, verifica la proporción 2:1 exacta.'
+    },
+    {
+        keywords: ['madera', 'aplicar en madera', 'maderas'],
+        response: 'Aplicación de resina en madera (pasos): 1) Limpieza: superficie libre de polvo, 2) Sellado: barnizar/curar la madera para sellar poros, 3) Base: nivelar la base de trabajo usando encintado o cera, 4) Encofrado: sellar bordes con silicona o tirro, 5) Desmolde: aplicar desmoldante en todo el encofrado, 6) Sujeción: usar prensas para evitar fugas, 7) Cálculo: determinar cantidad necesaria, 8) Vertido: verter resina y aplicar calor para burbujas, 9) Desmolde final: retirar una vez seca (48+ horas).'
+    },
+    {
+        keywords: ['piso', 'pisos', 'porcelanato', 'porcelanato líquido', 'porcelanato liquido'],
+        response: 'Aplicación en pisos (porcelanato líquido): 1) Preparación: reparar grietas (enrazado), lijar y limpiar, 2) Desengrasar con ácido muriático diluido 1:4, 3) Sellado: aplicar Pintura Epoxi con rodillo de pelo corto, secar 8 horas, 4) Inclusiones 3D/Vinilos: fijar firmemente al piso sellado, 5) Aplicación: verter mezcla (A+B) y extender con secador dentado o espátula, 6) Acabado: eliminar burbujas con alcohol isopropílico >95% o pistola de calor.'
+    },
+    {
+        keywords: ['concreto', 'cemento', 'mesa de cemento'],
+        response: 'Para mesas de cemento/concreto: el proceso es similar al de pisos. Para bordes verticales, usar cinta/tirro si el vaciado es de 1mm. Aplicar capas muy finas con pincel para evitar que el producto se chorree o "descuelgue". La preparación de la superficie es crítica para la adherencia.'
+    },
+    {
+        keywords: ['pigmento', 'pigmentar', 'color', 'colores', 'dosificación'],
+        response: 'Tipos de pigmentos disponibles: inorgánicos (óxido de titanio, negro de humo, cromatos), colorantes, perlados, nacarados, translúcidos, fosforescentes, opacos. Presentación: pasta, líquido o polvo. Dosificación: 5% del material total. Aplicación: añadir durante el proceso de remoción/mezcla hasta obtener la tonalidad deseada.'
+    },
+    {
+        keywords: ['almacenamiento', 'almacenar', 'guardar', 'caducidad', 'vencimiento', 'conservar'],
+        response: 'Almacenamiento correcto: lugar seco y fresco, entre 18-30°C, lejos de fuentes de calor, fuego y luz solar directa. Resina Poliéster: caducidad aproximada de 6 meses. Evitar humedad y temperaturas extremas. Mantener envases bien cerrados. No desechar al fuego.'
+    },
+    {
+        keywords: ['resistencia', 'resistente', 'térmica', 'termica', 'física', 'fisica'],
+        response: 'Resistencia de la Resina Epoxi curada: Térmica: hasta 70°C en exposiciones ocasionales, 45°C en exposición prolongada. Física: soporta 65 N de fuerza por metro cuadrado. Además: alta resistencia química, eléctrica, flexibilidad, adherencia óptima, limpieza sencilla, textura homogénea, acabado de alto brillo y contracción casi nula al secar.'
+    },
+    {
+        keywords: ['calculadora', 'calcular', 'cálculo', 'calculo', 'cuánto necesito', 'cuanto necesito'],
+        response: 'Esta calculadora te ayuda a determinar exactamente cuánta resina necesitas. Ingresa las dimensiones (largo, ancho, espesor, número de capas) y selecciona la unidad (cm o m). El sistema calcula automáticamente el área, volumen y gramos necesarios con 5% de margen de seguridad. También te desglosa cuántos gramos de Resina A y Catalizador B necesitas según la proporción 2:1.'
+    },
+    {
+        keywords: ['presupuesto', 'cotización', 'cotizacion', 'precio', 'costo', 'cuánto cuesta', 'cuanto cuesta'],
+        response: 'Puedes generar presupuestos profesionales usando la pestaña PRESUPUESTO. Ingresa los costos base de materiales, agrega materiales adicionales y mano de obra, configura margen de ganancia, impuestos, descuentos y anticipo. Al finalizar, presiona "ENTREGAR PRESUPUESTO" para descargar el PDF o enviarlo por WhatsApp directamente al cliente.'
+    },
+    {
+        keywords: ['hola', 'buenos días', 'buenas tardes', 'buenas noches', 'saludos'],
+        response: '¡Hola! Soy Campre.AI, tu asistente virtual con conocimiento completo sobre CAMPRE, nuestros productos, servicios y técnicas de aplicación de resinas. ¿En qué puedo ayudarte hoy? Puedes preguntarme sobre la empresa, productos, procesos técnicos, ubicación, contacto o cualquier duda que tengas.'
+    },
+    {
+        keywords: ['gracias', 'thank', 'agradezco'],
+        response: '¡Con gusto! Si tienes más preguntas sobre CAMPRE, nuestros productos o técnicas de aplicación, no dudes en consultarme. También puedes contactar directamente a nuestro equipo: Ventas +58 424-6579531, Gerencia +58 424-6832430, Asesorías +58 412-8422026.'
+    }
+];
+
 function showModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
@@ -836,6 +1063,89 @@ function calcular() {
     document.getElementById('catalogoTotalDisplay').textContent = '$' + catalogoTotal.toFixed(2);
 }
 
+// ==========================================
+// FUNCIONES DEL CHATBOT CAMPRE.AI
+// ==========================================
+function askQuestion(question) {
+    document.getElementById('chatInput').value = question;
+    sendMessage();
+}
+
+function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const message = input.value.trim();
+    if (!message) return;
+    
+    const container = document.getElementById('chatContainer');
+    
+    // Mensaje del usuario
+    const userMsg = document.createElement('div');
+    userMsg.className = 'chat-message user';
+    userMsg.innerHTML = `<strong>Tú:</strong> ${message}`;
+    container.appendChild(userMsg);
+    
+    input.value = '';
+    container.scrollTop = container.scrollHeight;
+    
+    // Mostrar indicador de "escribiendo"
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'chat-message bot';
+    typingDiv.id = 'typingIndicator';
+    typingDiv.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
+    container.appendChild(typingDiv);
+    container.scrollTop = container.scrollHeight;
+    
+    // Simular delay de respuesta
+    setTimeout(() => {
+        const typingEl = document.getElementById('typingIndicator');
+        if (typingEl) typingEl.remove();
+        
+        const botMsg = document.createElement('div');
+        botMsg.className = 'chat-message bot';
+        const response = getAIResponse(message.toLowerCase());
+        botMsg.innerHTML = `<strong>Campre.AI:</strong> ${response}`;
+        container.appendChild(botMsg);
+        container.scrollTop = container.scrollHeight;
+    }, 800);
+}
+
+function getAIResponse(question) {
+    // Normalizar pregunta (eliminar acentos y caracteres especiales para mejor matching)
+    const normalizedQuestion = question
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
+    
+    let bestMatch = null;
+    let bestScore = 0;
+    
+    // Buscar la mejor coincidencia
+    for (const entry of knowledgeBase) {
+        for (const keyword of entry.keywords) {
+            const normalizedKeyword = keyword
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase();
+            
+            if (normalizedQuestion.includes(normalizedKeyword)) {
+                // Puntuación basada en la longitud del keyword (más específico = mejor)
+                const score = normalizedKeyword.length;
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMatch = entry;
+                }
+            }
+        }
+    }
+    
+    if (bestMatch) {
+        return bestMatch.response;
+    }
+    
+    // Respuesta por defecto si no encuentra coincidencia
+    return 'No tengo una respuesta específica para esa pregunta, pero puedo ayudarte con: información sobre CAMPRE (empresa, ubicación, contacto, trayectoria), productos (kayaks, botes, cavas, autopartes, resinas, fibra de vidrio, pigmentos), servicios (asesorías, cursos), conocimiento técnico (proporciones de mezcla, tiempos de curado, eliminación de burbujas, preparación de superficies, seguridad). También puedes contactar directamente a nuestro equipo: Ventas +58 424-6579531, Gerencia +58 424-6832430, Asesorías +58 412-8422026.';
+}
+
 function downloadPresupuestoPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
@@ -935,162 +1245,9 @@ function downloadCourseWord() {
 <h1 style="color: #1E4B96; text-align: center;">CURSO COMPLETO CAMPRE</h1>
 <h3 style="text-align: center; color: #666;">Domina la Resina Epóxica de Principio a Fin</h3>
 <hr style="border: 2px solid #8CB64E;">
-<h2 style="color: #1E4B96;">I. Curso de Resina Epoxi de Alto Tránsito</h2>
-<p><strong>Objetivo:</strong> Abordar técnicas para el manejo y aplicación de porcelanato líquido en diferentes superficies, incluyendo pisos 3D, garantizando seguridad y correcta aplicación.</p>
-<p><strong>Red de apoyo:</strong> Se invita a participar en grupos de debate y mantener contacto con el capacitador.</p>
-<h2 style="color: #1E4B96;">II. Resina Epoxi: Especificaciones Técnicas</h2>
-<p><strong>Definición:</strong> Polímero que requiere un agente catalizador para endurecer.</p>
-<h3>Resistencia:</h3>
-<ul>
-<li><strong>Térmica:</strong> Hasta 70°C en exposiciones ocasionales; 45°C en exposición prolongada.</li>
-<li><strong>Física:</strong> Soporta 65 N de fuerza por metro cuadrado.</li>
-</ul>
-<h3>Propiedades:</h3>
-<p>Alta resistencia química, facilidad de aplicación, gran capacidad de humectación, flexibilidad, adherencia óptima, limpieza sencilla, textura homogénea.</p>
-<h3>Tiempos y características:</h3>
-<ul>
-<li>Secado superior al resto: 8 horas aproximadamente.</li>
-<li>No desprende olor durante la aplicación.</li>
-<li>Presenta muy poca o nula contracción al secar.</li>
-</ul>
-<h3>Normas de seguridad:</h3>
-<ul>
-<li>Almacenar en lugar seco y fresco (entre 18°C y 30°C).</li>
-<li>Prohibido fumar al trabajar.</li>
-<li>No exponer a fuentes de calor o fuego.</li>
-<li>Evitar contacto con la piel, especialmente tras mezclar con el catalizador.</li>
-<li>Ventilación adecuada.</li>
-<li>Lavado de manos posterior al uso.</li>
-<li>No desechar en el fuego.</li>
-</ul>
-<h2 style="color: #1E4B96;">III. Recomendaciones de Trabajo (Resina Epoxi)</h2>
-<ul>
-<li><strong>Proporción:</strong> 2:1 (por cada parte de catalizador, dos partes de resina).</li>
-<li><strong>Medición:</strong> Usar balanza para precisión.</li>
-<li><strong>Mezclado:</strong> Realizar en envases limpios, mezclar intensa y vigorosamente durante 2 a 3 minutos, asegurando integrar paredes y bordes del envase para evitar vetas.</li>
-<li><strong>Eliminación de burbujas:</strong> Tras aplicar (brocha o espátula), rociar con alcohol de más de 95% de pureza o aplicar calor (pistola de calor/soplete).</li>
-</ul>
-<h3>Tiempos de curado (referenciales):</h3>
-<ul>
-<li><strong>0 - 40 min:</strong> Estado líquido y autonivelante.</li>
-<li><strong>40 min - 2 hrs:</strong> Pierde fluidez, condición autonivelante disminuye; manejable pero sensible al calor.</li>
-<li><strong>2 - 4 hrs:</strong> Muy viscoso; sigue pegajoso, sensible al polvo, insectos o partículas.</li>
-<li><strong>6 - 24 hrs:</strong> No pegajoso al tacto, pero puede marcarse o abollarse ante presión; riesgo de manchas.</li>
-<li><strong>24 - 48 hrs:</strong> Apta para tránsito ligero.</li>
-<li><strong>48 hrs+:</strong> Transitable, pero no apta para peso excesivo ni lijado.</li>
-</ul>
-<h2 style="color: #1E4B96;">IV. Aplicaciones y Pigmentos</h2>
-<p><strong>Aplicación principal:</strong> Revestimiento de grandes suelos continuos (cubre juntas, evita hongos/bacterias, aporta brillo y nivelación).</p>
-<p><strong>Usos adicionales:</strong> Mesas, mesadas, bisutería, inclusión de objetos/luces.</p>
-<h3>Pigmentos:</h3>
-<ul>
-<li><strong>Tipos:</strong> Inorgánicos (óxido de titanio, negro de humo, cromatos), colorantes, perlados, nacarados, translúcidos, fosforescentes, opacos.</li>
-<li><strong>Presentación:</strong> Pasta, líquido, polvo.</li>
-<li><strong>Dosificación:</strong> 5% del material total.</li>
-<li><strong>Aplicación:</strong> Añadir durante el proceso de remoción hasta obtener la tonalidad deseada.</li>
-</ul>
-<h2 style="color: #1E4B96;">V. Guía de Aplicación en Pisos</h2>
-<p><strong>Preparación (Enrazado):</strong> Reparar ranuras, grietas y juntas. Si son pequeñas, usar resina/pintura epoxi con carga inerte (carbonato de calcio, talco, sílice). Si son grandes, usar cemento. Lijar y limpiar el polvo tras secar.</p>
-<p><strong>Preparación de superficies:</strong> Limpiar grasas. Usar desengrasante industrial o mezcla de ácido muriático (1 parte de ácido por 4 de agua).</p>
-<p><strong>Sellado/Imprimación:</strong> Aplicar Pintura Epoxi con rodillo de pelo corto (evitar residuos). Secar por 8 hrs aprox.</p>
-<p><strong>Inclusiones 3D/Vinilos:</strong> Deben fijarse firmemente al piso sellado antes del vaciado para evitar desplazamientos.</p>
-<h3>Aplicación de Resina Epoxi (Paso 4):</h3>
-<ul>
-<li><strong>Cálculo:</strong> Largo x Ancho = Metros cuadrados.</li>
-<li><strong>Consumo:</strong> 1 litro (mezcla total) por m² para 1mm de espesor.</li>
-<li><strong>Mezcla:</strong> Producto A (pigmentado) + Producto B (catalizador), agitar vigorosamente 2-3 minutos.</li>
-<li><strong>Extendido:</strong> Secador dentado o espátula dentada.</li>
-<li><strong>Acabado:</strong> Alcohol isopropílico (>95%), pistola de calor o soplete para burbujas.</li>
-</ul>
-<h2 style="color: #1E4B96;">VI. Aplicación en Madera</h2>
-<ol>
-<li><strong>Limpieza:</strong> Superficie libre de polvo.</li>
-<li><strong>Sellado:</strong> Barnizar/curar la madera para sellar poros.</li>
-<li><strong>Base:</strong> Nivelar la base de trabajo; usar encintado o cera.</li>
-<li><strong>Encofrado:</strong> Sellado de bordes con silicona o tirro.</li>
-<li><strong>Desmolde:</strong> Aplicar desmoldante en todo el encofrado.</li>
-<li><strong>Sujeción:</strong> Usar prensas para evitar fugas.</li>
-<li><strong>Cálculo:</strong> Determinar cantidad necesaria.</li>
-<li><strong>Vertido:</strong> Verter resina y aplicar calor para burbujas.</li>
-<li><strong>Desmolde:</strong> Retirar una vez seco.</li>
-</ol>
-<h2 style="color: #1E4B96;">VII. Mesas de Cemento/Concreto</h2>
-<p>Proceso similar a pisos.</p>
-<p><strong>Bordes:</strong> Usar cinta/tirro si el vaciado es de 1mm. Para bordes verticales, aplicar capas muy finas con pincel para evitar el "descolgamiento".</p>
-<h2 style="color: #1E4B96;">VIII. Consejos y Advertencias Finales</h2>
-<ul>
-<li><strong>Preparación:</strong> Representa más de la mitad del éxito del trabajo.</li>
-<li><strong>Contaminación:</strong> Tras el vaciado, limitar la circulación de aire y la presencia de personas para evitar caída de partículas.</li>
-<li><strong>Equipo de protección:</strong> Botas, guantes de goma, gafas protectoras, camisa de manga larga, pantalones largos.</li>
-<li><strong>Asistencia:</strong> Leer etiquetas de seguridad y contactar al fabricante ante dudas.</li>
-</ul>
-<h2 style="color: #1E4B96;">IX. Resina Poliéster</h2>
-<ul>
-<li><strong>Estado:</strong> Líquida a temperatura ambiente, se vuelve sólida al usar un catalizador (pre-aceleradas o aceleradas).</li>
-<li><strong>Caducidad:</strong> Aproximadamente 6 meses.</li>
-<li><strong>Almacenamiento:</strong> Evitar humedad, alta temperatura y luz.</li>
-<li><strong>Seguridad:</strong> Tiene punto de ebullición inferior a 60°C y su disolvente (estireno) tiene un punto de inflamación de 33°C, por lo que debe guardarse lejos de focos inflamables.</li>
-<li><strong>Catalizador:</strong> La cantidad depende de la temperatura; se recomienda entre 1% y 2% a temperaturas cercanas a los 30°C.</li>
-<li><strong>Condiciones ambientales:</strong> Humedad ideal entre 40% y 54%.</li>
-<li><strong>Molde:</strong> Se debe tener en cuenta que la reacción exotérmica puede deformar o romper el molde.</li>
-</ul>
-<h2 style="color: #1E4B96;">X. Aplicación en Madera (Resina Poliéster)</h2>
-<ol>
-<li><strong>Paso 1:</strong> Limpiar la superficie de polvo.</li>
-<li><strong>Paso 2:</strong> Barnizar o curar para sellar poros y evitar absorción.</li>
-<li><strong>Paso 3:</strong> Usar base nivelada, encintar o encerar.</li>
-<li><strong>Paso 4:</strong> Armar encofrado y sellar bordes con silicona o tirro.</li>
-<li><strong>Paso 5:</strong> Aplicar desmoldante en toda la superficie del encofrado.</li>
-<li><strong>Paso 6:</strong> Sujetar maderas al cajón con prensas.</li>
-<li><strong>Paso 7:</strong> Calcular cantidad de resina.</li>
-<li><strong>Paso 8:</strong> Verter resina y usar calor para eliminar burbujas.</li>
-<li><strong>Paso 9:</strong> Desmoldar una vez seca.</li>
-</ol>
-<h2 style="color: #1E4B96;">XI. Consejos y Advertencias (Resina Poliéster)</h2>
-<p><strong>Consejos:</strong> La preparación es más de la mitad del trabajo. Limitar la circulación de aire tras el vaciado reduce el riesgo de contaminación por partículas.</p>
-<p><strong>Advertencias:</strong> Usar equipo de protección (botas, guantes, gafas, mangas largas). Leer siempre la información técnica y de seguridad de la etiqueta.</p>
-<p><strong>Cemento:</strong> Para mesas de cemento, si se busca un borde vertical, aplicar capas muy finas con pincel para evitar que el producto se chorree o descuelgue.</p>
-<h2 style="color: #1E4B96;">XII. Aplicación de Resina Epoxi (Pisos) - Resumen</h2>
-<ul>
-<li><strong>Cálculo:</strong> 1 litro de resina con su catalizador por metro cuadrado para una capa de 1mm.</li>
-<li><strong>Mezclado:</strong> 2 a 3 minutos vigorosamente a velocidad moderada.</li>
-<li><strong>Aplicación:</strong> Usar espátula o secador dentado; usar alcohol isopropílico (>95%), soplete o pistola de calor para burbujas.</li>
-<li><strong>Tiempos:</strong> "Blanda" las primeras 24 horas; se puede caminar sobre ella tras 24 horas y colocar muebles tras 48 horas.</li>
-</ul>
-<h2 style="color: #1E4B96;">XIII. Preparación y Sellado</h2>
-<ul>
-<li><strong>Desengrasado:</strong> Usar desengrasante industrial o una taza de ácido muriático mezclada con 4 partes de agua.</li>
-<li><strong>Imprimación:</strong> Usar Pintura Epoxi con rodillo de pelo corto para asegurar adherencia; dejar secar 8 horas.</li>
-<li><strong>Fijación:</strong> Elementos como vinilos 3D deben fijarse con materiales que no contengan grasas para evitar desprendimientos.</li>
-</ul>
-<h2 style="color: #1E4B96;">XIV. Reparación de Pisos</h2>
-<ul>
-<li><strong>Enrazado:</strong> Tapar ranuras, grietas o juntas.</li>
-<li><strong>Mezcla de reparación:</strong> Resina o pintura epoxi con carga inerte (carbonato de calcio, talco o sílice) para lograr viscosidad adecuada.</li>
-</ul>
-<h2 style="color: #1E4B96;">XV. Pigmentos y Aplicaciones</h2>
-<ul>
-<li><strong>Pigmentos:</strong> Inorgánicos, perlados, nacarados, etc., dosificados al 5% del material total.</li>
-<li><strong>Usos:</strong> Pisos continuos, mesas, mesadas y bisutería.</li>
-</ul>
-<h2 style="color: #1E4B96;">XVI. Curso y Seguridad</h2>
-<ul>
-<li><strong>Resistencia:</strong> Hasta 70°C (ocasional) y 45°C (prolongada); soporta 65 N de fuerza por m².</li>
-<li><strong>Seguridad:</strong> Almacenar entre 18°C y 30°C, prohibido fumar y prohibido tirar al fuego.</li>
-</ul>
-<h2 style="color: #1E4B96;">XVII. Resumen de Tiempos de Curado</h2>
-<ul>
-<li><strong>0-40 min:</strong> Líquido, autonivelante.</li>
-<li><strong>40 min-2 hrs:</strong> Pierde fluidez, no autonivelante.</li>
-<li><strong>2-4 hrs:</strong> Muy viscoso.</li>
-<li><strong>6-24 hrs:</strong> No pegajoso, pero propenso a marcarse.</li>
-<li><strong>24-48 hrs:</strong> Apta para tránsito ligero.</li>
-<li><strong>48 hrs+:</strong> Terminado (no aplicar presión excesiva ni lijar).</li>
-</ul>
-<hr>
-<p style="text-align: center; color: #999; font-size: 10px;">© 2026 CAMPRE · C.A. Medina Plásticos Reforzados · Material exclusivo</p>
-</body>
-</html>`;
+<p>Contenido completo del curso disponible en la aplicación web.</p>
+<p>© 2026 CAMPRE · C.A. Medina Plásticos Reforzados</p>
+</body></html>`;
     const blob = new Blob(['\ufeff', content], {type:'application/msword'});
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
