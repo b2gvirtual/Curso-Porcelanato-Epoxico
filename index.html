@@ -7,37 +7,306 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #54667A; background: #f1f5f9; }
+body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    color: #54667A; 
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    min-height: 100vh;
+}
 .bg-campre-blue { background-color: #1E4B96; }
 .text-campre-blue { color: #1E4B96; }
 .bg-campre-green { background-color: #8CB64E; }
 .border-campre-green { border-color: #8CB64E; }
 .modal { display: none; }
 .modal.active { display: flex; }
-.tab-btn { transition: all 0.2s ease; }
-.tab-btn.active { background: #1E4B96; color: white; }
+.tab-btn { transition: all 0.3s ease; position: relative; overflow: hidden; }
+.tab-btn.active { 
+    background: linear-gradient(135deg, #1E4B96 0%, #153873 100%); 
+    color: white;
+    box-shadow: 0 4px 12px rgba(30, 75, 150, 0.4);
+}
+.tab-btn.catalogo-active {
+    background: linear-gradient(135deg, #8CB64E 0%, #6a8c3d 100%) !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(140, 182, 78, 0.4) !important;
+}
 .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
 .collapsible-content.open { max-height: 5000px; }
-.param-card { transition: all 0.2s ease; }
-.param-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-.course-section { margin-bottom: 2rem; padding: 1.5rem; border-left: 4px solid #8CB64E; background: #f8fafc; }
-.course-section h3 { color: #1E4B96; font-weight: 700; font-size: 1.1rem; margin-bottom: 1rem; border-bottom: 2px solid #8CB64E; padding-bottom: 0.5rem; }
-.course-section h4 { color: #1E4B96; font-weight: 600; font-size: 1rem; margin-top: 1rem; margin-bottom: 0.5rem; }
-.course-section p, .course-section li { font-size: 0.9rem; line-height: 1.6; color: #334155; }
-.course-section ul, .course-section ol { margin-left: 1.5rem; margin-top: 0.5rem; }
-.course-section li { margin-bottom: 0.4rem; }
+.param-card { 
+    transition: all 0.3s ease; 
+    position: relative;
+    overflow: hidden;
+}
+.param-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: left 0.5s;
+}
+.param-card:hover::before {
+    left: 100%;
+}
+.param-card:hover { 
+    transform: translateY(-4px); 
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
 
-.top-bar { position: sticky; top: 0; z-index: 40; background: white; border-bottom: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-.top-bar-inner { max-width: 72rem; margin: 0 auto; padding: 0.75rem 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+/* EFECTO RESINA EPÓXICA BRILLANTE */
+.epoxy-container {
+    position: relative;
+    background: white;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 
+        0 20px 60px rgba(0,0,0,0.15),
+        inset 0 1px 0 rgba(255,255,255,0.8),
+        inset 0 -1px 0 rgba(0,0,0,0.05);
+}
+.epoxy-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, 
+        rgba(255,255,255,0.4) 0%, 
+        rgba(255,255,255,0.1) 50%,
+        transparent 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+.epoxy-container::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, 
+        rgba(255,255,255,0.1) 0%, 
+        transparent 70%);
+    animation: epoxy-shine 8s infinite linear;
+    pointer-events: none;
+    z-index: 1;
+}
+@keyframes epoxy-shine {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.epoxy-content {
+    position: relative;
+    z-index: 2;
+}
+
+/* BOTONES CON EFECTOS ESPECIALES */
+.btn-epoxy {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 
+        0 6px 0 rgba(0,0,0,0.2),
+        0 8px 20px rgba(0,0,0,0.15);
+}
+.btn-epoxy::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255,255,255,0.4), 
+        transparent);
+    transition: left 0.6s;
+}
+.btn-epoxy:hover::before {
+    left: 100%;
+}
+.btn-epoxy:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 8px 0 rgba(0,0,0,0.2),
+        0 12px 28px rgba(0,0,0,0.2);
+}
+.btn-epoxy:active {
+    transform: translateY(4px);
+    box-shadow: 
+        0 2px 0 rgba(0,0,0,0.2),
+        0 4px 10px rgba(0,0,0,0.15);
+}
+
+.btn-epoxy-blue {
+    background: linear-gradient(135deg, #1E4B96 0%, #153873 100%);
+    color: white;
+}
+.btn-epoxy-green {
+    background: linear-gradient(135deg, #8CB64E 0%, #6a8c3d 100%);
+    color: white;
+}
+.btn-epoxy-purple {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+/* HEADER CON EFECTO RESINA */
+.epoxy-header {
+    position: relative;
+    background: linear-gradient(135deg, #1E4B96 0%, #153873 50%, #0d2852 100%);
+    overflow: hidden;
+}
+.epoxy-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 30%, rgba(140, 182, 78, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(140, 182, 78, 0.2) 0%, transparent 50%);
+    animation: epoxy-pulse 6s infinite ease-in-out;
+}
+@keyframes epoxy-pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+.epoxy-header::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, 
+        rgba(255,255,255,0.2) 0%, 
+        rgba(255,255,255,0.05) 100%);
+    pointer-events: none;
+}
+
+/* TARJETAS CON PROFUNDIDAD */
+.depth-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 
+        0 4px 6px rgba(0,0,0,0.05),
+        0 10px 20px rgba(0,0,0,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.8);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.depth-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255,255,255,0.8), 
+        transparent);
+}
+.depth-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+        0 8px 12px rgba(0,0,0,0.08),
+        0 16px 32px rgba(0,0,0,0.12),
+        inset 0 1px 0 rgba(255,255,255,0.8);
+}
+
+/* INPUTS CON EFECTO BRILLO */
+.input-epoxy {
+    transition: all 0.3s ease;
+    border: 2px solid #e2e8f0;
+    background: white;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+}
+.input-epoxy:focus {
+    border-color: #8CB64E;
+    box-shadow: 
+        0 0 0 4px rgba(140, 182, 78, 0.15),
+        inset 0 2px 4px rgba(0,0,0,0.05);
+    transform: translateY(-1px);
+}
+
+/* BARRA SUPERIOR */
+.top-bar { 
+    position: sticky; 
+    top: 0; 
+    z-index: 40; 
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid #e2e8f0; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.top-bar-inner { 
+    max-width: 72rem; 
+    margin: 0 auto; 
+    padding: 0.75rem 1.5rem; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    gap: 1rem; 
+    flex-wrap: wrap; 
+}
 .brand-mini { display: flex; align-items: center; gap: 0.75rem; }
-.brand-logo { width: 36px; height: 36px; background: #1E4B96; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 14px; letter-spacing: -0.5px; }
+.brand-logo { 
+    width: 36px; 
+    height: 36px; 
+    background: linear-gradient(135deg, #1E4B96 0%, #153873 100%);
+    border-radius: 8px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    color: white; 
+    font-weight: 800; 
+    font-size: 14px; 
+    letter-spacing: -0.5px;
+    box-shadow: 0 4px 8px rgba(30, 75, 150, 0.3);
+}
 .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
 .brand-text strong { color: #1E4B96; font-size: 14px; font-weight: 700; }
 .brand-text span { color: #94a3b8; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
 .nav-actions { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
-.nav-btn { padding: 0.5rem 1rem; border-radius: 8px; font-size: 12px; font-weight: 600; transition: all 0.2s ease; border: 1px solid transparent; cursor: pointer; white-space: nowrap; }
+.nav-btn { 
+    padding: 0.5rem 1rem; 
+    border-radius: 8px; 
+    font-size: 12px; 
+    font-weight: 600; 
+    transition: all 0.3s ease; 
+    border: 1px solid transparent; 
+    cursor: pointer; 
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+}
+.nav-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s;
+}
+.nav-btn:hover::before {
+    left: 100%;
+}
 .nav-btn-ghost { background: transparent; color: #64748b; border-color: #e2e8f0; }
-.nav-btn-ghost:hover { background: #f1f5f9; color: #1E4B96; border-color: #1E4B96; }
+.nav-btn-ghost:hover { 
+    background: #f1f5f9; 
+    color: #1E4B96; 
+    border-color: #1E4B96;
+    transform: translateY(-1px);
+}
 @media (max-width: 640px) {
     .top-bar-inner { padding: 0.5rem 1rem; }
     .nav-btn { padding: 0.4rem 0.75rem; font-size: 11px; }
@@ -45,192 +314,201 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #546
     .brand-text span { font-size: 9px; }
     .brand-logo { width: 32px; height: 32px; font-size: 12px; }
 }
-.whatsapp-btn { background: #25D366; color: white; }
-.whatsapp-btn:hover { background: #128C7E; }
-
-/* ASISTENTE VIRTUAL - Botón Flotante */
-.asistente-floating-btn {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    width: 75px;
-    height: 75px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.whatsapp-btn { 
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); 
     color: white;
-    font-size: 32px;
-    cursor: pointer;
-    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5), 0 0 0 0 rgba(102, 126, 234, 0.7);
-    z-index: 100;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    animation: pulse-asistente 2.5s infinite;
-    border: 3px solid white;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
 }
-.asistente-floating-btn:hover {
-    transform: scale(1.1) rotate(10deg);
-    box-shadow: 0 12px 32px rgba(102, 126, 234, 0.7);
-}
-.asistente-floating-btn::after {
-    content: 'Asistente Virtual';
-    position: absolute;
-    right: 85px;
-    background: #1E4B96;
-    color: white;
-    padding: 8px 14px;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: 600;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s;
-}
-.asistente-floating-btn:hover::after { opacity: 1; }
-@keyframes pulse-asistente {
-    0% { box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5), 0 0 0 0 rgba(102, 126, 234, 0.7); }
-    70% { box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5), 0 0 0 20px rgba(102, 126, 234, 0); }
-    100% { box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5), 0 0 0 0 rgba(102, 126, 234, 0); }
-}
-@media (max-width: 640px) {
-    .asistente-floating-btn { width: 65px; height: 65px; font-size: 28px; bottom: 16px; right: 16px; }
+.whatsapp-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4);
 }
 
-/* Chat del Asistente */
-.chat-modal-content {
-    max-width: 500px;
-    width: 90%;
-    max-height: 85vh;
-    background: white;
-    border-radius: 20px;
+.course-section { 
+    margin-bottom: 2rem; 
+    padding: 1.5rem; 
+    border-left: 4px solid #8CB64E; 
+    background: #f8fafc; 
+    border-radius: 0 12px 12px 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.course-section h3 { 
+    color: #1E4B96; 
+    font-weight: 700; 
+    font-size: 1.1rem; 
+    margin-bottom: 1rem; 
+    border-bottom: 2px solid #8CB64E; 
+    padding-bottom: 0.5rem; 
+}
+.course-section h4 { 
+    color: #1E4B96; 
+    font-weight: 600; 
+    font-size: 1rem; 
+    margin-top: 1rem; 
+    margin-bottom: 0.5rem; 
+}
+.course-section p, .course-section li { 
+    font-size: 0.9rem; 
+    line-height: 1.6; 
+    color: #334155; 
+}
+.course-section ul, .course-section ol { 
+    margin-left: 1.5rem; 
+    margin-top: 0.5rem; 
+}
+.course-section li { 
+    margin-bottom: 0.4rem; 
+}
+
+/* Estilos para sección de instrucciones */
+.instrucciones-container { max-width: 900px; margin: 0 auto; }
+.instruccion-seccion { 
+    background: white; 
+    border-radius: 16px; 
+    padding: 24px; 
+    margin-bottom: 24px; 
+    border: 1px solid #e2e8f0; 
+    box-shadow: 
+        0 4px 6px rgba(0,0,0,0.05),
+        0 10px 20px rgba(0,0,0,0.08);
+    position: relative;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
 }
-.chat-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+.instruccion-seccion::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
 }
-.chat-avatar {
-    width: 48px;
-    height: 48px;
-    background: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
+.instruccion-seccion h2 { 
+    color: #1E4B96; 
+    font-size: 1.4rem; 
+    font-weight: 700; 
+    margin-bottom: 16px; 
+    padding-bottom: 12px; 
+    border-bottom: 3px solid #8CB64E; 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
 }
-.chat-body {
-    padding: 20px;
-    max-height: 400px;
-    overflow-y: auto;
-    background: #f8fafc;
+.instruccion-seccion h3 { 
+    color: #1E4B96; 
+    font-size: 1.1rem; 
+    font-weight: 700; 
+    margin: 20px 0 12px 0; 
 }
-.chat-message {
-    margin-bottom: 16px;
-    display: flex;
-    gap: 12px;
+.instruccion-seccion p { 
+    font-size: 0.95rem; 
+    line-height: 1.7; 
+    color: #334155; 
+    margin-bottom: 12px; 
 }
-.chat-message.user {
-    flex-direction: row-reverse;
+.instruccion-seccion ul, .instruccion-seccion ol { 
+    margin-left: 20px; 
+    margin-bottom: 16px; 
 }
-.chat-bubble {
-    max-width: 75%;
-    padding: 12px 16px;
-    border-radius: 16px;
-    font-size: 14px;
-    line-height: 1.5;
+.instruccion-seccion li { 
+    font-size: 0.95rem; 
+    line-height: 1.7; 
+    color: #334155; 
+    margin-bottom: 8px; 
 }
-.chat-message.bot .chat-bubble {
-    background: white;
-    border: 1px solid #e2e8f0;
+.paso-numero { 
+    display: inline-flex; 
+    align-items: center; 
+    justify-content: center; 
+    width: 28px; 
+    height: 28px; 
+    background: linear-gradient(135deg, #1E4B96 0%, #153873 100%);
+    color: white; 
+    border-radius: 50%; 
+    font-weight: 700; 
+    font-size: 14px; 
+    margin-right: 8px; 
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(30, 75, 150, 0.3);
+}
+.paso-item { 
+    display: flex; 
+    align-items: flex-start; 
+    margin-bottom: 16px; 
+}
+.paso-contenido { flex: 1; }
+.paso-titulo { 
+    font-weight: 700; 
+    color: #1E4B96; 
+    font-size: 1rem; 
+    margin-bottom: 4px; 
+}
+.paso-descripcion { 
+    color: #54667A; 
+    font-size: 0.9rem; 
+    line-height: 1.6; 
+}
+.campo-ejemplo { 
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border: 2px dashed #8CB64E; 
+    border-radius: 8px; 
+    padding: 12px 16px; 
+    margin: 12px 0; 
+    font-family: monospace; 
+    font-size: 0.9rem; 
     color: #334155;
+    box-shadow: inset 0 2px 4px rgba(140, 182, 78, 0.1);
 }
-.chat-message.user .chat-bubble {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+.campo-ejemplo strong { color: #1E4B96; }
+.nota-importante { 
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-left: 4px solid #f59e0b; 
+    padding: 12px 16px; 
+    border-radius: 8px; 
+    margin: 16px 0;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
 }
-.chat-footer {
-    padding: 16px;
-    background: white;
-    border-top: 1px solid #e2e8f0;
+.nota-importante strong { color: #92400e; }
+.nota-info { 
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    border-left: 4px solid #3b82f6; 
+    padding: 12px 16px; 
+    border-radius: 8px; 
+    margin: 16px 0;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
 }
-.chat-input-container {
-    display: flex;
-    gap: 8px;
+.nota-info strong { color: #1e40af; }
+.nota-exito { 
+    background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+    border-left: 4px solid #22c55e; 
+    padding: 12px 16px; 
+    border-radius: 8px; 
+    margin: 16px 0;
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.2);
 }
-.chat-input {
-    flex: 1;
-    padding: 12px 16px;
-    border: 2px solid #e2e8f0;
-    border-radius: 24px;
-    outline: none;
-    font-size: 14px;
-    transition: border-color 0.2s;
+.nota-exito strong { color: #166534; }
+.tabla-ejemplo { 
+    width: 100%; 
+    border-collapse: collapse; 
+    margin: 16px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
-.chat-input:focus {
-    border-color: #667eea;
+.tabla-ejemplo th { 
+    background: linear-gradient(135deg, #1E4B96 0%, #153873 100%);
+    color: white; 
+    padding: 10px 12px; 
+    text-align: left; 
+    font-size: 0.9rem; 
 }
-.chat-send-btn {
-    width: 44px;
-    height: 44px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border: none;
-    border-radius: 50%;
-    color: white;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s;
+.tabla-ejemplo td { 
+    padding: 10px 12px; 
+    border-bottom: 1px solid #e2e8f0; 
+    font-size: 0.9rem; 
 }
-.chat-send-btn:hover {
-    transform: scale(1.1);
-}
-.suggestion-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 12px;
-}
-.suggestion-chip {
-    background: #e0e7ff;
-    color: #667eea;
-    padding: 6px 12px;
-    border-radius: 16px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: 1px solid #c7d2fe;
-}
-.suggestion-chip:hover {
-    background: #667eea;
-    color: white;
-}
-.typing-indicator {
-    display: flex;
-    gap: 4px;
-    padding: 12px 16px;
-}
-.typing-indicator span {
-    width: 8px;
-    height: 8px;
-    background: #94a3b8;
-    border-radius: 50%;
-    animation: typing 1.4s infinite;
-}
-.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-@keyframes typing {
-    0%, 60%, 100% { transform: translateY(0); }
-    30% { transform: translateY(-8px); }
-}
+.tabla-ejemplo tr:nth-child(even) { background: #f8fafc; }
+.icono-grande { font-size: 2rem; margin-right: 8px; }
 </style>
 </head>
 <body class="p-0 md:p-4">
@@ -246,25 +524,29 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #546
 </div>
 </div>
 <div class="nav-actions">
-<button onclick="showModal('contactModal')" class="nav-btn whatsapp-btn">Contacto</button>
-<button onclick="showModal('courseModal')" class="nav-btn nav-btn-ghost">Curso Completo</button>
+<button onclick="showModal('instruccionesModal')" class="nav-btn nav-btn-ghost">📋 Instrucciones</button>
+<button onclick="showModal('contactModal')" class="nav-btn whatsapp-btn">💬 Contacto</button>
+<button onclick="showModal('courseModal')" class="nav-btn nav-btn-ghost">🎓 Curso Completo</button>
 </div>
 </div>
 </div>
 
-<div class="max-w-5xl mx-auto shadow-2xl rounded-3xl overflow-hidden border border-slate-200 bg-white mt-4 md:mt-6">
-<header class="bg-campre-blue p-8 text-center text-white">
+<div class="max-w-5xl mx-auto mt-4 md:mt-6">
+<div class="epoxy-container">
+<header class="epoxy-header p-8 text-center text-white">
+<div class="relative z-10">
 <h1 class="text-3xl font-bold tracking-tight">Calculadora de Materiales y Servicios</h1>
-<p class="text-white/80 font-medium mt-2">C.A. Medina Plásticos Reforzados | CAMPRE</p>
+<p class="text-white/90 font-medium mt-2">C.A. Medina Plásticos Reforzados | CAMPRE</p>
+</div>
 </header>
 
-<div class="flex border-b border-slate-200 bg-slate-50">
-<button onclick="switchTab('tabTecnico')" id="btnTabTecnico" class="tab-btn active flex-1 py-4 font-bold text-sm">CÁLCULO TÉCNICO</button>
-<button onclick="switchTab('tabPresupuesto')" id="btnTabPresupuesto" class="tab-btn flex-1 py-4 font-bold text-sm text-slate-500">PRESUPUESTO</button>
-<button onclick="switchTab('tabCatalogo')" id="btnTabCatalogo" class="tab-btn flex-1 py-4 font-bold text-sm text-slate-500">CATÁLOGO CAMPRE</button>
+<div class="flex border-b border-slate-200 bg-slate-50 relative z-10">
+<button onclick="switchTab('tabTecnico')" id="btnTabTecnico" class="tab-btn active flex-1 py-4 font-bold text-sm">🔧 CÁLCULO TÉCNICO</button>
+<button onclick="switchTab('tabPresupuesto')" id="btnTabPresupuesto" class="tab-btn flex-1 py-4 font-bold text-sm text-slate-500">💰 PRESUPUESTO</button>
+<button onclick="switchTab('tabCatalogo')" id="btnTabCatalogo" class="tab-btn flex-1 py-4 font-bold text-sm text-slate-500">🛒 CATÁLOGO CAMPRE</button>
 </div>
 
-<div class="p-6 md:p-8">
+<div class="p-6 md:p-8 epoxy-content">
 
 <!-- TAB 1: CÁLCULO TÉCNICO -->
 <div id="tabTecnico" class="tab-content">
@@ -280,21 +562,21 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #546
 <div class="grid grid-cols-2 gap-3">
 <div>
 <label id="labelLargo" class="block text-sm font-semibold mb-1">Largo (cm)</label>
-<input type="number" id="largo" value="61" class="w-full p-3 border rounded-xl border-slate-300 focus:ring-2 focus:ring-campre-green outline-none" oninput="calcular()">
+<input type="number" id="largo" value="61" class="input-epoxy w-full p-3 border rounded-xl outline-none" oninput="calcular()">
 </div>
 <div>
 <label id="labelAncho" class="block text-sm font-semibold mb-1">Ancho (cm)</label>
-<input type="number" id="ancho" value="80" class="w-full p-3 border rounded-xl border-slate-300 focus:ring-2 focus:ring-campre-green outline-none" oninput="calcular()">
+<input type="number" id="ancho" value="80" class="input-epoxy w-full p-3 border rounded-xl outline-none" oninput="calcular()">
 </div>
 </div>
 <div class="grid grid-cols-2 gap-3">
 <div>
 <label class="block text-sm font-semibold mb-1">Espesor (mm)</label>
-<input type="number" id="espesor" value="1" step="0.5" class="w-full p-3 border rounded-xl border-slate-300 focus:ring-2 focus:ring-campre-green outline-none" oninput="calcular()">
+<input type="number" id="espesor" value="1" step="0.5" class="input-epoxy w-full p-3 border rounded-xl outline-none" oninput="calcular()">
 </div>
 <div>
 <label class="block text-sm font-semibold mb-1">Nº de Capas</label>
-<input type="number" id="capas" value="1" min="1" max="5" class="w-full p-3 border rounded-xl border-slate-300 focus:ring-2 focus:ring-campre-green outline-none" oninput="calcular()">
+<input type="number" id="capas" value="1" min="1" max="5" class="input-epoxy w-full p-3 border rounded-xl outline-none" oninput="calcular()">
 </div>
 </div>
 </div>
@@ -341,15 +623,15 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #546
 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
 <div class="param-card bg-white p-4 rounded-xl border border-slate-200">
 <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Costo Resina A ($/kg)</label>
-<input type="number" id="costoResina" value="20" class="w-full p-2 border rounded-lg" oninput="calcular()">
+<input type="number" id="costoResina" value="20" class="input-epoxy w-full p-2 border rounded-lg" oninput="calcular()">
 </div>
 <div class="param-card bg-white p-4 rounded-xl border border-slate-200">
 <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Costo Catalizador B ($/kg)</label>
-<input type="number" id="costoCatalizador" value="40" class="w-full p-2 border rounded-lg" oninput="calcular()">
+<input type="number" id="costoCatalizador" value="40" class="input-epoxy w-full p-2 border rounded-lg" oninput="calcular()">
 </div>
 <div class="param-card bg-white p-4 rounded-xl border border-slate-200">
 <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Costo Pigmento ($/kg)</label>
-<input type="number" id="costoPigmento" value="30" class="w-full p-2 border rounded-lg" oninput="calcular()">
+<input type="number" id="costoPigmento" value="30" class="input-epoxy w-full p-2 border rounded-lg" oninput="calcular()">
 </div>
 </div>
 </div>
@@ -362,8 +644,8 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #546
 <div class="flex justify-between items-center mb-3">
 <span class="text-sm font-semibold">Insumos complementarios</span>
 <div class="flex gap-2">
-<button onclick="addExampleMaterials()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded text-xs font-bold">+ Ejemplos</button>
-<button onclick="addRow('materials')" class="bg-campre-green text-white px-3 py-1 rounded text-xs font-bold">+ Agregar</button>
+<button onclick="addExampleMaterials()" class="btn-epoxy bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded text-xs font-bold">+ Ejemplos</button>
+<button onclick="addRow('materials')" class="btn-epoxy btn-epoxy-green px-3 py-1 rounded text-xs font-bold">+ Agregar</button>
 </div>
 </div>
 <div id="materialsList" class="space-y-2"></div>
@@ -378,8 +660,8 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #546
 <div class="flex justify-between items-center mb-3">
 <span class="text-sm font-semibold">Servicios y trabajos</span>
 <div class="flex gap-2">
-<button onclick="addExampleServices()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded text-xs font-bold">+ Ejemplos</button>
-<button onclick="addRow('services')" class="bg-campre-green text-white px-3 py-1 rounded text-xs font-bold">+ Agregar</button>
+<button onclick="addExampleServices()" class="btn-epoxy bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded text-xs font-bold">+ Ejemplos</button>
+<button onclick="addRow('services')" class="btn-epoxy btn-epoxy-green px-3 py-1 rounded text-xs font-bold">+ Agregar</button>
 </div>
 </div>
 <div id="servicesList" class="space-y-2"></div>
@@ -395,58 +677,60 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #546
 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3">
 <div class="param-card bg-white p-3 rounded-xl border border-slate-200">
 <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Margen Ganancia (%)</label>
-<input type="number" id="margenGanancia" value="30" class="w-full p-2 border rounded-lg text-sm" oninput="calcular()">
+<input type="number" id="margenGanancia" value="30" class="input-epoxy w-full p-2 border rounded-lg text-sm" oninput="calcular()">
 </div>
 <div class="param-card bg-white p-3 rounded-xl border border-slate-200">
 <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Impuestos (%)</label>
-<input type="number" id="impuestos" value="16" class="w-full p-2 border rounded-lg text-sm" oninput="calcular()">
+<input type="number" id="impuestos" value="16" class="input-epoxy w-full p-2 border rounded-lg text-sm" oninput="calcular()">
 </div>
 <div class="param-card bg-white p-3 rounded-xl border border-slate-200">
 <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Descuento (%)</label>
-<input type="number" id="descuento" value="0" class="w-full p-2 border rounded-lg text-sm" oninput="calcular()">
+<input type="number" id="descuento" value="0" class="input-epoxy w-full p-2 border rounded-lg text-sm" oninput="calcular()">
 </div>
 <div class="param-card bg-white p-3 rounded-xl border border-slate-200">
 <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Anticipo (%)</label>
-<input type="number" id="anticipo" value="50" class="w-full p-2 border rounded-lg text-sm" oninput="calcular()">
+<input type="number" id="anticipo" value="50" class="input-epoxy w-full p-2 border rounded-lg text-sm" oninput="calcular()">
 </div>
 <div class="param-card bg-white p-3 rounded-xl border border-slate-200">
 <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Transporte ($)</label>
-<input type="number" id="transporte" value="0" class="w-full p-2 border rounded-lg text-sm" oninput="calcular()">
+<input type="number" id="transporte" value="0" class="input-epoxy w-full p-2 border rounded-lg text-sm" oninput="calcular()">
 </div>
 <div class="param-card bg-white p-3 rounded-xl border border-slate-200">
 <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Plazo (días)</label>
-<input type="number" id="plazo" value="7" class="w-full p-2 border rounded-lg text-sm">
+<input type="number" id="plazo" value="7" class="input-epoxy w-full p-2 border rounded-lg text-sm">
 </div>
 <div class="param-card bg-white p-3 rounded-xl border border-slate-200">
 <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Garantía (meses)</label>
-<input type="number" id="garantia" value="12" class="w-full p-2 border rounded-lg text-sm">
+<input type="number" id="garantia" value="12" class="input-epoxy w-full p-2 border rounded-lg text-sm">
 </div>
 <div class="param-card bg-white p-3 rounded-xl border border-slate-200">
 <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Validez (días)</label>
-<input type="number" id="validez" value="15" class="w-full p-2 border rounded-lg text-sm">
+<input type="number" id="validez" value="15" class="input-epoxy w-full p-2 border rounded-lg text-sm">
 </div>
 </div>
 </div>
 </div>
 
-<div class="bg-gradient-to-br from-campre-blue to-blue-900 p-6 rounded-2xl text-white text-center shadow-xl mb-6">
-<p class="text-xs uppercase tracking-widest opacity-70">Subtotal</p>
+<div class="epoxy-header p-6 rounded-2xl text-white text-center shadow-xl mb-6">
+<div class="relative z-10">
+<p class="text-xs uppercase tracking-widest opacity-90">Subtotal</p>
 <div id="subtotalDisplay" class="text-2xl font-bold">$0.00</div>
 <div class="grid grid-cols-3 gap-2 my-4 text-xs">
-<div class="bg-white/10 p-2 rounded"><span class="opacity-70">Ganancia:</span><br><span id="displayGanancia" class="font-bold">$0</span></div>
-<div class="bg-white/10 p-2 rounded"><span class="opacity-70">Impuestos:</span><br><span id="displayImpuestos" class="font-bold">$0</span></div>
-<div class="bg-white/10 p-2 rounded"><span class="opacity-70">Descuento:</span><br><span id="displayDescuento" class="font-bold">-$0</span></div>
+<div class="bg-white/20 p-2 rounded backdrop-blur-sm"><span class="opacity-90">Ganancia:</span><br><span id="displayGanancia" class="font-bold">$0</span></div>
+<div class="bg-white/20 p-2 rounded backdrop-blur-sm"><span class="opacity-90">Impuestos:</span><br><span id="displayImpuestos" class="font-bold">$0</span></div>
+<div class="bg-white/20 p-2 rounded backdrop-blur-sm"><span class="opacity-90">Descuento:</span><br><span id="displayDescuento" class="font-bold">-$0</span></div>
 </div>
-<p class="text-xs uppercase tracking-widest opacity-70 mt-4">Total Final</p>
+<p class="text-xs uppercase tracking-widest opacity-90 mt-4">Total Final</p>
 <div id="totalPresupuesto" class="text-5xl font-black my-2">$0.00</div>
 <div class="grid grid-cols-2 gap-2 mt-4 text-sm">
-<div class="bg-green-500/30 p-2 rounded"><span class="opacity-80">Anticipo:</span><br><span id="displayAnticipo" class="font-bold">$0</span></div>
-<div class="bg-orange-500/30 p-2 rounded"><span class="opacity-80">Saldo:</span><br><span id="displaySaldo" class="font-bold">$0</span></div>
+<div class="bg-green-500/30 p-2 rounded backdrop-blur-sm"><span class="opacity-90">Anticipo:</span><br><span id="displayAnticipo" class="font-bold">$0</span></div>
+<div class="bg-orange-500/30 p-2 rounded backdrop-blur-sm"><span class="opacity-90">Saldo:</span><br><span id="displaySaldo" class="font-bold">$0</span></div>
+</div>
 </div>
 </div>
 
-<button onclick="showModal('entregaModal')" class="w-full bg-campre-green hover:bg-[#6a8c3d] text-white py-4 rounded-xl font-bold text-lg shadow-lg transition-all flex items-center justify-center gap-2">
-ENTREGAR PRESUPUESTO
+<button onclick="showModal('entregaModal')" class="btn-epoxy btn-epoxy-green w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2">
+📤 ENTREGAR PRESUPUESTO
 </button>
 
 </div>
@@ -459,59 +743,466 @@ ENTREGAR PRESUPUESTO
 </div>
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="catalogoCAMPRE"></div>
 
-<div class="mt-8 bg-campre-blue p-6 rounded-2xl text-white text-center shadow-xl sticky bottom-4">
-<p class="text-xs uppercase tracking-widest opacity-70">Total de Productos Seleccionados</p>
+<div class="mt-8 epoxy-header p-6 rounded-2xl text-white text-center shadow-xl sticky bottom-4">
+<div class="relative z-10">
+<p class="text-xs uppercase tracking-widest opacity-90">Total de Productos Seleccionados</p>
 <div id="catalogoTotalDisplay" class="text-4xl font-black my-2">$0.00</div>
-<p class="text-xs opacity-70">Este total es independiente del presupuesto de servicios</p>
+<p class="text-xs opacity-90">Este total es independiente del presupuesto de servicios</p>
+</div>
+</div>
+</div>
+</div>
+
 </div>
 </div>
 </div>
 
+<!-- MODAL INSTRUCCIONES -->
+<div id="instruccionesModal" class="modal fixed inset-0 bg-black/50 z-50 items-center justify-center p-4">
+<div class="bg-white max-w-4xl w-full rounded-2xl p-6 md:p-8 relative max-h-[90vh] overflow-y-auto">
+<button onclick="closeModal('instruccionesModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold text-2xl">X</button>
+
+<div class="instrucciones-container">
+
+<!-- Introducción -->
+<div class="instruccion-seccion">
+<h2><span class="icono-grande">📋</span> Bienvenido a la Calculadora CAMPRE</h2>
+<p>Esta aplicación te permite calcular exactamente cuánta resina necesitas para tu proyecto, generar presupuestos profesionales y conocer los productos de CAMPRE. Sigue estas instrucciones paso a paso para aprovechar al máximo la herramienta.</p>
+
+<div class="nota-info">
+<strong>💡 Consejo:</strong> Si tienes dudas en cualquier momento, puedes contactar a nuestro equipo de asesorías técnicas al <strong>+58 412-8422026</strong> (WhatsApp).
 </div>
 </div>
 
-<!-- BOTÓN FLOTANTE ASISTENTE VIRTUAL -->
-<button onclick="showModal('asistenteModal')" class="asistente-floating-btn" aria-label="Abrir Asistente Virtual">🤖</button>
+<!-- Sección 1: Cálculo Técnico -->
+<div class="instruccion-seccion">
+<h2><span class="icono-grande">🔧</span> 1. CÁLCULO TÉCNICO - Cómo calcular materiales</h2>
+<p>Esta sección calcula automáticamente la cantidad exacta de resina y catalizador que necesitas para tu proyecto, basándose en las dimensiones que ingreses.</p>
 
-<!-- MODAL ASISTENTE VIRTUAL -->
-<div id="asistenteModal" class="modal fixed inset-0 bg-black/50 z-50 items-center justify-center p-4">
-<div class="chat-modal-content">
-    <div class="chat-header">
-        <div class="chat-avatar">🤖</div>
-        <div>
-            <h3 class="font-bold text-lg">Asistente Virtual CAMPRE</h3>
-            <p class="text-xs opacity-90">Experto en curso y empresa</p>
-        </div>
-        <button onclick="closeModal('asistenteModal')" class="ml-auto text-white hover:text-gray-200 text-2xl">×</button>
-    </div>
-    
-    <div class="chat-body" id="chatBody">
-        <div class="chat-message bot">
-            <div class="chat-bubble">
-                ¡Hola! Soy el Asistente Virtual de CAMPRE. Puedo responder tus preguntas sobre:
-                <ul class="mt-2 ml-4 list-disc">
-                    <li>El curso de Resina Epoxi</li>
-                    <li>La empresa CAMPRE</li>
-                    <li>Productos y servicios</li>
-                    <li>Técnicas de aplicación</li>
-                </ul>
-                <p class="mt-2">¿En qué puedo ayudarte?</p>
-            </div>
-        </div>
-    </div>
-    
-    <div class="chat-footer">
-        <div class="chat-input-container">
-            <input type="text" id="chatInput" class="chat-input" placeholder="Escribe tu pregunta..." onkeypress="if(event.key==='Enter') sendMessage()">
-            <button onclick="sendMessage()" class="chat-send-btn">➤</button>
-        </div>
-        <div class="suggestion-chips">
-            <span class="suggestion-chip" onclick="askQuestion('¿Qué es CAMPRE?')">¿Qué es CAMPRE?</span>
-            <span class="suggestion-chip" onclick="askQuestion('¿Qué incluye el curso?')">Curso</span>
-            <span class="suggestion-chip" onclick="askQuestion('¿Cómo contacto a CAMPRE?')">Contacto</span>
-            <span class="suggestion-chip" onclick="askQuestion('¿Qué productos tienen?')">Productos</span>
-        </div>
-    </div>
+<h3>📐 Paso 1: Selecciona la unidad de medida</h3>
+<p>En la parte superior derecha verás un menú desplegable con dos opciones:</p>
+<ul>
+<li><strong>Centímetros (cm):</strong> Úsalo si tus medidas están en centímetros (ejemplo: 61 cm x 80 cm)</li>
+<li><strong>Metros (m):</strong> Úsalo si tus medidas están en metros (ejemplo: 3 m x 4 m)</li>
+</ul>
+<div class="campo-ejemplo">
+<strong>Ejemplo:</strong> Si tu mesa mide 1 metro por 2 metros, selecciona "Metros (m)" e ingresa 1 y 2.
+</div>
+
+<h3>📏 Paso 2: Ingresa las dimensiones</h3>
+<div class="paso-item">
+<span class="paso-numero">1</span>
+<div class="paso-contenido">
+<div class="paso-titulo">Largo</div>
+<div class="paso-descripcion">Escribe la medida del lado más largo de tu superficie. Solo números, sin símbolos.</div>
+</div>
+</div>
+<div class="paso-item">
+<span class="paso-numero">2</span>
+<div class="paso-contenido">
+<div class="paso-titulo">Ancho</div>
+<div class="paso-descripcion">Escribe la medida del lado más corto de tu superficie.</div>
+</div>
+</div>
+<div class="paso-item">
+<span class="paso-numero">3</span>
+<div class="paso-contenido">
+<div class="paso-titulo">Espesor (mm)</div>
+<div class="paso-descripcion">Indica qué tan gruesa será la capa de resina. El valor por defecto es 1mm. Para pisos se recomienda 2-3mm, para mesas 3-5mm.</div>
+</div>
+</div>
+<div class="paso-item">
+<span class="paso-numero">4</span>
+<div class="paso-contenido">
+<div class="paso-titulo">Nº de Capas</div>
+<div class="paso-descripcion">Indica cuántas capas de resina aplicarás. Por defecto es 1 capa. Si vas a aplicar 2 capas, cambia este valor a 2.</div>
+</div>
+</div>
+
+<div class="nota-importante">
+<strong>⚠️ Importante:</strong> Los cálculos se actualizan automáticamente mientras escribes. No necesitas presionar ningún botón de "calcular".
+</div>
+
+<h3>📊 Paso 3: Revisa los resultados</h3>
+<p>En el lado derecho verás los resultados del cálculo:</p>
+<table class="tabla-ejemplo">
+<thead>
+<tr>
+<th>Campo</th>
+<th>Qué significa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Área Total</strong></td>
+<td>La superficie total en metros cuadrados (m²)</td>
+</tr>
+<tr>
+<td><strong>Total Base</strong></td>
+<td>La cantidad de material necesaria sin margen de seguridad</td>
+</tr>
+<tr>
+<td><strong>Total con 5% seguridad</strong></td>
+<td>La cantidad real que necesitas, incluyendo 5% extra por desperdicio</td>
+</tr>
+<tr>
+<td><strong>Resina Epoxi (A) - 2/3</strong></td>
+<td>Cuántos gramos de resina necesitas (2/3 del total)</td>
+</tr>
+<tr>
+<td><strong>Catalizador (B) - 1/3</strong></td>
+<td>Cuántos gramos de catalizador necesitas (1/3 del total)</td>
+</tr>
+<tr>
+<td><strong>TOTAL MATERIAL A MEZCLAR</strong></td>
+<td>La suma total de resina + catalizador que debes mezclar</td>
+</tr>
+</tbody>
+</table>
+
+<div class="nota-exito">
+<strong>✅ Ejemplo práctico:</strong> Si tienes una mesa de 1m x 2m con espesor de 2mm y 1 capa, el cálculo será: Área = 2 m², Total con seguridad = 4,200g, Resina A = 2,800g, Catalizador B = 1,400g.
+</div>
+</div>
+
+<!-- Sección 2: Presupuesto -->
+<div class="instruccion-seccion">
+<h2><span class="icono-grande">💰</span> 2. PRESUPUESTO - Cómo generar un presupuesto profesional</h2>
+<p>Esta sección te permite crear presupuestos completos incluyendo costos de materiales, mano de obra y parámetros financieros.</p>
+
+<h3>💵 Paso 1: Costos Base de Materiales</h3>
+<p>Ingresa el precio por kilogramo de cada material:</p>
+<ul>
+<li><strong>Costo Resina A ($/kg):</strong> Cuánto cuesta 1 kilogramo de resina epoxi</li>
+<li><strong>Costo Catalizador B ($/kg):</strong> Cuánto cuesta 1 kilogramo de catalizador</li>
+<li><strong>Costo Pigmento ($/kg):</strong> Cuánto cuesta 1 kilogramo de pigmento (si vas a usar color)</li>
+</ul>
+<div class="campo-ejemplo">
+<strong>Ejemplo:</strong> Si la resina cuesta $20 por kilogramo, escribe 20 en el campo "Costo Resina A".
+</div>
+
+<h3>🛠️ Paso 2: Materiales Adicionales</h3>
+<p>Agrega otros materiales que necesites para el proyecto (sellador, rodillos, guantes, lija, etc.):</p>
+<div class="paso-item">
+<span class="paso-numero">1</span>
+<div class="paso-contenido">
+<div class="paso-titulo">Botón "+ Ejemplos"</div>
+<div class="paso-descripcion">Haz clic para cargar automáticamente materiales comunes con precios de ejemplo. Puedes modificar los precios según tus costos reales.</div>
+</div>
+</div>
+<div class="paso-item">
+<span class="paso-numero">2</span>
+<div class="paso-contenido">
+<div class="paso-titulo">Botón "+ Agregar"</div>
+<div class="paso-descripcion">Haz clic para agregar un material personalizado. Aparecerá una fila con tres campos: Concepto (nombre del material), Cantidad (cuántos necesitas), y Precio (costo unitario en dólares).</div>
+</div>
+</div>
+<div class="paso-item">
+<span class="paso-numero">3</span>
+<div class="paso-contenido">
+<div class="paso-titulo">Eliminar un material</div>
+<div class="paso-descripcion">Haz clic en la "X" roja al final de la fila para eliminar ese material del presupuesto.</div>
+</div>
+</div>
+
+<h3>👷 Paso 3: Mano de Obra</h3>
+<p>Registra los servicios y trabajos necesarios (preparación de superficie, aplicación, lijado, etc.):</p>
+<p>Funciona igual que Materiales Adicionales: usa "+ Ejemplos" para cargar servicios comunes o "+ Agregar" para servicios personalizados. Ingresa el concepto, cantidad (horas o unidades) y precio por unidad.</p>
+
+<h3>📈 Paso 4: Parámetros Financieros</h3>
+<p>Haz clic en "Parámetros Financieros" para expandir esta sección. Configura:</p>
+<ul>
+<li><strong>Margen Ganancia (%):</strong> Porcentaje de ganancia que quieres obtener (ejemplo: 30%)</li>
+<li><strong>Impuestos (%):</strong> Porcentaje de impuestos a aplicar (ejemplo: 16% IVA)</li>
+<li><strong>Descuento (%):</strong> Porcentaje de descuento si aplica (ejemplo: 10% de descuento)</li>
+<li><strong>Anticipo (%):</strong> Porcentaje que el cliente debe pagar por adelantado (ejemplo: 50%)</li>
+<li><strong>Transporte ($):</strong> Costo de envío o transporte en dólares</li>
+<li><strong>Plazo (días):</strong> Cuántos días tardarás en completar el trabajo</li>
+<li><strong>Garantía (meses):</strong> Cuántos meses de garantía ofreces</li>
+<li><strong>Validez (días):</strong> Cuántos días es válido este presupuesto</li>
+</ul>
+
+<h3>💰 Paso 5: Revisa el resumen financiero</h3>
+<p>En la parte inferior verás un resumen con fondo azul oscuro que muestra:</p>
+<ul>
+<li><strong>Subtotal:</strong> Suma de todos los costos antes de ganancias e impuestos</li>
+<li><strong>Ganancia:</strong> El monto de tu ganancia según el porcentaje configurado</li>
+<li><strong>Impuestos:</strong> El monto de impuestos a pagar</li>
+<li><strong>Descuento:</strong> El monto descontado (si aplica)</li>
+<li><strong>Total Final:</strong> El precio total del proyecto en grande y destacado</li>
+<li><strong>Anticipo:</strong> Cuánto debe pagar el cliente al inicio</li>
+<li><strong>Saldo:</strong> Cuánto queda por pagar después del anticipo</li>
+</ul>
+
+<div class="nota-exito">
+<strong>✅ Listo:</strong> Cuando estés satisfecho con el presupuesto, haz clic en el botón verde "ENTREGAR PRESUPUESTO" para continuar.
+</div>
+</div>
+
+<!-- Sección 3: Catálogo -->
+<div class="instruccion-seccion">
+<h2><span class="icono-grande">🛒</span> 3. CATÁLOGO CAMPRE - Cómo comprar productos</h2>
+<p>Aquí puedes ver todos los productos que CAMPRE tiene disponibles y calcular el total de tu compra.</p>
+
+<h3>📦 Paso 1: Explora los productos</h3>
+<p>Los productos están organizados en categorías:</p>
+<ul>
+<li><strong>Productos Terminados:</strong> Kayaks, Botes, Cavas Térmicas, Autopartes</li>
+<li><strong>Materias Primas:</strong> Fibra de Vidrio (Roving y Mat), Gel Coat</li>
+<li><strong>Resinas:</strong> Resina Epoxi A, Catalizador B, Resina Poliéster</li>
+<li><strong>Aditivos:</strong> Pigmentos en Pasta, Alcohol Isopropílico</li>
+</ul>
+
+<h3>🔢 Paso 2: Selecciona cantidades</h3>
+<p>Para cada producto que quieras comprar:</p>
+<div class="paso-item">
+<span class="paso-numero">1</span>
+<div class="paso-contenido">
+<div class="paso-titulo">Botón "-" (menos)</div>
+<div class="paso-descripcion">Haz clic para disminuir la cantidad. No puede ser menor a 0.</div>
+</div>
+</div>
+<div class="paso-item">
+<span class="paso-numero">2</span>
+<div class="paso-contenido">
+<div class="paso-titulo">Campo numérico</div>
+<div class="paso-descripcion">Puedes escribir directamente la cantidad que necesitas. Solo números enteros.</div>
+</div>
+</div>
+<div class="paso-item">
+<span class="paso-numero">3</span>
+<div class="paso-contenido">
+<div class="paso-titulo">Botón "+" (más)</div>
+<div class="paso-descripcion">Haz clic para aumentar la cantidad en 1.</div>
+</div>
+</div>
+
+<div class="campo-ejemplo">
+<strong>Ejemplo:</strong> Si necesitas 2 kayaks, busca "Kayak PRFV" y haz clic en el botón "+" dos veces, o escribe "2" directamente en el campo numérico.
+</div>
+
+<h3>💵 Paso 3: Revisa el total</h3>
+<p>En la parte inferior de la página verás un recuadro azul oscuro con el <strong>"Total de Productos Seleccionados"</strong>. Este valor se actualiza automáticamente cada vez que cambias una cantidad.</p>
+
+<div class="nota-info">
+<strong>💡 Nota importante:</strong> El total del catálogo es independiente del presupuesto de servicios. Son cálculos separados. El catálogo es solo para conocer el costo de los productos, mientras que el presupuesto incluye materiales, mano de obra y parámetros financieros.
+</div>
+</div>
+
+<!-- Sección 4: Entrega de Presupuesto -->
+<div class="instruccion-seccion">
+<h2><span class="icono-grande">📤</span> 4. ENTREGA DE PRESUPUESTO - Cómo enviar al cliente</h2>
+<p>Después de hacer clic en "ENTREGAR PRESUPUESTO" en la pestaña Presupuesto, se abrirá un formulario donde debes completar la información.</p>
+
+<h3>👤 Paso 1: Datos del Cliente</h3>
+<p>Completa la información de la persona o empresa que recibirá el presupuesto:</p>
+<ul>
+<li><strong>Nombre del Cliente *:</strong> Nombre completo (campo obligatorio, marcado con *)</li>
+<li><strong>Teléfono / WhatsApp *:</strong> Número de contacto (campo obligatorio). Incluye el código de país sin el signo + (ejemplo: 584246579531)</li>
+<li><strong>Email (Opcional):</strong> Correo electrónico del cliente</li>
+<li><strong>Dirección del Proyecto:</strong> Ubicación donde se realizará el trabajo</li>
+</ul>
+
+<h3>🏢 Paso 2: Datos del Contratista</h3>
+<p>Completa tu información o la de la empresa que realizará el trabajo:</p>
+<ul>
+<li><strong>Nombre de la Empresa:</strong> Nombre de tu empresa o tu nombre si eres independiente</li>
+<li><strong>RIF / ID Fiscal:</strong> Número de identificación fiscal</li>
+<li><strong>Teléfono de contacto:</strong> Tu número de teléfono</li>
+<li><strong>Email de contacto:</strong> Tu correo electrónico</li>
+</ul>
+
+<h3>📝 Paso 3: Notas y Observaciones</h3>
+<p>Escribe cualquier condición especial, garantía adicional, o detalle importante del proyecto. Ejemplos:</p>
+<ul>
+<li>"El precio no incluye preparación de superficie"</li>
+<li>"Garantía extendida de 24 meses si se usa resina CAMPRE"</li>
+<li>"Tiempo de ejecución sujeto a condiciones climáticas"</li>
+</ul>
+
+<h3>📄 Paso 4: Descargar o Enviar</h3>
+<p>Tienes dos opciones para entregar el presupuesto:</p>
+
+<div class="paso-item">
+<span class="paso-numero">1</span>
+<div class="paso-contenido">
+<div class="paso-titulo">Botón "Descargar PDF"</div>
+<div class="paso-descripcion">Haz clic para descargar el presupuesto en formato PDF. El archivo se guardará en tu computadora con el nombre del cliente y la fecha. Puedes imprimirlo o enviarlo por email.</div>
+</div>
+</div>
+
+<div class="paso-item">
+<span class="paso-numero">2</span>
+<div class="paso-contenido">
+<div class="paso-titulo">Botón "Enviar por WhatsApp"</div>
+<div class="paso-descripcion">Haz clic para enviar el resumen del presupuesto directamente por WhatsApp al número del cliente. Se abrirá WhatsApp con un mensaje pre-escrito que incluye: nombre del cliente, área del proyecto, total, anticipo, saldo y validez. Solo debes presionar "Enviar" en WhatsApp.</div>
+</div>
+</div>
+
+<div class="nota-exito">
+<strong>✅ Consejo profesional:</strong> Siempre envía el PDF por WhatsApp o email para que el cliente tenga un documento formal. El mensaje de WhatsApp es solo un resumen rápido.
+</div>
+</div>
+
+<!-- Sección 5: Contacto -->
+<div class="instruccion-seccion">
+<h2><span class="icono-grande">📞</span> 5. CONTACTO - Cómo comunicarse con CAMPRE</h2>
+<p>En la barra superior de la aplicación verás un botón verde "Contacto". Al hacer clic, verás todas las formas de contactar a CAMPRE:</p>
+
+<h3>💬 Canales de WhatsApp</h3>
+<ul>
+<li><strong>Ventas:</strong> +58 424-6579531 - Para consultas sobre productos y precios</li>
+<li><strong>Gerencia de Ventas:</strong> +58 424-6832430 - Para negociaciones y pedidos grandes</li>
+<li><strong>Asesorías Técnicas:</strong> +58 412-8422026 - Para dudas técnicas sobre aplicación de resinas</li>
+</ul>
+
+<div class="nota-info">
+<strong>💡 Consejo:</strong> Cada número de WhatsApp tiene un enlace directo. Al hacer clic en cualquiera de ellos, se abrirá WhatsApp automáticamente para que puedas escribir tu mensaje.
+</div>
+
+<h3>📧 Otros canales</h3>
+<ul>
+<li><strong>Email:</strong> info@campre.net - Para consultas formales o envío de documentos</li>
+<li><strong>Ubicación:</strong> Circunvalación No 2, Av. 58, calles 98 y 99, Edif. CAMPRE No 98D-274, Maracaibo, Venezuela</li>
+</ul>
+
+<p>Al lado de la ubicación verás un botón azul "Ver ubicación en Google Maps" que abrirá un mapa con la ubicación exacta de CAMPRE para que puedas llegar fácilmente.</p>
+</div>
+
+<!-- Sección 6: Curso Completo -->
+<div class="instruccion-seccion">
+<h2><span class="icono-grande">🎓</span> 6. CURSO COMPLETO - Cómo acceder al contenido educativo</h2>
+<p>En la barra superior verás un botón gris "Curso Completo". Al hacer clic, se abrirá el curso completo de Resina Epoxi de Alto Tránsito de CAMPRE.</p>
+
+<h3>📚 Contenido del curso</h3>
+<p>El curso incluye 17 secciones completas:</p>
+<ol>
+<li>Curso de Resina Epoxi de Alto Tránsito (objetivo y red de apoyo)</li>
+<li>Resina Epoxi: Especificaciones Técnicas (definición, resistencia, propiedades, tiempos, normas de seguridad)</li>
+<li>Recomendaciones de Trabajo (proporción, medición, mezclado, eliminación de burbujas, tiempos de curado)</li>
+<li>Aplicaciones y Pigmentos (aplicación principal, tipos de pigmentos, dosificación)</li>
+<li>Guía de Aplicación en Pisos (preparación, aplicación paso a paso)</li>
+<li>Aplicación en Madera (9 pasos detallados)</li>
+<li>Mesas de Cemento/Concreto (proceso y bordes verticales)</li>
+<li>Consejos y Advertencias Finales (preparación, equipo de protección)</li>
+<li>Resina Poliéster (catalizador, caducidad, seguridad)</li>
+<li>Secciones X-XVII: Resumen de tiempos y aplicaciones adicionales</li>
+</ol>
+
+<h3>📥 Descarga del curso</h3>
+<p>En la parte inferior del curso verás dos botones:</p>
+<ul>
+<li><strong>Descargar PDF:</strong> Descarga el curso en formato PDF para leerlo sin conexión o imprimirlo</li>
+<li><strong>Descargar Word:</strong> Descarga el curso en formato Word (.doc) para editarlo o tomar notas</li>
+</ul>
+
+<div class="nota-exito">
+<strong>✅ Recomendación:</strong> Lee el curso completo antes de hacer tu primer proyecto. La información sobre seguridad y tiempos de curado es especialmente importante.
+</div>
+</div>
+
+<!-- Sección 7: Consejos Técnicos -->
+<div class="instruccion-seccion">
+<h2><span class="icono-grande">⚠️</span> 7. CONSEJOS TÉCNICOS IMPORTANTES</h2>
+<p>Información crítica que debes conocer para obtener los mejores resultados con las resinas CAMPRE:</p>
+
+<h3>🌡️ Condiciones ambientales ideales</h3>
+<ul>
+<li><strong>Temperatura:</strong> 20-30°C (ni muy frío ni muy calor)</li>
+<li><strong>Humedad:</strong> 40-60% (ambiente seco pero no extremadamente seco)</li>
+</ul>
+
+<div class="nota-importante">
+<strong>⚠️ Advertencia:</strong> Si la temperatura está fuera del rango ideal, el curado puede verse afectado. Con frío extremo la resina no cura correctamente. Con calor extremo, el tiempo de trabajo se reduce drásticamente.
+</div>
+
+<h3>⚖️ Proporción de mezcla</h3>
+<ul>
+<li><strong>Resina Epoxi:</strong> 2:1 (2 partes de Resina A por 1 parte de Catalizador B)</li>
+<li><strong>Resina Poliéster:</strong> 1-2% de catalizador MEKP según temperatura ambiente</li>
+</ul>
+
+<div class="nota-importante">
+<strong>⚠️ CRÍTICO:</strong> SIEMPRE mide por PESO (gramos) usando una balanza digital, NUNCA por volumen (mililitros). La densidad del catalizador es diferente a la de la resina, por lo que medir por volumen daría proporciones incorrectas y el material no curaría bien.
+</div>
+
+<h3>⏱️ Tiempos importantes</h3>
+<ul>
+<li><strong>Pot Life (vida útil de la mezcla):</strong> 30-40 minutos a 25°C. Prepara solo lo que puedas aplicar en ese tiempo.</li>
+<li><strong>Consumo:</strong> 1 litro de mezcla por m² por 1mm de espesor</li>
+<li><strong>Curado total:</strong> 48+ horas (no aplicar peso excesivo ni lijar antes)</li>
+</ul>
+
+<h3>🫧 Eliminación de burbujas</h3>
+<p>Después de aplicar la resina, pueden aparecer burbujas en la superficie. Para eliminarlas:</p>
+<ol>
+<li>Rocía alcohol isopropílico >95% sobre la superficie (método más común y efectivo)</li>
+<li>O aplica calor con pistola de calor o soplete rápidamente a distancia segura</li>
+<li>O usa rodillo de púas para masas grandes</li>
+</ol>
+
+<div class="nota-info">
+<strong>💡 Prevención:</strong> No batas muy rápido al mezclar (genera microburbujas), deja reposar la mezcla 2-3 minutos antes de verter, y trabaja en ambiente cálido.
+</div>
+
+<h3>🚨 Error más común</h3>
+<div class="nota-importante">
+<strong>⚠️ PRECAUCIÓN:</strong> Si la mezcla no es uniforme o la proporción es incorrecta, aparecerán zonas pegajosas ("tacky") que NO curarán tras 48 horas. La única solución es remoción mecánica total y nueva aplicación. Para prevenir: mide SIEMPRE por peso, mezcla vigorosamente 2-3 minutos raspando paredes y fondo del recipiente, y verifica la proporción 2:1 exacta.
+</div>
+
+<h3>🛡️ Seguridad</h3>
+<p>Equipo de protección obligatorio:</p>
+<ul>
+<li>Guantes de goma</li>
+<li>Gafas protectoras</li>
+<li>Camisa de manga larga</li>
+<li>Pantalones largos</li>
+<li>Botas cerradas</li>
+</ul>
+<p>Además: ventilación adecuada, NO fumar durante la aplicación, almacenar resinas entre 18-30°C lejos de fuentes de calor y fuego, lavar manos después del uso, no desechar residuos al fuego.</p>
+</div>
+
+<!-- Sección 8: Preguntas Frecuentes -->
+<div class="instruccion-seccion">
+<h2><span class="icono-grande">❓</span> 8. PREGUNTAS FRECUENTES</h2>
+
+<h3>¿Cómo sé cuánta resina necesito para mi proyecto?</h3>
+<p>Usa la pestaña "CÁLCULO TÉCNICO". Ingresa las dimensiones de tu superficie (largo, ancho, espesor y número de capas) y la calculadora te dirá exactamente cuántos gramos de resina y catalizador necesitas, incluyendo 5% de margen de seguridad.</p>
+
+<h3>¿Puedo usar esta calculadora para resina poliéster?</h3>
+<p>Esta calculadora está optimizada para resina epoxi con proporción 2:1. Si vas a usar resina poliéster, la proporción es diferente (1-2% de catalizador MEKP). Consulta con el equipo de asesorías técnicas de CAMPRE al +58 412-8422026.</p>
+
+<h3>¿Los precios del catálogo son fijos?</h3>
+<p>Los precios mostrados en el catálogo son de referencia. Los precios actualizados pueden variar. Contacta al equipo de ventas de CAMPRE al +58 424-6579531 para confirmar precios actuales.</p>
+
+<h3>¿Cómo genero un presupuesto para un cliente?</h3>
+<p>Sigue estos pasos: 1) Ve a la pestaña "PRESUPUESTO", 2) Ingresa los costos de materiales, 3) Agrega materiales adicionales y mano de obra, 4) Configura los parámetros financieros (ganancia, impuestos, etc.), 5) Haz clic en "ENTREGAR PRESUPUESTO", 6) Completa los datos del cliente, 7) Descarga el PDF o envíalo por WhatsApp.</p>
+
+<h3>¿Puedo guardar mi presupuesto para editarlo después?</h3>
+<p>Actualmente la aplicación no tiene función de guardado. Te recomendamos descargar el PDF inmediatamente después de generarlo. Si necesitas hacer cambios, puedes volver a crear el presupuesto con los mismos datos.</p>
+
+<h3>¿Qué hago si tengo una duda técnica durante mi proyecto?</h3>
+<p>Contacta inmediatamente al equipo de asesorías técnicas de CAMPRE al WhatsApp +58 412-8422026. Están disponibles para ayudarte con cualquier duda sobre aplicación de resinas.</p>
+
+<h3>¿CAMPRE ofrece capacitación?</h3>
+<p>Sí, CAMPRE ofrece el Curso de Resina Epoxi de Alto Tránsito, disponible completo en esta aplicación (botón "Curso Completo" en la barra superior). También puedes descargarlo en PDF o Word para estudiarlo sin conexión.</p>
+</div>
+
+<!-- Sección final -->
+<div class="instruccion-seccion" style="background: linear-gradient(135deg, #1E4B96 0%, #153873 100%); color: white; border: none;">
+<h2 style="color: white; border-bottom-color: #8CB64E;">🎉 ¡Listo para comenzar!</h2>
+<p style="color: white; font-size: 1.1rem;">Ahora que conoces cómo usar la Calculadora CAMPRE, estás listo para crear presupuestos profesionales y calcular materiales con precisión.</p>
+<p style="color: white; margin-top: 20px;"><strong>¿Necesitas ayuda adicional?</strong></p>
+<ul style="color: white;">
+<li>📞 Asesorías Técnicas: +58 412-8422026</li>
+<li>💬 Ventas: +58 424-6579531</li>
+<li>📧 Email: info@campre.net</li>
+<li>📍 Maracaibo, Venezuela</li>
+</ul>
+<p style="color: white; margin-top: 20px; font-size: 0.9rem; opacity: 0.9;"><strong>C.A. Medina Plásticos Reforzados | CAMPRE</strong><br>Más de 30 años de experiencia en polímeros y plásticos reforzados</p>
+</div>
+
+</div>
 </div>
 </div>
 
@@ -566,28 +1257,28 @@ ENTREGAR PRESUPUESTO
     <div>
         <h3 class="font-bold text-campre-blue mb-3">Datos del Cliente</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <input type="text" id="clientName" placeholder="Nombre del Cliente *" class="p-3 border-2 border-slate-200 rounded-xl focus:border-campre-green outline-none">
-            <input type="text" id="clientPhone" placeholder="Teléfono / WhatsApp *" class="p-3 border-2 border-slate-200 rounded-xl focus:border-campre-green outline-none">
-            <input type="email" id="clientEmail" placeholder="Email (Opcional)" class="p-3 border-2 border-slate-200 rounded-xl focus:border-campre-green outline-none">
-            <input type="text" id="clientAddress" placeholder="Dirección del Proyecto" class="p-3 border-2 border-slate-200 rounded-xl focus:border-campre-green outline-none">
+            <input type="text" id="clientName" placeholder="Nombre del Cliente *" class="input-epoxy p-3 border-2 border-slate-200 rounded-xl outline-none">
+            <input type="text" id="clientPhone" placeholder="Teléfono / WhatsApp *" class="input-epoxy p-3 border-2 border-slate-200 rounded-xl outline-none">
+            <input type="email" id="clientEmail" placeholder="Email (Opcional)" class="input-epoxy p-3 border-2 border-slate-200 rounded-xl outline-none">
+            <input type="text" id="clientAddress" placeholder="Dirección del Proyecto" class="input-epoxy p-3 border-2 border-slate-200 rounded-xl outline-none">
         </div>
     </div>
     <div>
         <h3 class="font-bold text-campre-blue mb-3">Datos del Contratista</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <input type="text" id="contractorName" placeholder="Nombre de la Empresa" class="p-3 border-2 border-slate-200 rounded-xl">
-            <input type="text" id="contractorRIF" placeholder="RIF / ID Fiscal" class="p-3 border-2 border-slate-200 rounded-xl">
-            <input type="text" id="contractorPhone" placeholder="Teléfono de contacto" class="p-3 border-2 border-slate-200 rounded-xl">
-            <input type="text" id="contractorEmail" placeholder="Email de contacto" class="p-3 border-2 border-slate-200 rounded-xl">
+            <input type="text" id="contractorName" placeholder="Nombre de la Empresa" class="input-epoxy p-3 border-2 border-slate-200 rounded-xl">
+            <input type="text" id="contractorRIF" placeholder="RIF / ID Fiscal" class="input-epoxy p-3 border-2 border-slate-200 rounded-xl">
+            <input type="text" id="contractorPhone" placeholder="Teléfono de contacto" class="input-epoxy p-3 border-2 border-slate-200 rounded-xl">
+            <input type="text" id="contractorEmail" placeholder="Email de contacto" class="input-epoxy p-3 border-2 border-slate-200 rounded-xl">
         </div>
     </div>
     <div>
         <label class="text-xs font-bold text-slate-500 uppercase block mb-2">Notas y Observaciones</label>
-        <textarea id="notas" rows="3" placeholder="Condiciones especiales..." class="w-full p-3 border-2 border-slate-200 rounded-xl focus:border-campre-green outline-none"></textarea>
+        <textarea id="notas" rows="3" placeholder="Condiciones especiales..." class="input-epoxy w-full p-3 border-2 border-slate-200 rounded-xl outline-none"></textarea>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-4">
-        <button onclick="downloadPresupuestoPDF()" class="bg-campre-blue text-white py-4 rounded-xl font-bold hover:bg-blue-800 transition">Descargar PDF</button>
-        <button onclick="enviarWhatsApp()" class="bg-green-500 text-white py-4 rounded-xl font-bold hover:bg-green-600 transition">Enviar por WhatsApp</button>
+        <button onclick="downloadPresupuestoPDF()" class="btn-epoxy btn-epoxy-blue py-4 rounded-xl font-bold">📄 Descargar PDF</button>
+        <button onclick="enviarWhatsApp()" class="btn-epoxy btn-epoxy-green py-4 rounded-xl font-bold">💬 Enviar por WhatsApp</button>
     </div>
 </div>
 </div>
@@ -695,8 +1386,8 @@ ENTREGAR PRESUPUESTO
 <p>Consultar secciones completas en la aplicación web.</p>
 </div>
 <div class="grid grid-cols-2 gap-3 pt-4">
-<button onclick="downloadCoursePDF()" class="bg-red-500 text-white py-3 rounded-xl font-bold hover:bg-red-600">Descargar PDF</button>
-<button onclick="downloadCourseWord()" class="bg-blue-500 text-white py-3 rounded-xl font-bold hover:bg-blue-600">Descargar Word</button>
+<button onclick="downloadCoursePDF()" class="btn-epoxy bg-red-500 text-white py-3 rounded-xl font-bold hover:bg-red-600">📄 Descargar PDF</button>
+<button onclick="downloadCourseWord()" class="btn-epoxy bg-blue-500 text-white py-3 rounded-xl font-bold hover:bg-blue-600">📝 Descargar Word</button>
 </div>
 </div>
 </div>
@@ -720,154 +1411,6 @@ const productosCAMPRE = [
     { id: 12, nombre: "Alcohol Isopropílico (>95%)", descripcion: "Eliminador de burbujas. 1 Litro.", precio: 12.00, unidad: "Litro", categoria: "Aditivos" }
 ];
 
-// Base de conocimiento del Asistente Virtual - SOLO sobre CAMPRE y el curso
-const baseConocimiento = [
-    {
-        keywords: ['campre', 'empresa', 'qué es campre', 'que es campre'],
-        respuesta: 'CAMPRE (C.A. Medina Plásticos Reforzados) es una empresa venezolana con más de 30 años de trayectoria en la industria de polímeros y plásticos reforzados. Nos especializamos en la fabricación de artículos en PRFV (Plástico Reforzado con Fibra de Vidrio), distribución de materias primas, y asesoramiento técnico especializado. Nuestra sede está en Maracaibo, Venezuela.'
-    },
-    {
-        keywords: ['ubicación', 'ubicacion', 'dirección', 'direccion', 'dónde están', 'donde estan'],
-        respuesta: 'CAMPRE está ubicado en: Circunvalación No 2, Av. 58, calles 98 y 99, Edif. CAMPRE No 98D-274, Maracaibo, Estado Zulia, Venezuela.'
-    },
-    {
-        keywords: ['contacto', 'teléfono', 'telefono', 'whatsapp', 'llamar'],
-        respuesta: 'Puedes contactar a CAMPRE por: Ventas: +58 424-6579531 (WhatsApp), Gerencia de Ventas: +58 424-6832430 (WhatsApp), Asesorías Técnicas: +58 412-8422026 (WhatsApp), Email: info@campre.net'
-    },
-    {
-        keywords: ['productos', 'qué fabrican', 'que fabrican', 'catálogo', 'catalogo'],
-        respuesta: 'CAMPRE fabrica y distribuye: PRODUCTOS TERMINADOS: Kayaks PRFV ($450), Botes PRFV ($850), Cavas Térmicas PRFV ($120), Autopartes PRFV ($180). MATERIAS PRIMAS: Fibra de Vidrio Roving ($95/rollo 25kg), Mat ($110/rollo 50kg), Gel Coat ($45/galón). RESINAS: Resina Epoxi A ($60/kit 3kg), Catalizador B ($40/kit 3kg), Resina Poliéster ($35/galón). ADITIVOS: Pigmentos en Pasta ($15/250g), Alcohol Isopropílico >95% ($12/litro).'
-    },
-    {
-        keywords: ['kayak', 'kayaks'],
-        respuesta: 'CAMPRE fabrica Kayaks PRFV a $450 por unidad. Son kayaks de alta resistencia y durabilidad, fabricados en plástico reforzado con fibra de vidrio. Ideales para recreación y deportes acuáticos.'
-    },
-    {
-        keywords: ['bote', 'botes', 'barco', 'embarcación'],
-        respuesta: 'CAMPRE fabrica Botes PRFV a $850 por unidad. Son embarcaciones ligeras en plástico reforzado con fibra de vidrio, ideales para pesca y recreación. Ofrecen excelente durabilidad, bajo mantenimiento y resistencia al agua salada.'
-    },
-    {
-        keywords: ['cava', 'cavas', 'térmica', 'termica'],
-        respuesta: 'CAMPRE fabrica Cavas Térmicas PRFV a $120 por unidad. Son cavas con excelente aislamiento térmico, ideales para conservación de alimentos y bebidas. Mantienen la temperatura por períodos prolongados y son muy resistentes.'
-    },
-    {
-        keywords: ['autoparte', 'autopartes', 'carro', 'automotriz'],
-        respuesta: 'CAMPRE produce Autopartes PRFV a $180 por unidad. Incluye parachoques, spoilers, deflectores y otras piezas automotrices en plástico reforzado. Ofrecen excelente relación peso-resistencia y pueden ser personalizadas.'
-    },
-    {
-        keywords: ['fibra', 'fibra de vidrio', 'roving', 'mat'],
-        respuesta: 'CAMPRE distribuye Fibra de Vidrio en dos presentaciones: Roving a $95 por rollo de 25kg para refuerzo estructural, y Mat a $110 por rollo de 50kg que es un fieltro para laminado. Ambas son esenciales para la fabricación de productos PRFV.'
-    },
-    {
-        keywords: ['gel coat', 'gelcoat'],
-        respuesta: 'CAMPRE ofrece Gel Coat a $45 por galón. Es un acabado superficial de alta resistencia UV y química, disponible en varios colores. Se utiliza como capa final protectora y decorativa en productos PRFV.'
-    },
-    {
-        keywords: ['resina epoxi', 'epoxi', 'epoxy'],
-        respuesta: 'CAMPRE distribuye Resina Epoxi A a $60 por kit de 3kg. Es de alta resistencia con acabado brillante, ideal para pisos, mesas y proyectos de alto tránsito. El Catalizador B cuesta $40 por kit de 3kg. La proporción de mezcla es 2:1 (2 partes de resina por 1 de catalizador) SIEMPRE por peso.'
-    },
-    {
-        keywords: ['resina poliéster', 'poliester', 'poliéster'],
-        respuesta: 'CAMPRE ofrece Resina Poliéster a $35 por galón. Es pre-acelerada y se usa para laminado general. Requiere catalizador MEKP en proporción de 1-2% según la temperatura ambiente. Tiene caducidad de aproximadamente 6 meses.'
-    },
-    {
-        keywords: ['pigmento', 'pigmentos', 'color'],
-        respuesta: 'CAMPRE ofrece Pigmentos en Pasta a $15 por envase de 250g. Son de alta concentración, disponibles en varios colores. La dosificación recomendada es del 5% del material total.'
-    },
-    {
-        keywords: ['alcohol', 'isopropílico', 'isopropilico'],
-        respuesta: 'CAMPRE vende Alcohol Isopropílico al 95% o superior a $12 por litro. Es esencial para eliminar burbujas en la superficie de la resina epoxi recién aplicada.'
-    },
-    {
-        keywords: ['prfv', 'qué es prfv', 'que es prfv'],
-        respuesta: 'PRFV significa Plástico Reforzado con Fibra de Vidrio (también conocido como FRP en inglés). Es un material compuesto formado por una matriz de resina (poliéster, epoxi o viniléster) reforzada con fibras de vidrio. CAMPRE es especialista en este material.'
-    },
-    {
-        keywords: ['servicios', 'asesoría', 'asesoria', 'consultoría'],
-        respuesta: 'CAMPRE ofrece: 1) Asesoramiento técnico especializado en aplicación de resinas y fabricación PRFV, 2) Cursos de formación (como el Curso de Resina Epoxi de Alto Tránsito), 3) Consultoría para proyectos específicos, 4) Distribución de materias primas con soporte técnico.'
-    },
-    {
-        keywords: ['curso', 'cursos', 'formación', 'formacion', 'capacitación'],
-        respuesta: 'CAMPRE ofrece el Curso de Resina Epoxi de Alto Tránsito. El curso cubre: especificaciones técnicas de la resina epoxi, proporciones de mezcla, tiempos de curado, aplicación en pisos/madera/concreto, uso de pigmentos, seguridad, y más. Está disponible completo en esta aplicación (botón "Curso Completo") y también puedes descargarlo en PDF o Word.'
-    },
-    {
-        keywords: ['proporción', 'proporcion', 'mezcla', '2:1'],
-        respuesta: 'La proporción estándar para Resina Epoxi es 2:1 (2 partes de Resina A por 1 parte de Catalizador B) SIEMPRE por PESO usando balanza digital. Para Resina Poliéster, la proporción es 1-2% de catalizador MEKP, variando según la temperatura ambiente.'
-    },
-    {
-        keywords: ['mezclar', 'mezclado', 'homogeneizar'],
-        respuesta: 'Procedimiento correcto de mezclado: 1) Vierte el componente A (resina) en un recipiente limpio, 2) Añade el componente B (catalizador) en la proporción exacta, 3) Mezcla intensa y vigorosamente durante 2-3 minutos con espátula plana, 4) Realiza movimientos envolventes raspando especialmente el fondo y paredes del recipiente, 5) EVITA batidos de alta velocidad que introduzcan microburbujas.'
-    },
-    {
-        keywords: ['secar', 'secado', 'curado', 'tiempo', 'tiempos'],
-        respuesta: 'Tiempos de curado de Resina Epoxi: 0-40 min: Estado líquido y autonivelante; 40 min - 2 hrs: Pierde fluidez pero aún manejable; 2-4 hrs: Muy viscoso, pegajoso, sensible al polvo e insectos; 6-24 hrs: No pegajoso al tacto pero puede marcarse; 24-48 hrs: Apta para tránsito ligero; 48 hrs+: Curado total.'
-    },
-    {
-        keywords: ['burbuja', 'burbujas', 'eliminar burbujas'],
-        respuesta: 'Para eliminar burbujas en resina epoxi: 1) Rocía alcohol isopropílico >95% sobre la superficie (método más común), 2) Aplica calor con pistola de calor o soplete rápidamente a distancia segura, 3) Usa rodillo de púas para masas grandes. PREVENCIÓN: No batas muy rápido al mezclar, deja reposar la mezcla 2-3 minutos antes de verter.'
-    },
-    {
-        keywords: ['temperatura', 'clima', 'ambiente'],
-        respuesta: 'Temperatura ideal de aplicación: 20-30°C. Humedad ideal: 40-60%. Fuera de estos rangos el curado puede verse afectado. Almacena las resinas entre 18-30°C en lugar seco y fresco.'
-    },
-    {
-        keywords: ['peso', 'balanza', 'medir', 'gramos'],
-        respuesta: 'IMPORTANTE: SIEMPRE mide por PESO (gramos) usando una balanza digital, NUNCA por volumen (mililitros). La densidad del componente B (catalizador) es diferente a la del A (resina), por lo que medir por volumen daría proporciones incorrectas.'
-    },
-    {
-        keywords: ['pot life', 'vida útil', 'vida util'],
-        respuesta: 'Pot Life (vida útil de la mezcla): aproximadamente 30-40 minutos a 25°C. Una vez unidos A y B, el tiempo de trabajo es limitado. PREPARA SOLO la cantidad que puedas aplicar en ese rango de tiempo.'
-    },
-    {
-        keywords: ['preparación', 'preparacion', 'superficie', 'limpieza'],
-        respuesta: 'La preparación representa más del 50% del éxito del trabajo. Pasos: 1) Limpia la superficie eliminando grasas con desengrasante industrial o mezcla de ácido muriático (1 parte de ácido por 4 de agua), 2) Lijs la superficie, 3) Repara grietas con resina + carga inerte, 4) Aplica sellador con rodillo de pelo corto, 5) Deja secar 8 horas.'
-    },
-    {
-        keywords: ['seguridad', 'epp', 'protección', 'guantes'],
-        respuesta: 'Equipo de protección obligatorio: Guantes de goma, gafas protectoras, camisa de manga larga, pantalones largos, botas cerradas. Ventilación adecuada. NO fumar. Almacenar resinas entre 18-30°C, lejos de fuentes de calor y fuego.'
-    },
-    {
-        keywords: ['error', 'pegajoso', 'no cura'],
-        respuesta: 'Error más común: Si la mezcla no es uniforme o la proporción es incorrecta, aparecerán zonas pegajosas ("tacky") que NO curarán tras 48 horas. SOLUCIÓN: Requiere remoción mecánica total. PREVENCIÓN: Mide SIEMPRE por peso, mezcla vigorosamente 2-3 minutos raspando paredes y fondo.'
-    },
-    {
-        keywords: ['madera', 'aplicar en madera'],
-        respuesta: 'Aplicación de resina en madera: 1) Limpieza: superficie libre de polvo, 2) Sellado: barnizar/curar la madera para sellar poros, 3) Base nivelada con encintado o cera, 4) Encofrado sellado con silicona, 5) Desmoldante, 6) Prensas para evitar fugas, 7) Cálculo de cantidad, 8) Vertido y calor para burbujas, 9) Desmolde final después de 48+ horas.'
-    },
-    {
-        keywords: ['piso', 'pisos', 'porcelanato'],
-        respuesta: 'Aplicación en pisos (porcelanato líquido): 1) Reparar grietas y lijar, 2) Desengrasar con ácido muriático diluido 1:4, 3) Aplicar Pintura Epoxi con rodillo de pelo corto y secar 8 horas, 4) Fijar inclusiones 3D/Vinilos, 5) Verter mezcla y extender con secador dentado, 6) Eliminar burbujas con alcohol isopropílico >95% o pistola de calor.'
-    },
-    {
-        keywords: ['concreto', 'cemento'],
-        respuesta: 'Para mesas de cemento/concreto: el proceso es similar al de pisos. Para bordes verticales, usar cinta/tirro si el vaciado es de 1mm. Aplicar capas muy finas con pincel para evitar que el producto se chorree o "descuelgue".'
-    },
-    {
-        keywords: ['almacenamiento', 'almacenar', 'caducidad'],
-        respuesta: 'Almacenamiento correcto: lugar seco y fresco, entre 18-30°C, lejos de fuentes de calor, fuego y luz solar directa. Resina Poliéster: caducidad aproximada de 6 meses. Mantener envases bien cerrados.'
-    },
-    {
-        keywords: ['resistencia', 'térmica', 'termica'],
-        respuesta: 'Resistencia de la Resina Epoxi curada: Térmica: hasta 70°C en exposiciones ocasionales, 45°C en exposición prolongada. Física: soporta 65 N de fuerza por metro cuadrado. Además: alta resistencia química, eléctrica, flexibilidad, adherencia óptima, brillo, contracción casi nula.'
-    },
-    {
-        keywords: ['calculadora', 'calcular', 'cálculo'],
-        respuesta: 'Esta calculadora te ayuda a determinar exactamente cuánta resina necesitas. Ingresa las dimensiones (largo, ancho, espesor, número de capas) y selecciona la unidad (cm o m). El sistema calcula automáticamente el área, gramos necesarios con 5% de margen, y desglosa cuántos gramos de Resina A y Catalizador B necesitas según la proporción 2:1.'
-    },
-    {
-        keywords: ['presupuesto', 'cotización', 'precio'],
-        respuesta: 'Puedes generar presupuestos profesionales usando la pestaña PRESUPUESTO. Ingresa los costos base de materiales, agrega materiales adicionales y mano de obra, configura margen de ganancia, impuestos, descuentos y anticipo. Al finalizar, presiona "ENTREGAR PRESUPUESTO" para descargar el PDF o enviarlo por WhatsApp.'
-    },
-    {
-        keywords: ['hola', 'buenos días', 'buenas tardes', 'saludos'],
-        respuesta: '¡Hola! Soy el Asistente Virtual de CAMPRE. Puedo responder tus preguntas sobre el curso de Resina Epoxi, la empresa CAMPRE, productos, servicios y técnicas de aplicación. ¿En qué puedo ayudarte?'
-    },
-    {
-        keywords: ['gracias', 'thank'],
-        respuesta: '¡Con gusto! Si tienes más preguntas sobre CAMPRE o el curso, no dudes en consultarme. También puedes contactar directamente a nuestro equipo: Ventas +58 424-6579531, Gerencia +58 424-6832430, Asesorías +58 412-8422026.'
-    }
-];
-
 function showModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
@@ -875,8 +1418,16 @@ function switchTab(tab) {
     currentTab = tab;
     ['tabTecnico', 'tabPresupuesto', 'tabCatalogo'].forEach(t => {
         document.getElementById(t).classList.toggle('hidden', t !== tab);
-        document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('active', t === tab);
-        document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('text-slate-500', t !== tab);
+        const btn = document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1));
+        btn.classList.toggle('active', t === tab);
+        btn.classList.toggle('text-slate-500', t !== tab);
+        
+        // Cambiar color de la pestaña Catálogo a verde cuando esté activa
+        if (t === 'tabCatalogo' && t === tab) {
+            btn.classList.add('catalogo-active');
+        } else {
+            btn.classList.remove('catalogo-active');
+        }
     });
     calcular();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1059,80 +1610,6 @@ function calcular() {
         catalogoTotal += qty * prod.precio;
     });
     document.getElementById('catalogoTotalDisplay').textContent = '$' + catalogoTotal.toFixed(2);
-}
-
-// Funciones del Asistente Virtual
-function askQuestion(question) {
-    document.getElementById('chatInput').value = question;
-    sendMessage();
-}
-
-function sendMessage() {
-    const input = document.getElementById('chatInput');
-    const message = input.value.trim();
-    if (!message) return;
-    
-    const chatBody = document.getElementById('chatBody');
-    
-    // Agregar mensaje del usuario
-    const userMsg = document.createElement('div');
-    userMsg.className = 'chat-message user';
-    userMsg.innerHTML = `<div class="chat-bubble">${message}</div>`;
-    chatBody.appendChild(userMsg);
-    
-    input.value = '';
-    chatBody.scrollTop = chatBody.scrollHeight;
-    
-    // Mostrar indicador de escritura
-    const typingMsg = document.createElement('div');
-    typingMsg.className = 'chat-message bot';
-    typingMsg.id = 'typingMsg';
-    typingMsg.innerHTML = `<div class="chat-bubble"><div class="typing-indicator"><span></span><span></span><span></span></div></div>`;
-    chatBody.appendChild(typingMsg);
-    chatBody.scrollTop = chatBody.scrollHeight;
-    
-    // Simular delay y buscar respuesta
-    setTimeout(() => {
-        const typingEl = document.getElementById('typingMsg');
-        if (typingEl) typingEl.remove();
-        
-        const respuesta = buscarRespuesta(message.toLowerCase());
-        
-        const botMsg = document.createElement('div');
-        botMsg.className = 'chat-message bot';
-        botMsg.innerHTML = `<div class="chat-bubble">${respuesta}</div>`;
-        chatBody.appendChild(botMsg);
-        chatBody.scrollTop = chatBody.scrollHeight;
-    }, 800);
-}
-
-function buscarRespuesta(pregunta) {
-    // Normalizar pregunta (quitar acentos)
-    const preguntaNormalizada = pregunta.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-    
-    let mejorMatch = null;
-    let mejorScore = 0;
-    
-    // Buscar en base de conocimiento
-    for (const entry of baseConocimiento) {
-        for (const keyword of entry.keywords) {
-            const keywordNormalizada = keyword.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-            if (preguntaNormalizada.includes(keywordNormalizada)) {
-                const score = keywordNormalizada.length;
-                if (score > mejorScore) {
-                    mejorScore = score;
-                    mejorMatch = entry;
-                }
-            }
-        }
-    }
-    
-    if (mejorMatch) {
-        return mejorMatch.respuesta;
-    }
-    
-    // Si no encuentra respuesta, mensaje de restricción
-    return 'Lo siento, solo puedo responder preguntas sobre el curso de Resina Epoxi de CAMPRE y la empresa CAMPRE (productos, servicios, contacto, técnicas de aplicación). ¿Tienes alguna pregunta sobre estos temas?';
 }
 
 function downloadPresupuestoPDF() {
