@@ -7,306 +7,32 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-body { 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-    color: #54667A; 
-    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-    min-height: 100vh;
-}
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #54667A; background: #f1f5f9; }
 .bg-campre-blue { background-color: #1E4B96; }
 .text-campre-blue { color: #1E4B96; }
 .bg-campre-green { background-color: #8CB64E; }
 .border-campre-green { border-color: #8CB64E; }
 .modal { display: none; }
 .modal.active { display: flex; }
-.tab-btn { transition: all 0.3s ease; position: relative; overflow: hidden; }
-.tab-btn.active { 
-    background: linear-gradient(135deg, #1E4B96 0%, #153873 100%); 
-    color: white;
-    box-shadow: 0 4px 12px rgba(30, 75, 150, 0.4);
-}
-.tab-btn.catalogo-active {
-    background: linear-gradient(135deg, #8CB64E 0%, #6a8c3d 100%) !important;
-    color: white !important;
-    box-shadow: 0 4px 12px rgba(140, 182, 78, 0.4) !important;
-}
+.tab-btn { transition: all 0.2s ease; }
+.tab-btn.active { background-color: #1E4B96; color: white; }
+.tab-btn.catalogo-active { background-color: #8CB64E !important; color: white !important; }
 .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
 .collapsible-content.open { max-height: 5000px; }
-.param-card { 
-    transition: all 0.3s ease; 
-    position: relative;
-    overflow: hidden;
-}
-.param-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    transition: left 0.5s;
-}
-.param-card:hover::before {
-    left: 100%;
-}
-.param-card:hover { 
-    transform: translateY(-4px); 
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-}
+.param-card { transition: all 0.2s ease; }
+.param-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
 
-/* EFECTO RESINA EPÓXICA BRILLANTE */
-.epoxy-container {
-    position: relative;
-    background: white;
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 
-        0 20px 60px rgba(0,0,0,0.15),
-        inset 0 1px 0 rgba(255,255,255,0.8),
-        inset 0 -1px 0 rgba(0,0,0,0.05);
-}
-.epoxy-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 50%;
-    background: linear-gradient(180deg, 
-        rgba(255,255,255,0.4) 0%, 
-        rgba(255,255,255,0.1) 50%,
-        transparent 100%);
-    pointer-events: none;
-    z-index: 1;
-}
-.epoxy-container::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, 
-        rgba(255,255,255,0.1) 0%, 
-        transparent 70%);
-    animation: epoxy-shine 8s infinite linear;
-    pointer-events: none;
-    z-index: 1;
-}
-@keyframes epoxy-shine {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-.epoxy-content {
-    position: relative;
-    z-index: 2;
-}
-
-/* BOTONES CON EFECTOS ESPECIALES */
-.btn-epoxy {
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    box-shadow: 
-        0 6px 0 rgba(0,0,0,0.2),
-        0 8px 20px rgba(0,0,0,0.15);
-}
-.btn-epoxy::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, 
-        transparent, 
-        rgba(255,255,255,0.4), 
-        transparent);
-    transition: left 0.6s;
-}
-.btn-epoxy:hover::before {
-    left: 100%;
-}
-.btn-epoxy:hover {
-    transform: translateY(-2px);
-    box-shadow: 
-        0 8px 0 rgba(0,0,0,0.2),
-        0 12px 28px rgba(0,0,0,0.2);
-}
-.btn-epoxy:active {
-    transform: translateY(4px);
-    box-shadow: 
-        0 2px 0 rgba(0,0,0,0.2),
-        0 4px 10px rgba(0,0,0,0.15);
-}
-
-.btn-epoxy-blue {
-    background: linear-gradient(135deg, #1E4B96 0%, #153873 100%);
-    color: white;
-}
-.btn-epoxy-green {
-    background: linear-gradient(135deg, #8CB64E 0%, #6a8c3d 100%);
-    color: white;
-}
-.btn-epoxy-purple {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-}
-
-/* HEADER CON EFECTO RESINA */
-.epoxy-header {
-    position: relative;
-    background: linear-gradient(135deg, #1E4B96 0%, #153873 50%, #0d2852 100%);
-    overflow: hidden;
-}
-.epoxy-header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        radial-gradient(circle at 20% 30%, rgba(140, 182, 78, 0.3) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(140, 182, 78, 0.2) 0%, transparent 50%);
-    animation: epoxy-pulse 6s infinite ease-in-out;
-}
-@keyframes epoxy-pulse {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
-}
-.epoxy-header::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 50%;
-    background: linear-gradient(180deg, 
-        rgba(255,255,255,0.2) 0%, 
-        rgba(255,255,255,0.05) 100%);
-    pointer-events: none;
-}
-
-/* TARJETAS CON PROFUNDIDAD */
-.depth-card {
-    background: white;
-    border-radius: 16px;
-    box-shadow: 
-        0 4px 6px rgba(0,0,0,0.05),
-        0 10px 20px rgba(0,0,0,0.08),
-        inset 0 1px 0 rgba(255,255,255,0.8);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-.depth-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, 
-        transparent, 
-        rgba(255,255,255,0.8), 
-        transparent);
-}
-.depth-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 
-        0 8px 12px rgba(0,0,0,0.08),
-        0 16px 32px rgba(0,0,0,0.12),
-        inset 0 1px 0 rgba(255,255,255,0.8);
-}
-
-/* INPUTS CON EFECTO BRILLO */
-.input-epoxy {
-    transition: all 0.3s ease;
-    border: 2px solid #e2e8f0;
-    background: white;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
-}
-.input-epoxy:focus {
-    border-color: #8CB64E;
-    box-shadow: 
-        0 0 0 4px rgba(140, 182, 78, 0.15),
-        inset 0 2px 4px rgba(0,0,0,0.05);
-    transform: translateY(-1px);
-}
-
-/* BARRA SUPERIOR */
-.top-bar { 
-    position: sticky; 
-    top: 0; 
-    z-index: 40; 
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid #e2e8f0; 
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-.top-bar-inner { 
-    max-width: 72rem; 
-    margin: 0 auto; 
-    padding: 0.75rem 1.5rem; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    gap: 1rem; 
-    flex-wrap: wrap; 
-}
+.top-bar { position: sticky; top: 0; z-index: 40; background: white; border-bottom: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+.top-bar-inner { max-width: 72rem; margin: 0 auto; padding: 0.75rem 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
 .brand-mini { display: flex; align-items: center; gap: 0.75rem; }
-.brand-logo { 
-    width: 36px; 
-    height: 36px; 
-    background: linear-gradient(135deg, #1E4B96 0%, #153873 100%);
-    border-radius: 8px; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    color: white; 
-    font-weight: 800; 
-    font-size: 14px; 
-    letter-spacing: -0.5px;
-    box-shadow: 0 4px 8px rgba(30, 75, 150, 0.3);
-}
+.brand-logo { width: 36px; height: 36px; background: #1E4B96; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 14px; letter-spacing: -0.5px; }
 .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
 .brand-text strong { color: #1E4B96; font-size: 14px; font-weight: 700; }
 .brand-text span { color: #94a3b8; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
 .nav-actions { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
-.nav-btn { 
-    padding: 0.5rem 1rem; 
-    border-radius: 8px; 
-    font-size: 12px; 
-    font-weight: 600; 
-    transition: all 0.3s ease; 
-    border: 1px solid transparent; 
-    cursor: pointer; 
-    white-space: nowrap;
-    position: relative;
-    overflow: hidden;
-}
-.nav-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    transition: left 0.5s;
-}
-.nav-btn:hover::before {
-    left: 100%;
-}
+.nav-btn { padding: 0.5rem 1rem; border-radius: 8px; font-size: 12px; font-weight: 600; transition: all 0.2s ease; border: 1px solid transparent; cursor: pointer; white-space: nowrap; }
 .nav-btn-ghost { background: transparent; color: #64748b; border-color: #e2e8f0; }
-.nav-btn-ghost:hover { 
-    background: #f1f5f9; 
-    color: #1E4B96; 
-    border-color: #1E4B96;
-    transform: translateY(-1px);
-}
+.nav-btn-ghost:hover { background: #f1f5f9; color: #1E4B96; border-color: #1E4B96; }
 @media (max-width: 640px) {
     .top-bar-inner { padding: 0.5rem 1rem; }
     .nav-btn { padding: 0.4rem 0.75rem; font-size: 11px; }
@@ -314,206 +40,45 @@ body {
     .brand-text span { font-size: 9px; }
     .brand-logo { width: 32px; height: 32px; font-size: 12px; }
 }
-.whatsapp-btn { 
-    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); 
-    color: white;
-    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
-}
-.whatsapp-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4);
-}
+.whatsapp-btn { background: #25D366; color: white; }
+.whatsapp-btn:hover { background: #128C7E; }
 
-.course-section { 
-    margin-bottom: 2rem; 
-    padding: 1.5rem; 
-    border-left: 4px solid #8CB64E; 
-    background: #f8fafc; 
-    border-radius: 0 12px 12px 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-.course-section h3 { 
-    color: #1E4B96; 
-    font-weight: 700; 
-    font-size: 1.1rem; 
-    margin-bottom: 1rem; 
-    border-bottom: 2px solid #8CB64E; 
-    padding-bottom: 0.5rem; 
-}
-.course-section h4 { 
-    color: #1E4B96; 
-    font-weight: 600; 
-    font-size: 1rem; 
-    margin-top: 1rem; 
-    margin-bottom: 0.5rem; 
-}
-.course-section p, .course-section li { 
-    font-size: 0.9rem; 
-    line-height: 1.6; 
-    color: #334155; 
-}
-.course-section ul, .course-section ol { 
-    margin-left: 1.5rem; 
-    margin-top: 0.5rem; 
-}
-.course-section li { 
-    margin-bottom: 0.4rem; 
-}
+.course-section { margin-bottom: 2rem; padding: 1.5rem; border-left: 4px solid #8CB64E; background: #f8fafc; }
+.course-section h3 { color: #1E4B96; font-weight: 700; font-size: 1.1rem; margin-bottom: 1rem; border-bottom: 2px solid #8CB64E; padding-bottom: 0.5rem; }
+.course-section h4 { color: #1E4B96; font-weight: 600; font-size: 1rem; margin-top: 1rem; margin-bottom: 0.5rem; }
+.course-section p, .course-section li { font-size: 0.9rem; line-height: 1.6; color: #334155; }
+.course-section ul, .course-section ol { margin-left: 1.5rem; margin-top: 0.5rem; }
+.course-section li { margin-bottom: 0.4rem; }
 
-/* Estilos para sección de instrucciones */
 .instrucciones-container { max-width: 900px; margin: 0 auto; }
-.instruccion-seccion { 
-    background: white; 
-    border-radius: 16px; 
-    padding: 24px; 
-    margin-bottom: 24px; 
-    border: 1px solid #e2e8f0; 
-    box-shadow: 
-        0 4px 6px rgba(0,0,0,0.05),
-        0 10px 20px rgba(0,0,0,0.08);
-    position: relative;
-    overflow: hidden;
-}
-.instruccion-seccion::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
-}
-.instruccion-seccion h2 { 
-    color: #1E4B96; 
-    font-size: 1.4rem; 
-    font-weight: 700; 
-    margin-bottom: 16px; 
-    padding-bottom: 12px; 
-    border-bottom: 3px solid #8CB64E; 
-    display: flex; 
-    align-items: center; 
-    gap: 12px; 
-}
-.instruccion-seccion h3 { 
-    color: #1E4B96; 
-    font-size: 1.1rem; 
-    font-weight: 700; 
-    margin: 20px 0 12px 0; 
-}
-.instruccion-seccion p { 
-    font-size: 0.95rem; 
-    line-height: 1.7; 
-    color: #334155; 
-    margin-bottom: 12px; 
-}
-.instruccion-seccion ul, .instruccion-seccion ol { 
-    margin-left: 20px; 
-    margin-bottom: 16px; 
-}
-.instruccion-seccion li { 
-    font-size: 0.95rem; 
-    line-height: 1.7; 
-    color: #334155; 
-    margin-bottom: 8px; 
-}
-.paso-numero { 
-    display: inline-flex; 
-    align-items: center; 
-    justify-content: center; 
-    width: 28px; 
-    height: 28px; 
-    background: linear-gradient(135deg, #1E4B96 0%, #153873 100%);
-    color: white; 
-    border-radius: 50%; 
-    font-weight: 700; 
-    font-size: 14px; 
-    margin-right: 8px; 
-    flex-shrink: 0;
-    box-shadow: 0 2px 6px rgba(30, 75, 150, 0.3);
-}
-.paso-item { 
-    display: flex; 
-    align-items: flex-start; 
-    margin-bottom: 16px; 
-}
+.instruccion-seccion { background: white; border-radius: 16px; padding: 24px; margin-bottom: 24px; border: 1px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+.instruccion-seccion h2 { color: #1E4B96; font-size: 1.4rem; font-weight: 700; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 3px solid #8CB64E; }
+.instruccion-seccion h3 { color: #1E4B96; font-size: 1.1rem; font-weight: 700; margin: 20px 0 12px 0; }
+.instruccion-seccion p { font-size: 0.95rem; line-height: 1.7; color: #334155; margin-bottom: 12px; }
+.instruccion-seccion ul, .instruccion-seccion ol { margin-left: 20px; margin-bottom: 16px; }
+.instruccion-seccion li { font-size: 0.95rem; line-height: 1.7; color: #334155; margin-bottom: 8px; }
+.paso-numero { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: #1E4B96; color: white; border-radius: 50%; font-weight: 700; font-size: 14px; margin-right: 8px; flex-shrink: 0; }
+.paso-item { display: flex; align-items: flex-start; margin-bottom: 16px; }
 .paso-contenido { flex: 1; }
-.paso-titulo { 
-    font-weight: 700; 
-    color: #1E4B96; 
-    font-size: 1rem; 
-    margin-bottom: 4px; 
-}
-.paso-descripcion { 
-    color: #54667A; 
-    font-size: 0.9rem; 
-    line-height: 1.6; 
-}
-.campo-ejemplo { 
-    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-    border: 2px dashed #8CB64E; 
-    border-radius: 8px; 
-    padding: 12px 16px; 
-    margin: 12px 0; 
-    font-family: monospace; 
-    font-size: 0.9rem; 
-    color: #334155;
-    box-shadow: inset 0 2px 4px rgba(140, 182, 78, 0.1);
-}
+.paso-titulo { font-weight: 700; color: #1E4B96; font-size: 1rem; margin-bottom: 4px; }
+.paso-descripcion { color: #54667A; font-size: 0.9rem; line-height: 1.6; }
+.campo-ejemplo { background: #f8fafc; border: 2px dashed #8CB64E; border-radius: 8px; padding: 12px 16px; margin: 12px 0; font-family: monospace; font-size: 0.9rem; color: #334155; }
 .campo-ejemplo strong { color: #1E4B96; }
-.nota-importante { 
-    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-    border-left: 4px solid #f59e0b; 
-    padding: 12px 16px; 
-    border-radius: 8px; 
-    margin: 16px 0;
-    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
-}
+.nota-importante { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 12px 16px; border-radius: 8px; margin: 16px 0; }
 .nota-importante strong { color: #92400e; }
-.nota-info { 
-    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-    border-left: 4px solid #3b82f6; 
-    padding: 12px 16px; 
-    border-radius: 8px; 
-    margin: 16px 0;
-    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
-}
+.nota-info { background: #dbeafe; border-left: 4px solid #3b82f6; padding: 12px 16px; border-radius: 8px; margin: 16px 0; }
 .nota-info strong { color: #1e40af; }
-.nota-exito { 
-    background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
-    border-left: 4px solid #22c55e; 
-    padding: 12px 16px; 
-    border-radius: 8px; 
-    margin: 16px 0;
-    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.2);
-}
+.nota-exito { background: #dcfce7; border-left: 4px solid #22c55e; padding: 12px 16px; border-radius: 8px; margin: 16px 0; }
 .nota-exito strong { color: #166534; }
-.tabla-ejemplo { 
-    width: 100%; 
-    border-collapse: collapse; 
-    margin: 16px 0;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-.tabla-ejemplo th { 
-    background: linear-gradient(135deg, #1E4B96 0%, #153873 100%);
-    color: white; 
-    padding: 10px 12px; 
-    text-align: left; 
-    font-size: 0.9rem; 
-}
-.tabla-ejemplo td { 
-    padding: 10px 12px; 
-    border-bottom: 1px solid #e2e8f0; 
-    font-size: 0.9rem; 
-}
+.tabla-ejemplo { width: 100%; border-collapse: collapse; margin: 16px 0; }
+.tabla-ejemplo th { background: #1E4B96; color: white; padding: 10px 12px; text-align: left; font-size: 0.9rem; }
+.tabla-ejemplo td { padding: 10px 12px; border-bottom: 1px solid #e2e8f0; font-size: 0.9rem; }
 .tabla-ejemplo tr:nth-child(even) { background: #f8fafc; }
-.icono-grande { font-size: 2rem; margin-right: 8px; }
 </style>
 </head>
 <body class="p-0 md:p-4">
 
-<!-- BARRA SUPERIOR STICKY -->
+<!-- BARRA SUPERIOR -->
 <div class="top-bar">
 <div class="top-bar-inner">
 <div class="brand-mini">
@@ -524,31 +89,28 @@ body {
 </div>
 </div>
 <div class="nav-actions">
-<button onclick="showModal('instruccionesModal')" class="nav-btn nav-btn-ghost">📋 Instrucciones</button>
-<button onclick="showModal('contactModal')" class="nav-btn whatsapp-btn">💬 Contacto</button>
-<button onclick="showModal('courseModal')" class="nav-btn nav-btn-ghost">🎓 Curso Completo</button>
+<button onclick="showModal('instruccionesModal')" class="nav-btn nav-btn-ghost">Instrucciones</button>
+<button onclick="showModal('contactModal')" class="nav-btn whatsapp-btn">Contacto</button>
+<button onclick="showModal('courseModal')" class="nav-btn nav-btn-ghost">Curso Completo</button>
 </div>
 </div>
 </div>
 
-<div class="max-w-5xl mx-auto mt-4 md:mt-6">
-<div class="epoxy-container">
-<header class="epoxy-header p-8 text-center text-white">
-<div class="relative z-10">
+<div class="max-w-5xl mx-auto shadow-2xl rounded-3xl overflow-hidden border border-slate-200 bg-white mt-4 md:mt-6">
+<header class="bg-campre-blue p-8 text-center text-white">
 <h1 class="text-3xl font-bold tracking-tight">Calculadora de Materiales y Servicios</h1>
-<p class="text-white/90 font-medium mt-2">C.A. Medina Plásticos Reforzados | CAMPRE</p>
-</div>
+<p class="text-white/80 font-medium mt-2">C.A. Medina Plásticos Reforzados | CAMPRE</p>
 </header>
 
-<div class="flex border-b border-slate-200 bg-slate-50 relative z-10">
-<button onclick="switchTab('tabTecnico')" id="btnTabTecnico" class="tab-btn active flex-1 py-4 font-bold text-sm">🔧 CÁLCULO TÉCNICO</button>
-<button onclick="switchTab('tabPresupuesto')" id="btnTabPresupuesto" class="tab-btn flex-1 py-4 font-bold text-sm text-slate-500">💰 PRESUPUESTO</button>
-<button onclick="switchTab('tabCatalogo')" id="btnTabCatalogo" class="tab-btn flex-1 py-4 font-bold text-sm text-slate-500">🛒 CATÁLOGO CAMPRE</button>
+<div class="flex border-b border-slate-200 bg-slate-50">
+<button onclick="switchTab('tabTecnico')" id="btnTabTecnico" class="tab-btn active flex-1 py-4 font-bold text-sm">CALCULO TECNICO</button>
+<button onclick="switchTab('tabPresupuesto')" id="btnTabPresupuesto" class="tab-btn flex-1 py-4 font-bold text-sm text-slate-500">PRESUPUESTO</button>
+<button onclick="switchTab('tabCatalogo')" id="btnTabCatalogo" class="tab-btn flex-1 py-4 font-bold text-sm text-slate-500">CATALOGO CAMPRE</button>
 </div>
 
-<div class="p-6 md:p-8 epoxy-content">
+<div class="p-6 md:p-8">
 
-<!-- TAB 1: CÁLCULO TÉCNICO -->
+<!-- TAB 1: CALCULO TECNICO -->
 <div id="tabTecnico" class="tab-content">
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
 <div class="space-y-4">
@@ -562,21 +124,21 @@ body {
 <div class="grid grid-cols-2 gap-3">
 <div>
 <label id="labelLargo" class="block text-sm font-semibold mb-1">Largo (cm)</label>
-<input type="number" id="largo" value="61" class="input-epoxy w-full p-3 border rounded-xl outline-none" oninput="calcular()">
+<input type="number" id="largo" value="61" class="w-full p-3 border rounded-xl border-slate-300 focus:ring-2 focus:ring-campre-green outline-none" oninput="calcular()">
 </div>
 <div>
 <label id="labelAncho" class="block text-sm font-semibold mb-1">Ancho (cm)</label>
-<input type="number" id="ancho" value="80" class="input-epoxy w-full p-3 border rounded-xl outline-none" oninput="calcular()">
+<input type="number" id="ancho" value="80" class="w-full p-3 border rounded-xl border-slate-300 focus:ring-2 focus:ring-campre-green outline-none" oninput="calcular()">
 </div>
 </div>
 <div class="grid grid-cols-2 gap-3">
 <div>
 <label class="block text-sm font-semibold mb-1">Espesor (mm)</label>
-<input type="number" id="espesor" value="1" step="0.5" class="input-epoxy w-full p-3 border rounded-xl outline-none" oninput="calcular()">
+<input type="number" id="espesor" value="1" step="0.5" class="w-full p-3 border rounded-xl border-slate-300 focus:ring-2 focus:ring-campre-green outline-none" oninput="calcular()">
 </div>
 <div>
 <label class="block text-sm font-semibold mb-1">Nº de Capas</label>
-<input type="number" id="capas" value="1" min="1" max="5" class="input-epoxy w-full p-3 border rounded-xl outline-none" oninput="calcular()">
+<input type="number" id="capas" value="1" min="1" max="5" class="w-full p-3 border rounded-xl border-slate-300 focus:ring-2 focus:ring-campre-green outline-none" oninput="calcular()">
 </div>
 </div>
 </div>
@@ -623,15 +185,15 @@ body {
 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
 <div class="param-card bg-white p-4 rounded-xl border border-slate-200">
 <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Costo Resina A ($/kg)</label>
-<input type="number" id="costoResina" value="20" class="input-epoxy w-full p-2 border rounded-lg" oninput="calcular()">
+<input type="number" id="costoResina" value="20" class="w-full p-2 border rounded-lg" oninput="calcular()">
 </div>
 <div class="param-card bg-white p-4 rounded-xl border border-slate-200">
 <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Costo Catalizador B ($/kg)</label>
-<input type="number" id="costoCatalizador" value="40" class="input-epoxy w-full p-2 border rounded-lg" oninput="calcular()">
+<input type="number" id="costoCatalizador" value="40" class="w-full p-2 border rounded-lg" oninput="calcular()">
 </div>
 <div class="param-card bg-white p-4 rounded-xl border border-slate-200">
 <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Costo Pigmento ($/kg)</label>
-<input type="number" id="costoPigmento" value="30" class="input-epoxy w-full p-2 border rounded-lg" oninput="calcular()">
+<input type="number" id="costoPigmento" value="30" class="w-full p-2 border rounded-lg" oninput="calcular()">
 </div>
 </div>
 </div>
@@ -644,8 +206,8 @@ body {
 <div class="flex justify-between items-center mb-3">
 <span class="text-sm font-semibold">Insumos complementarios</span>
 <div class="flex gap-2">
-<button onclick="addExampleMaterials()" class="btn-epoxy bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded text-xs font-bold">+ Ejemplos</button>
-<button onclick="addRow('materials')" class="btn-epoxy btn-epoxy-green px-3 py-1 rounded text-xs font-bold">+ Agregar</button>
+<button onclick="addExampleMaterials()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded text-xs font-bold">+ Ejemplos</button>
+<button onclick="addRow('materials')" class="bg-campre-green text-white px-3 py-1 rounded text-xs font-bold">+ Agregar</button>
 </div>
 </div>
 <div id="materialsList" class="space-y-2"></div>
@@ -660,8 +222,8 @@ body {
 <div class="flex justify-between items-center mb-3">
 <span class="text-sm font-semibold">Servicios y trabajos</span>
 <div class="flex gap-2">
-<button onclick="addExampleServices()" class="btn-epoxy bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded text-xs font-bold">+ Ejemplos</button>
-<button onclick="addRow('services')" class="btn-epoxy btn-epoxy-green px-3 py-1 rounded text-xs font-bold">+ Agregar</button>
+<button onclick="addExampleServices()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded text-xs font-bold">+ Ejemplos</button>
+<button onclick="addRow('services')" class="bg-campre-green text-white px-3 py-1 rounded text-xs font-bold">+ Agregar</button>
 </div>
 </div>
 <div id="servicesList" class="space-y-2"></div>
@@ -677,65 +239,63 @@ body {
 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3">
 <div class="param-card bg-white p-3 rounded-xl border border-slate-200">
 <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Margen Ganancia (%)</label>
-<input type="number" id="margenGanancia" value="30" class="input-epoxy w-full p-2 border rounded-lg text-sm" oninput="calcular()">
+<input type="number" id="margenGanancia" value="30" class="w-full p-2 border rounded-lg text-sm" oninput="calcular()">
 </div>
 <div class="param-card bg-white p-3 rounded-xl border border-slate-200">
 <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Impuestos (%)</label>
-<input type="number" id="impuestos" value="16" class="input-epoxy w-full p-2 border rounded-lg text-sm" oninput="calcular()">
+<input type="number" id="impuestos" value="16" class="w-full p-2 border rounded-lg text-sm" oninput="calcular()">
 </div>
 <div class="param-card bg-white p-3 rounded-xl border border-slate-200">
 <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Descuento (%)</label>
-<input type="number" id="descuento" value="0" class="input-epoxy w-full p-2 border rounded-lg text-sm" oninput="calcular()">
+<input type="number" id="descuento" value="0" class="w-full p-2 border rounded-lg text-sm" oninput="calcular()">
 </div>
 <div class="param-card bg-white p-3 rounded-xl border border-slate-200">
 <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Anticipo (%)</label>
-<input type="number" id="anticipo" value="50" class="input-epoxy w-full p-2 border rounded-lg text-sm" oninput="calcular()">
+<input type="number" id="anticipo" value="50" class="w-full p-2 border rounded-lg text-sm" oninput="calcular()">
 </div>
 <div class="param-card bg-white p-3 rounded-xl border border-slate-200">
 <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Transporte ($)</label>
-<input type="number" id="transporte" value="0" class="input-epoxy w-full p-2 border rounded-lg text-sm" oninput="calcular()">
+<input type="number" id="transporte" value="0" class="w-full p-2 border rounded-lg text-sm" oninput="calcular()">
 </div>
 <div class="param-card bg-white p-3 rounded-xl border border-slate-200">
 <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Plazo (días)</label>
-<input type="number" id="plazo" value="7" class="input-epoxy w-full p-2 border rounded-lg text-sm">
+<input type="number" id="plazo" value="7" class="w-full p-2 border rounded-lg text-sm">
 </div>
 <div class="param-card bg-white p-3 rounded-xl border border-slate-200">
 <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Garantía (meses)</label>
-<input type="number" id="garantia" value="12" class="input-epoxy w-full p-2 border rounded-lg text-sm">
+<input type="number" id="garantia" value="12" class="w-full p-2 border rounded-lg text-sm">
 </div>
 <div class="param-card bg-white p-3 rounded-xl border border-slate-200">
 <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Validez (días)</label>
-<input type="number" id="validez" value="15" class="input-epoxy w-full p-2 border rounded-lg text-sm">
+<input type="number" id="validez" value="15" class="w-full p-2 border rounded-lg text-sm">
 </div>
 </div>
 </div>
 </div>
 
-<div class="epoxy-header p-6 rounded-2xl text-white text-center shadow-xl mb-6">
-<div class="relative z-10">
-<p class="text-xs uppercase tracking-widest opacity-90">Subtotal</p>
+<div class="bg-campre-blue p-6 rounded-2xl text-white text-center shadow-xl mb-6">
+<p class="text-xs uppercase tracking-widest opacity-70">Subtotal</p>
 <div id="subtotalDisplay" class="text-2xl font-bold">$0.00</div>
 <div class="grid grid-cols-3 gap-2 my-4 text-xs">
-<div class="bg-white/20 p-2 rounded backdrop-blur-sm"><span class="opacity-90">Ganancia:</span><br><span id="displayGanancia" class="font-bold">$0</span></div>
-<div class="bg-white/20 p-2 rounded backdrop-blur-sm"><span class="opacity-90">Impuestos:</span><br><span id="displayImpuestos" class="font-bold">$0</span></div>
-<div class="bg-white/20 p-2 rounded backdrop-blur-sm"><span class="opacity-90">Descuento:</span><br><span id="displayDescuento" class="font-bold">-$0</span></div>
+<div class="bg-white/10 p-2 rounded"><span class="opacity-70">Ganancia:</span><br><span id="displayGanancia" class="font-bold">$0</span></div>
+<div class="bg-white/10 p-2 rounded"><span class="opacity-70">Impuestos:</span><br><span id="displayImpuestos" class="font-bold">$0</span></div>
+<div class="bg-white/10 p-2 rounded"><span class="opacity-70">Descuento:</span><br><span id="displayDescuento" class="font-bold">-$0</span></div>
 </div>
-<p class="text-xs uppercase tracking-widest opacity-90 mt-4">Total Final</p>
+<p class="text-xs uppercase tracking-widest opacity-70 mt-4">Total Final</p>
 <div id="totalPresupuesto" class="text-5xl font-black my-2">$0.00</div>
 <div class="grid grid-cols-2 gap-2 mt-4 text-sm">
-<div class="bg-green-500/30 p-2 rounded backdrop-blur-sm"><span class="opacity-90">Anticipo:</span><br><span id="displayAnticipo" class="font-bold">$0</span></div>
-<div class="bg-orange-500/30 p-2 rounded backdrop-blur-sm"><span class="opacity-90">Saldo:</span><br><span id="displaySaldo" class="font-bold">$0</span></div>
-</div>
+<div class="bg-white/10 p-2 rounded"><span class="opacity-80">Anticipo:</span><br><span id="displayAnticipo" class="font-bold">$0</span></div>
+<div class="bg-white/10 p-2 rounded"><span class="opacity-80">Saldo:</span><br><span id="displaySaldo" class="font-bold">$0</span></div>
 </div>
 </div>
 
-<button onclick="showModal('entregaModal')" class="btn-epoxy btn-epoxy-green w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2">
-📤 ENTREGAR PRESUPUESTO
+<button onclick="showModal('entregaModal')" class="w-full bg-campre-green hover:bg-[#6a8c3d] text-white py-4 rounded-xl font-bold text-lg shadow-lg transition-all flex items-center justify-center gap-2">
+ENTREGAR PRESUPUESTO
 </button>
 
 </div>
 
-<!-- TAB 3: CATÁLOGO -->
+<!-- TAB 3: CATALOGO -->
 <div id="tabCatalogo" class="tab-content hidden">
 <div class="mb-6">
 <div class="flex items-center gap-2 mb-3">
@@ -743,17 +303,14 @@ body {
 </div>
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="catalogoCAMPRE"></div>
 
-<div class="mt-8 epoxy-header p-6 rounded-2xl text-white text-center shadow-xl sticky bottom-4">
-<div class="relative z-10">
-<p class="text-xs uppercase tracking-widest opacity-90">Total de Productos Seleccionados</p>
+<div class="mt-8 bg-campre-green p-6 rounded-2xl text-white text-center shadow-xl sticky bottom-4">
+<p class="text-xs uppercase tracking-widest opacity-80">Total de Productos Seleccionados</p>
 <div id="catalogoTotalDisplay" class="text-4xl font-black my-2">$0.00</div>
-<p class="text-xs opacity-90">Este total es independiente del presupuesto de servicios</p>
-</div>
+<p class="text-xs opacity-80">Este total es independiente del presupuesto de servicios</p>
 </div>
 </div>
 </div>
 
-</div>
 </div>
 </div>
 
@@ -764,22 +321,19 @@ body {
 
 <div class="instrucciones-container">
 
-<!-- Introducción -->
 <div class="instruccion-seccion">
-<h2><span class="icono-grande">📋</span> Bienvenido a la Calculadora CAMPRE</h2>
+<h2>Bienvenido a la Calculadora CAMPRE</h2>
 <p>Esta aplicación te permite calcular exactamente cuánta resina necesitas para tu proyecto, generar presupuestos profesionales y conocer los productos de CAMPRE. Sigue estas instrucciones paso a paso para aprovechar al máximo la herramienta.</p>
-
 <div class="nota-info">
-<strong>💡 Consejo:</strong> Si tienes dudas en cualquier momento, puedes contactar a nuestro equipo de asesorías técnicas al <strong>+58 412-8422026</strong> (WhatsApp).
+<strong>Consejo:</strong> Si tienes dudas en cualquier momento, puedes contactar a nuestro equipo de asesorías técnicas al <strong>+58 412-8422026</strong> (WhatsApp).
 </div>
 </div>
 
-<!-- Sección 1: Cálculo Técnico -->
 <div class="instruccion-seccion">
-<h2><span class="icono-grande">🔧</span> 1. CÁLCULO TÉCNICO - Cómo calcular materiales</h2>
+<h2>1. CALCULO TECNICO - Cómo calcular materiales</h2>
 <p>Esta sección calcula automáticamente la cantidad exacta de resina y catalizador que necesitas para tu proyecto, basándose en las dimensiones que ingreses.</p>
 
-<h3>📐 Paso 1: Selecciona la unidad de medida</h3>
+<h3>Paso 1: Selecciona la unidad de medida</h3>
 <p>En la parte superior derecha verás un menú desplegable con dos opciones:</p>
 <ul>
 <li><strong>Centímetros (cm):</strong> Úsalo si tus medidas están en centímetros (ejemplo: 61 cm x 80 cm)</li>
@@ -789,7 +343,7 @@ body {
 <strong>Ejemplo:</strong> Si tu mesa mide 1 metro por 2 metros, selecciona "Metros (m)" e ingresa 1 y 2.
 </div>
 
-<h3>📏 Paso 2: Ingresa las dimensiones</h3>
+<h3>Paso 2: Ingresa las dimensiones</h3>
 <div class="paso-item">
 <span class="paso-numero">1</span>
 <div class="paso-contenido">
@@ -820,57 +374,35 @@ body {
 </div>
 
 <div class="nota-importante">
-<strong>⚠️ Importante:</strong> Los cálculos se actualizan automáticamente mientras escribes. No necesitas presionar ningún botón de "calcular".
+<strong>Importante:</strong> Los cálculos se actualizan automáticamente mientras escribes. No necesitas presionar ningún botón de "calcular".
 </div>
 
-<h3>📊 Paso 3: Revisa los resultados</h3>
+<h3>Paso 3: Revisa los resultados</h3>
 <p>En el lado derecho verás los resultados del cálculo:</p>
 <table class="tabla-ejemplo">
 <thead>
-<tr>
-<th>Campo</th>
-<th>Qué significa</th>
-</tr>
+<tr><th>Campo</th><th>Qué significa</th></tr>
 </thead>
 <tbody>
-<tr>
-<td><strong>Área Total</strong></td>
-<td>La superficie total en metros cuadrados (m²)</td>
-</tr>
-<tr>
-<td><strong>Total Base</strong></td>
-<td>La cantidad de material necesaria sin margen de seguridad</td>
-</tr>
-<tr>
-<td><strong>Total con 5% seguridad</strong></td>
-<td>La cantidad real que necesitas, incluyendo 5% extra por desperdicio</td>
-</tr>
-<tr>
-<td><strong>Resina Epoxi (A) - 2/3</strong></td>
-<td>Cuántos gramos de resina necesitas (2/3 del total)</td>
-</tr>
-<tr>
-<td><strong>Catalizador (B) - 1/3</strong></td>
-<td>Cuántos gramos de catalizador necesitas (1/3 del total)</td>
-</tr>
-<tr>
-<td><strong>TOTAL MATERIAL A MEZCLAR</strong></td>
-<td>La suma total de resina + catalizador que debes mezclar</td>
-</tr>
+<tr><td><strong>Área Total</strong></td><td>La superficie total en metros cuadrados (m²)</td></tr>
+<tr><td><strong>Total Base</strong></td><td>La cantidad de material necesaria sin margen de seguridad</td></tr>
+<tr><td><strong>Total con 5% seguridad</strong></td><td>La cantidad real que necesitas, incluyendo 5% extra por desperdicio</td></tr>
+<tr><td><strong>Resina Epoxi (A) - 2/3</strong></td><td>Cuántos gramos de resina necesitas (2/3 del total)</td></tr>
+<tr><td><strong>Catalizador (B) - 1/3</strong></td><td>Cuántos gramos de catalizador necesitas (1/3 del total)</td></tr>
+<tr><td><strong>TOTAL MATERIAL A MEZCLAR</strong></td><td>La suma total de resina + catalizador que debes mezclar</td></tr>
 </tbody>
 </table>
 
 <div class="nota-exito">
-<strong>✅ Ejemplo práctico:</strong> Si tienes una mesa de 1m x 2m con espesor de 2mm y 1 capa, el cálculo será: Área = 2 m², Total con seguridad = 4,200g, Resina A = 2,800g, Catalizador B = 1,400g.
+<strong>Ejemplo práctico:</strong> Si tienes una mesa de 1m x 2m con espesor de 2mm y 1 capa, el cálculo será: Área = 2 m², Total con seguridad = 4,200g, Resina A = 2,800g, Catalizador B = 1,400g.
 </div>
 </div>
 
-<!-- Sección 2: Presupuesto -->
 <div class="instruccion-seccion">
-<h2><span class="icono-grande">💰</span> 2. PRESUPUESTO - Cómo generar un presupuesto profesional</h2>
+<h2>2. PRESUPUESTO - Cómo generar un presupuesto profesional</h2>
 <p>Esta sección te permite crear presupuestos completos incluyendo costos de materiales, mano de obra y parámetros financieros.</p>
 
-<h3>💵 Paso 1: Costos Base de Materiales</h3>
+<h3>Paso 1: Costos Base de Materiales</h3>
 <p>Ingresa el precio por kilogramo de cada material:</p>
 <ul>
 <li><strong>Costo Resina A ($/kg):</strong> Cuánto cuesta 1 kilogramo de resina epoxi</li>
@@ -881,7 +413,7 @@ body {
 <strong>Ejemplo:</strong> Si la resina cuesta $20 por kilogramo, escribe 20 en el campo "Costo Resina A".
 </div>
 
-<h3>🛠️ Paso 2: Materiales Adicionales</h3>
+<h3>Paso 2: Materiales Adicionales</h3>
 <p>Agrega otros materiales que necesites para el proyecto (sellador, rodillos, guantes, lija, etc.):</p>
 <div class="paso-item">
 <span class="paso-numero">1</span>
@@ -905,46 +437,35 @@ body {
 </div>
 </div>
 
-<h3>👷 Paso 3: Mano de Obra</h3>
-<p>Registra los servicios y trabajos necesarios (preparación de superficie, aplicación, lijado, etc.):</p>
-<p>Funciona igual que Materiales Adicionales: usa "+ Ejemplos" para cargar servicios comunes o "+ Agregar" para servicios personalizados. Ingresa el concepto, cantidad (horas o unidades) y precio por unidad.</p>
+<h3>Paso 3: Mano de Obra</h3>
+<p>Registra los servicios y trabajos necesarios (preparación de superficie, aplicación, lijado, etc.). Funciona igual que Materiales Adicionales: usa "+ Ejemplos" para cargar servicios comunes o "+ Agregar" para servicios personalizados.</p>
 
-<h3>📈 Paso 4: Parámetros Financieros</h3>
+<h3>Paso 4: Parámetros Financieros</h3>
 <p>Haz clic en "Parámetros Financieros" para expandir esta sección. Configura:</p>
 <ul>
-<li><strong>Margen Ganancia (%):</strong> Porcentaje de ganancia que quieres obtener (ejemplo: 30%)</li>
-<li><strong>Impuestos (%):</strong> Porcentaje de impuestos a aplicar (ejemplo: 16% IVA)</li>
-<li><strong>Descuento (%):</strong> Porcentaje de descuento si aplica (ejemplo: 10% de descuento)</li>
-<li><strong>Anticipo (%):</strong> Porcentaje que el cliente debe pagar por adelantado (ejemplo: 50%)</li>
+<li><strong>Margen Ganancia (%):</strong> Porcentaje de ganancia que quieres obtener</li>
+<li><strong>Impuestos (%):</strong> Porcentaje de impuestos a aplicar</li>
+<li><strong>Descuento (%):</strong> Porcentaje de descuento si aplica</li>
+<li><strong>Anticipo (%):</strong> Porcentaje que el cliente debe pagar por adelantado</li>
 <li><strong>Transporte ($):</strong> Costo de envío o transporte en dólares</li>
 <li><strong>Plazo (días):</strong> Cuántos días tardarás en completar el trabajo</li>
 <li><strong>Garantía (meses):</strong> Cuántos meses de garantía ofreces</li>
 <li><strong>Validez (días):</strong> Cuántos días es válido este presupuesto</li>
 </ul>
 
-<h3>💰 Paso 5: Revisa el resumen financiero</h3>
-<p>En la parte inferior verás un resumen con fondo azul oscuro que muestra:</p>
-<ul>
-<li><strong>Subtotal:</strong> Suma de todos los costos antes de ganancias e impuestos</li>
-<li><strong>Ganancia:</strong> El monto de tu ganancia según el porcentaje configurado</li>
-<li><strong>Impuestos:</strong> El monto de impuestos a pagar</li>
-<li><strong>Descuento:</strong> El monto descontado (si aplica)</li>
-<li><strong>Total Final:</strong> El precio total del proyecto en grande y destacado</li>
-<li><strong>Anticipo:</strong> Cuánto debe pagar el cliente al inicio</li>
-<li><strong>Saldo:</strong> Cuánto queda por pagar después del anticipo</li>
-</ul>
+<h3>Paso 5: Revisa el resumen financiero</h3>
+<p>En la parte inferior verás un resumen que muestra: Subtotal, Ganancia, Impuestos, Descuento, Total Final, Anticipo y Saldo.</p>
 
 <div class="nota-exito">
-<strong>✅ Listo:</strong> Cuando estés satisfecho con el presupuesto, haz clic en el botón verde "ENTREGAR PRESUPUESTO" para continuar.
+<strong>Listo:</strong> Cuando estés satisfecho con el presupuesto, haz clic en el botón verde "ENTREGAR PRESUPUESTO" para continuar.
 </div>
 </div>
 
-<!-- Sección 3: Catálogo -->
 <div class="instruccion-seccion">
-<h2><span class="icono-grande">🛒</span> 3. CATÁLOGO CAMPRE - Cómo comprar productos</h2>
+<h2>3. CATALOGO CAMPRE - Cómo comprar productos</h2>
 <p>Aquí puedes ver todos los productos que CAMPRE tiene disponibles y calcular el total de tu compra.</p>
 
-<h3>📦 Paso 1: Explora los productos</h3>
+<h3>Paso 1: Explora los productos</h3>
 <p>Los productos están organizados en categorías:</p>
 <ul>
 <li><strong>Productos Terminados:</strong> Kayaks, Botes, Cavas Térmicas, Autopartes</li>
@@ -953,253 +474,62 @@ body {
 <li><strong>Aditivos:</strong> Pigmentos en Pasta, Alcohol Isopropílico</li>
 </ul>
 
-<h3>🔢 Paso 2: Selecciona cantidades</h3>
-<p>Para cada producto que quieras comprar:</p>
-<div class="paso-item">
-<span class="paso-numero">1</span>
-<div class="paso-contenido">
-<div class="paso-titulo">Botón "-" (menos)</div>
-<div class="paso-descripcion">Haz clic para disminuir la cantidad. No puede ser menor a 0.</div>
-</div>
-</div>
-<div class="paso-item">
-<span class="paso-numero">2</span>
-<div class="paso-contenido">
-<div class="paso-titulo">Campo numérico</div>
-<div class="paso-descripcion">Puedes escribir directamente la cantidad que necesitas. Solo números enteros.</div>
-</div>
-</div>
-<div class="paso-item">
-<span class="paso-numero">3</span>
-<div class="paso-contenido">
-<div class="paso-titulo">Botón "+" (más)</div>
-<div class="paso-descripcion">Haz clic para aumentar la cantidad en 1.</div>
-</div>
-</div>
-
-<div class="campo-ejemplo">
-<strong>Ejemplo:</strong> Si necesitas 2 kayaks, busca "Kayak PRFV" y haz clic en el botón "+" dos veces, o escribe "2" directamente en el campo numérico.
-</div>
-
-<h3>💵 Paso 3: Revisa el total</h3>
-<p>En la parte inferior de la página verás un recuadro azul oscuro con el <strong>"Total de Productos Seleccionados"</strong>. Este valor se actualiza automáticamente cada vez que cambias una cantidad.</p>
+<h3>Paso 2: Selecciona cantidades</h3>
+<p>Para cada producto, usa los botones + y - para ajustar la cantidad o escribe directamente el número en el campo. El total se calcula automáticamente.</p>
 
 <div class="nota-info">
-<strong>💡 Nota importante:</strong> El total del catálogo es independiente del presupuesto de servicios. Son cálculos separados. El catálogo es solo para conocer el costo de los productos, mientras que el presupuesto incluye materiales, mano de obra y parámetros financieros.
+<strong>Nota importante:</strong> El total del catálogo es independiente del presupuesto de servicios. Son cálculos separados.
 </div>
 </div>
 
-<!-- Sección 4: Entrega de Presupuesto -->
 <div class="instruccion-seccion">
-<h2><span class="icono-grande">📤</span> 4. ENTREGA DE PRESUPUESTO - Cómo enviar al cliente</h2>
-<p>Después de hacer clic en "ENTREGAR PRESUPUESTO" en la pestaña Presupuesto, se abrirá un formulario donde debes completar la información.</p>
-
-<h3>👤 Paso 1: Datos del Cliente</h3>
-<p>Completa la información de la persona o empresa que recibirá el presupuesto:</p>
+<h2>4. ENTREGA DE PRESUPUESTO - Cómo enviar al cliente</h2>
+<p>Después de hacer clic en "ENTREGAR PRESUPUESTO", se abrirá un formulario donde debes completar la información del cliente y contratista.</p>
 <ul>
-<li><strong>Nombre del Cliente *:</strong> Nombre completo (campo obligatorio, marcado con *)</li>
-<li><strong>Teléfono / WhatsApp *:</strong> Número de contacto (campo obligatorio). Incluye el código de país sin el signo + (ejemplo: 584246579531)</li>
-<li><strong>Email (Opcional):</strong> Correo electrónico del cliente</li>
-<li><strong>Dirección del Proyecto:</strong> Ubicación donde se realizará el trabajo</li>
+<li><strong>Datos del Cliente:</strong> Nombre, teléfono, email y dirección del proyecto</li>
+<li><strong>Datos del Contratista:</strong> Nombre de la empresa, RIF, teléfono y email</li>
+<li><strong>Notas:</strong> Condiciones especiales o detalles del proyecto</li>
 </ul>
-
-<h3>🏢 Paso 2: Datos del Contratista</h3>
-<p>Completa tu información o la de la empresa que realizará el trabajo:</p>
-<ul>
-<li><strong>Nombre de la Empresa:</strong> Nombre de tu empresa o tu nombre si eres independiente</li>
-<li><strong>RIF / ID Fiscal:</strong> Número de identificación fiscal</li>
-<li><strong>Teléfono de contacto:</strong> Tu número de teléfono</li>
-<li><strong>Email de contacto:</strong> Tu correo electrónico</li>
-</ul>
-
-<h3>📝 Paso 3: Notas y Observaciones</h3>
-<p>Escribe cualquier condición especial, garantía adicional, o detalle importante del proyecto. Ejemplos:</p>
-<ul>
-<li>"El precio no incluye preparación de superficie"</li>
-<li>"Garantía extendida de 24 meses si se usa resina CAMPRE"</li>
-<li>"Tiempo de ejecución sujeto a condiciones climáticas"</li>
-</ul>
-
-<h3>📄 Paso 4: Descargar o Enviar</h3>
-<p>Tienes dos opciones para entregar el presupuesto:</p>
-
-<div class="paso-item">
-<span class="paso-numero">1</span>
-<div class="paso-contenido">
-<div class="paso-titulo">Botón "Descargar PDF"</div>
-<div class="paso-descripcion">Haz clic para descargar el presupuesto en formato PDF. El archivo se guardará en tu computadora con el nombre del cliente y la fecha. Puedes imprimirlo o enviarlo por email.</div>
-</div>
+<p>Luego puedes descargar el presupuesto en PDF o enviarlo por WhatsApp.</p>
 </div>
 
-<div class="paso-item">
-<span class="paso-numero">2</span>
-<div class="paso-contenido">
-<div class="paso-titulo">Botón "Enviar por WhatsApp"</div>
-<div class="paso-descripcion">Haz clic para enviar el resumen del presupuesto directamente por WhatsApp al número del cliente. Se abrirá WhatsApp con un mensaje pre-escrito que incluye: nombre del cliente, área del proyecto, total, anticipo, saldo y validez. Solo debes presionar "Enviar" en WhatsApp.</div>
-</div>
-</div>
-
-<div class="nota-exito">
-<strong>✅ Consejo profesional:</strong> Siempre envía el PDF por WhatsApp o email para que el cliente tenga un documento formal. El mensaje de WhatsApp es solo un resumen rápido.
-</div>
-</div>
-
-<!-- Sección 5: Contacto -->
 <div class="instruccion-seccion">
-<h2><span class="icono-grande">📞</span> 5. CONTACTO - Cómo comunicarse con CAMPRE</h2>
-<p>En la barra superior de la aplicación verás un botón verde "Contacto". Al hacer clic, verás todas las formas de contactar a CAMPRE:</p>
-
-<h3>💬 Canales de WhatsApp</h3>
+<h2>5. CONTACTO</h2>
 <ul>
-<li><strong>Ventas:</strong> +58 424-6579531 - Para consultas sobre productos y precios</li>
-<li><strong>Gerencia de Ventas:</strong> +58 424-6832430 - Para negociaciones y pedidos grandes</li>
-<li><strong>Asesorías Técnicas:</strong> +58 412-8422026 - Para dudas técnicas sobre aplicación de resinas</li>
-</ul>
-
-<div class="nota-info">
-<strong>💡 Consejo:</strong> Cada número de WhatsApp tiene un enlace directo. Al hacer clic en cualquiera de ellos, se abrirá WhatsApp automáticamente para que puedas escribir tu mensaje.
-</div>
-
-<h3>📧 Otros canales</h3>
-<ul>
-<li><strong>Email:</strong> info@campre.net - Para consultas formales o envío de documentos</li>
+<li><strong>Ventas:</strong> +58 424-6579531</li>
+<li><strong>Gerencia de Ventas:</strong> +58 424-6832430</li>
+<li><strong>Asesorías Técnicas:</strong> +58 412-8422026</li>
+<li><strong>Email:</strong> info@campre.net</li>
 <li><strong>Ubicación:</strong> Circunvalación No 2, Av. 58, calles 98 y 99, Edif. CAMPRE No 98D-274, Maracaibo, Venezuela</li>
 </ul>
-
-<p>Al lado de la ubicación verás un botón azul "Ver ubicación en Google Maps" que abrirá un mapa con la ubicación exacta de CAMPRE para que puedas llegar fácilmente.</p>
 </div>
 
-<!-- Sección 6: Curso Completo -->
 <div class="instruccion-seccion">
-<h2><span class="icono-grande">🎓</span> 6. CURSO COMPLETO - Cómo acceder al contenido educativo</h2>
-<p>En la barra superior verás un botón gris "Curso Completo". Al hacer clic, se abrirá el curso completo de Resina Epoxi de Alto Tránsito de CAMPRE.</p>
-
-<h3>📚 Contenido del curso</h3>
-<p>El curso incluye 17 secciones completas:</p>
-<ol>
-<li>Curso de Resina Epoxi de Alto Tránsito (objetivo y red de apoyo)</li>
-<li>Resina Epoxi: Especificaciones Técnicas (definición, resistencia, propiedades, tiempos, normas de seguridad)</li>
-<li>Recomendaciones de Trabajo (proporción, medición, mezclado, eliminación de burbujas, tiempos de curado)</li>
-<li>Aplicaciones y Pigmentos (aplicación principal, tipos de pigmentos, dosificación)</li>
-<li>Guía de Aplicación en Pisos (preparación, aplicación paso a paso)</li>
-<li>Aplicación en Madera (9 pasos detallados)</li>
-<li>Mesas de Cemento/Concreto (proceso y bordes verticales)</li>
-<li>Consejos y Advertencias Finales (preparación, equipo de protección)</li>
-<li>Resina Poliéster (catalizador, caducidad, seguridad)</li>
-<li>Secciones X-XVII: Resumen de tiempos y aplicaciones adicionales</li>
-</ol>
-
-<h3>📥 Descarga del curso</h3>
-<p>En la parte inferior del curso verás dos botones:</p>
+<h2>6. CONSEJOS TECNICOS IMPORTANTES</h2>
 <ul>
-<li><strong>Descargar PDF:</strong> Descarga el curso en formato PDF para leerlo sin conexión o imprimirlo</li>
-<li><strong>Descargar Word:</strong> Descarga el curso en formato Word (.doc) para editarlo o tomar notas</li>
-</ul>
-
-<div class="nota-exito">
-<strong>✅ Recomendación:</strong> Lee el curso completo antes de hacer tu primer proyecto. La información sobre seguridad y tiempos de curado es especialmente importante.
-</div>
-</div>
-
-<!-- Sección 7: Consejos Técnicos -->
-<div class="instruccion-seccion">
-<h2><span class="icono-grande">⚠️</span> 7. CONSEJOS TÉCNICOS IMPORTANTES</h2>
-<p>Información crítica que debes conocer para obtener los mejores resultados con las resinas CAMPRE:</p>
-
-<h3>🌡️ Condiciones ambientales ideales</h3>
-<ul>
-<li><strong>Temperatura:</strong> 20-30°C (ni muy frío ni muy calor)</li>
-<li><strong>Humedad:</strong> 40-60% (ambiente seco pero no extremadamente seco)</li>
-</ul>
-
-<div class="nota-importante">
-<strong>⚠️ Advertencia:</strong> Si la temperatura está fuera del rango ideal, el curado puede verse afectado. Con frío extremo la resina no cura correctamente. Con calor extremo, el tiempo de trabajo se reduce drásticamente.
-</div>
-
-<h3>⚖️ Proporción de mezcla</h3>
-<ul>
-<li><strong>Resina Epoxi:</strong> 2:1 (2 partes de Resina A por 1 parte de Catalizador B)</li>
-<li><strong>Resina Poliéster:</strong> 1-2% de catalizador MEKP según temperatura ambiente</li>
-</ul>
-
-<div class="nota-importante">
-<strong>⚠️ CRÍTICO:</strong> SIEMPRE mide por PESO (gramos) usando una balanza digital, NUNCA por volumen (mililitros). La densidad del catalizador es diferente a la de la resina, por lo que medir por volumen daría proporciones incorrectas y el material no curaría bien.
-</div>
-
-<h3>⏱️ Tiempos importantes</h3>
-<ul>
-<li><strong>Pot Life (vida útil de la mezcla):</strong> 30-40 minutos a 25°C. Prepara solo lo que puedas aplicar en ese tiempo.</li>
+<li><strong>Temperatura ideal:</strong> 20-30°C</li>
+<li><strong>Humedad ideal:</strong> 40-60%</li>
+<li><strong>Proporción Epoxi:</strong> 2:1 (Resina:Catalizador) SIEMPRE por PESO con balanza digital</li>
+<li><strong>Pot Life:</strong> 30-40 minutos a 25°C</li>
 <li><strong>Consumo:</strong> 1 litro de mezcla por m² por 1mm de espesor</li>
-<li><strong>Curado total:</strong> 48+ horas (no aplicar peso excesivo ni lijar antes)</li>
+<li><strong>Curado total:</strong> 48+ horas</li>
 </ul>
-
-<h3>🫧 Eliminación de burbujas</h3>
-<p>Después de aplicar la resina, pueden aparecer burbujas en la superficie. Para eliminarlas:</p>
-<ol>
-<li>Rocía alcohol isopropílico >95% sobre la superficie (método más común y efectivo)</li>
-<li>O aplica calor con pistola de calor o soplete rápidamente a distancia segura</li>
-<li>O usa rodillo de púas para masas grandes</li>
-</ol>
-
-<div class="nota-info">
-<strong>💡 Prevención:</strong> No batas muy rápido al mezclar (genera microburbujas), deja reposar la mezcla 2-3 minutos antes de verter, y trabaja en ambiente cálido.
-</div>
-
-<h3>🚨 Error más común</h3>
 <div class="nota-importante">
-<strong>⚠️ PRECAUCIÓN:</strong> Si la mezcla no es uniforme o la proporción es incorrecta, aparecerán zonas pegajosas ("tacky") que NO curarán tras 48 horas. La única solución es remoción mecánica total y nueva aplicación. Para prevenir: mide SIEMPRE por peso, mezcla vigorosamente 2-3 minutos raspando paredes y fondo del recipiente, y verifica la proporción 2:1 exacta.
+<strong>CRITICO:</strong> SIEMPRE mide por PESO (gramos) usando balanza digital, NUNCA por volumen. Si la mezcla no es uniforme o la proporción es incorrecta, aparecerán zonas pegajosas que NO curarán.
+</div>
 </div>
 
-<h3>🛡️ Seguridad</h3>
-<p>Equipo de protección obligatorio:</p>
-<ul>
-<li>Guantes de goma</li>
-<li>Gafas protectoras</li>
-<li>Camisa de manga larga</li>
-<li>Pantalones largos</li>
-<li>Botas cerradas</li>
-</ul>
-<p>Además: ventilación adecuada, NO fumar durante la aplicación, almacenar resinas entre 18-30°C lejos de fuentes de calor y fuego, lavar manos después del uso, no desechar residuos al fuego.</p>
-</div>
-
-<!-- Sección 8: Preguntas Frecuentes -->
-<div class="instruccion-seccion">
-<h2><span class="icono-grande">❓</span> 8. PREGUNTAS FRECUENTES</h2>
-
-<h3>¿Cómo sé cuánta resina necesito para mi proyecto?</h3>
-<p>Usa la pestaña "CÁLCULO TÉCNICO". Ingresa las dimensiones de tu superficie (largo, ancho, espesor y número de capas) y la calculadora te dirá exactamente cuántos gramos de resina y catalizador necesitas, incluyendo 5% de margen de seguridad.</p>
-
-<h3>¿Puedo usar esta calculadora para resina poliéster?</h3>
-<p>Esta calculadora está optimizada para resina epoxi con proporción 2:1. Si vas a usar resina poliéster, la proporción es diferente (1-2% de catalizador MEKP). Consulta con el equipo de asesorías técnicas de CAMPRE al +58 412-8422026.</p>
-
-<h3>¿Los precios del catálogo son fijos?</h3>
-<p>Los precios mostrados en el catálogo son de referencia. Los precios actualizados pueden variar. Contacta al equipo de ventas de CAMPRE al +58 424-6579531 para confirmar precios actuales.</p>
-
-<h3>¿Cómo genero un presupuesto para un cliente?</h3>
-<p>Sigue estos pasos: 1) Ve a la pestaña "PRESUPUESTO", 2) Ingresa los costos de materiales, 3) Agrega materiales adicionales y mano de obra, 4) Configura los parámetros financieros (ganancia, impuestos, etc.), 5) Haz clic en "ENTREGAR PRESUPUESTO", 6) Completa los datos del cliente, 7) Descarga el PDF o envíalo por WhatsApp.</p>
-
-<h3>¿Puedo guardar mi presupuesto para editarlo después?</h3>
-<p>Actualmente la aplicación no tiene función de guardado. Te recomendamos descargar el PDF inmediatamente después de generarlo. Si necesitas hacer cambios, puedes volver a crear el presupuesto con los mismos datos.</p>
-
-<h3>¿Qué hago si tengo una duda técnica durante mi proyecto?</h3>
-<p>Contacta inmediatamente al equipo de asesorías técnicas de CAMPRE al WhatsApp +58 412-8422026. Están disponibles para ayudarte con cualquier duda sobre aplicación de resinas.</p>
-
-<h3>¿CAMPRE ofrece capacitación?</h3>
-<p>Sí, CAMPRE ofrece el Curso de Resina Epoxi de Alto Tránsito, disponible completo en esta aplicación (botón "Curso Completo" en la barra superior). También puedes descargarlo en PDF o Word para estudiarlo sin conexión.</p>
-</div>
-
-<!-- Sección final -->
-<div class="instruccion-seccion" style="background: linear-gradient(135deg, #1E4B96 0%, #153873 100%); color: white; border: none;">
-<h2 style="color: white; border-bottom-color: #8CB64E;">🎉 ¡Listo para comenzar!</h2>
-<p style="color: white; font-size: 1.1rem;">Ahora que conoces cómo usar la Calculadora CAMPRE, estás listo para crear presupuestos profesionales y calcular materiales con precisión.</p>
-<p style="color: white; margin-top: 20px;"><strong>¿Necesitas ayuda adicional?</strong></p>
+<div class="instruccion-seccion" style="background: #1E4B96; color: white; border: none;">
+<h2 style="color: white; border-bottom-color: #8CB64E;">Listo para comenzar</h2>
+<p style="color: white;">Ahora que conoces cómo usar la Calculadora CAMPRE, estás listo para crear presupuestos profesionales y calcular materiales con precisión.</p>
+<p style="color: white; margin-top: 16px;"><strong>Necesitas ayuda adicional?</strong></p>
 <ul style="color: white;">
-<li>📞 Asesorías Técnicas: +58 412-8422026</li>
-<li>💬 Ventas: +58 424-6579531</li>
-<li>📧 Email: info@campre.net</li>
-<li>📍 Maracaibo, Venezuela</li>
+<li>Asesorías Técnicas: +58 412-8422026</li>
+<li>Ventas: +58 424-6579531</li>
+<li>Email: info@campre.net</li>
+<li>Maracaibo, Venezuela</li>
 </ul>
-<p style="color: white; margin-top: 20px; font-size: 0.9rem; opacity: 0.9;"><strong>C.A. Medina Plásticos Reforzados | CAMPRE</strong><br>Más de 30 años de experiencia en polímeros y plásticos reforzados</p>
+<p style="color: white; margin-top: 16px; font-size: 0.9rem; opacity: 0.9;"><strong>C.A. Medina Plásticos Reforzados | CAMPRE</strong><br>Más de 30 años de experiencia en polímeros y plásticos reforzados</p>
 </div>
 
 </div>
@@ -1211,26 +541,22 @@ body {
 <div class="bg-white max-w-md w-full rounded-2xl p-6 relative">
 <button onclick="closeModal('contactModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold text-2xl">X</button>
 <h2 class="text-2xl font-bold text-campre-blue mb-6">Contacto CAMPRE</h2>
-
 <div class="space-y-4">
     <div class="p-4 bg-green-50 rounded-xl border border-green-200">
         <h3 class="font-bold text-green-800 mb-2">Ventas</h3>
         <a href="https://wa.me/584246579531" target="_blank" class="flex items-center gap-2 text-green-700 hover:text-green-900">
-            <span class="text-2xl">💬</span>
             <span>+58 424-6579531</span>
         </a>
     </div>
     <div class="p-4 bg-blue-50 rounded-xl border border-blue-200">
         <h3 class="font-bold text-blue-800 mb-2">Gerencia de Ventas</h3>
         <a href="https://wa.me/584246832430" target="_blank" class="flex items-center gap-2 text-blue-700 hover:text-blue-900">
-            <span class="text-2xl">💬</span>
             <span>+58 424-6832430</span>
         </a>
     </div>
     <div class="p-4 bg-purple-50 rounded-xl border border-purple-200">
         <h3 class="font-bold text-purple-800 mb-2">Asesorías Técnicas</h3>
         <a href="https://wa.me/584128422026" target="_blank" class="flex items-center gap-2 text-purple-700 hover:text-purple-900">
-            <span class="text-2xl">💬</span>
             <span>+58 412-8422026</span>
         </a>
     </div>
@@ -1240,8 +566,8 @@ body {
             <strong>Email:</strong> info@campre.net<br>
             <strong>Ubicación:</strong> Maracaibo, Venezuela
         </p>
-        <a href="https://www.google.com/maps/search/?api=1&query=Circunvalación+No+2+Av+58+calles+98+y+99+Edif+CAMPRE+No+98D-274+Maracaibo+Venezuela" target="_blank" class="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-700 transition">
-            <span>📍</span> Ver ubicación en Google Maps
+        <a href="https://www.google.com/maps/search/?api=1&query=Circunvalación+No+2+Av+58+calles+98+y+99+Edif+CAMPRE+No+98D-274+Maracaibo+Venezuela" target="_blank" class="inline-flex items-center gap-2 bg-campre-blue text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-800 transition">
+            Ver ubicación en Google Maps
         </a>
     </div>
 </div>
@@ -1257,28 +583,28 @@ body {
     <div>
         <h3 class="font-bold text-campre-blue mb-3">Datos del Cliente</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <input type="text" id="clientName" placeholder="Nombre del Cliente *" class="input-epoxy p-3 border-2 border-slate-200 rounded-xl outline-none">
-            <input type="text" id="clientPhone" placeholder="Teléfono / WhatsApp *" class="input-epoxy p-3 border-2 border-slate-200 rounded-xl outline-none">
-            <input type="email" id="clientEmail" placeholder="Email (Opcional)" class="input-epoxy p-3 border-2 border-slate-200 rounded-xl outline-none">
-            <input type="text" id="clientAddress" placeholder="Dirección del Proyecto" class="input-epoxy p-3 border-2 border-slate-200 rounded-xl outline-none">
+            <input type="text" id="clientName" placeholder="Nombre del Cliente *" class="p-3 border-2 border-slate-200 rounded-xl focus:border-campre-green outline-none">
+            <input type="text" id="clientPhone" placeholder="Teléfono / WhatsApp *" class="p-3 border-2 border-slate-200 rounded-xl focus:border-campre-green outline-none">
+            <input type="email" id="clientEmail" placeholder="Email (Opcional)" class="p-3 border-2 border-slate-200 rounded-xl focus:border-campre-green outline-none">
+            <input type="text" id="clientAddress" placeholder="Dirección del Proyecto" class="p-3 border-2 border-slate-200 rounded-xl focus:border-campre-green outline-none">
         </div>
     </div>
     <div>
         <h3 class="font-bold text-campre-blue mb-3">Datos del Contratista</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <input type="text" id="contractorName" placeholder="Nombre de la Empresa" class="input-epoxy p-3 border-2 border-slate-200 rounded-xl">
-            <input type="text" id="contractorRIF" placeholder="RIF / ID Fiscal" class="input-epoxy p-3 border-2 border-slate-200 rounded-xl">
-            <input type="text" id="contractorPhone" placeholder="Teléfono de contacto" class="input-epoxy p-3 border-2 border-slate-200 rounded-xl">
-            <input type="text" id="contractorEmail" placeholder="Email de contacto" class="input-epoxy p-3 border-2 border-slate-200 rounded-xl">
+            <input type="text" id="contractorName" placeholder="Nombre de la Empresa" class="p-3 border-2 border-slate-200 rounded-xl">
+            <input type="text" id="contractorRIF" placeholder="RIF / ID Fiscal" class="p-3 border-2 border-slate-200 rounded-xl">
+            <input type="text" id="contractorPhone" placeholder="Teléfono de contacto" class="p-3 border-2 border-slate-200 rounded-xl">
+            <input type="text" id="contractorEmail" placeholder="Email de contacto" class="p-3 border-2 border-slate-200 rounded-xl">
         </div>
     </div>
     <div>
         <label class="text-xs font-bold text-slate-500 uppercase block mb-2">Notas y Observaciones</label>
-        <textarea id="notas" rows="3" placeholder="Condiciones especiales..." class="input-epoxy w-full p-3 border-2 border-slate-200 rounded-xl outline-none"></textarea>
+        <textarea id="notas" rows="3" placeholder="Condiciones especiales..." class="w-full p-3 border-2 border-slate-200 rounded-xl focus:border-campre-green outline-none"></textarea>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-4">
-        <button onclick="downloadPresupuestoPDF()" class="btn-epoxy btn-epoxy-blue py-4 rounded-xl font-bold">📄 Descargar PDF</button>
-        <button onclick="enviarWhatsApp()" class="btn-epoxy btn-epoxy-green py-4 rounded-xl font-bold">💬 Enviar por WhatsApp</button>
+        <button onclick="downloadPresupuestoPDF()" class="bg-campre-blue text-white py-4 rounded-xl font-bold hover:bg-blue-800 transition">Descargar PDF</button>
+        <button onclick="enviarWhatsApp()" class="bg-campre-green text-white py-4 rounded-xl font-bold hover:bg-green-700 transition">Enviar por WhatsApp</button>
     </div>
 </div>
 </div>
@@ -1386,8 +712,8 @@ body {
 <p>Consultar secciones completas en la aplicación web.</p>
 </div>
 <div class="grid grid-cols-2 gap-3 pt-4">
-<button onclick="downloadCoursePDF()" class="btn-epoxy bg-red-500 text-white py-3 rounded-xl font-bold hover:bg-red-600">📄 Descargar PDF</button>
-<button onclick="downloadCourseWord()" class="btn-epoxy bg-blue-500 text-white py-3 rounded-xl font-bold hover:bg-blue-600">📝 Descargar Word</button>
+<button onclick="downloadCoursePDF()" class="bg-red-500 text-white py-3 rounded-xl font-bold hover:bg-red-600">Descargar PDF</button>
+<button onclick="downloadCourseWord()" class="bg-blue-500 text-white py-3 rounded-xl font-bold hover:bg-blue-600">Descargar Word</button>
 </div>
 </div>
 </div>
@@ -1421,8 +747,6 @@ function switchTab(tab) {
         const btn = document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1));
         btn.classList.toggle('active', t === tab);
         btn.classList.toggle('text-slate-500', t !== tab);
-        
-        // Cambiar color de la pestaña Catálogo a verde cuando esté activa
         if (t === 'tabCatalogo' && t === tab) {
             btn.classList.add('catalogo-active');
         } else {
@@ -1537,15 +861,11 @@ function calcular() {
     const capas = parseInt(document.getElementById('capas').value) || 1;
     
     let areaM2 = 0;
-    if (unidad === 'cm') {
-        areaM2 = (largo / 100) * (ancho / 100);
-    } else {
-        areaM2 = largo * ancho;
-    }
+    if (unidad === 'cm') { areaM2 = (largo / 100) * (ancho / 100); }
+    else { areaM2 = largo * ancho; }
     
     const gramosBase = areaM2 * 1000 * espesor * capas;
     const gramosTotal = Math.ceil(gramosBase * 1.05);
-    
     const catalizadorB = Math.ceil(gramosTotal / 3);
     const resinaA = gramosTotal - catalizadorB;
 
@@ -1562,38 +882,24 @@ function calcular() {
         let subtotal = 0;
         const cR = parseFloat(document.getElementById('costoResina').value) || 0;
         const cC = parseFloat(document.getElementById('costoCatalizador').value) || 0;
-        
-        const resinaKg = resinaA / 1000;
-        const catalizadorKg = catalizadorB / 1000;
-        
-        subtotal += (resinaKg * cR) + (catalizadorKg * cC);
-
+        subtotal += ((resinaA/1000) * cR) + ((catalizadorB/1000) * cC);
         ['materials', 'services'].forEach(type => {
             document.getElementById(type + 'List').querySelectorAll('div').forEach(row => {
-                const qty = parseFloat(row.querySelector('.qty')?.value) || 0;
-                const price = parseFloat(row.querySelector('.price')?.value) || 0;
-                subtotal += qty * price;
+                subtotal += (parseFloat(row.querySelector('.qty')?.value) || 0) * (parseFloat(row.querySelector('.price')?.value) || 0);
             });
         });
-
-        const transporte = parseFloat(document.getElementById('transporte').value) || 0;
-        subtotal += transporte;
-
+        subtotal += parseFloat(document.getElementById('transporte').value) || 0;
         const margen = parseFloat(document.getElementById('margenGanancia').value) || 0;
         const ganancia = subtotal * (margen / 100);
         const conGanancia = subtotal + ganancia;
-
         const desc = parseFloat(document.getElementById('descuento').value) || 0;
         const montoDesc = conGanancia * (desc / 100);
         const conDescuento = conGanancia - montoDesc;
-
         const imp = parseFloat(document.getElementById('impuestos').value) || 0;
         const montoImp = conDescuento * (imp / 100);
         const totalFinal = conDescuento + montoImp;
-
         const ant = parseFloat(document.getElementById('anticipo').value) || 0;
         const anticipo = totalFinal * (ant / 100);
-        const saldo = totalFinal - anticipo;
 
         document.getElementById('subtotalDisplay').textContent = '$' + subtotal.toFixed(2);
         document.getElementById('displayGanancia').textContent = '$' + ganancia.toFixed(2);
@@ -1601,13 +907,12 @@ function calcular() {
         document.getElementById('displayDescuento').textContent = '-$' + montoDesc.toFixed(2);
         document.getElementById('totalPresupuesto').textContent = '$' + totalFinal.toFixed(2);
         document.getElementById('displayAnticipo').textContent = '$' + anticipo.toFixed(2);
-        document.getElementById('displaySaldo').textContent = '$' + saldo.toFixed(2);
+        document.getElementById('displaySaldo').textContent = '$' + (totalFinal - anticipo).toFixed(2);
     }
 
     let catalogoTotal = 0;
     productosCAMPRE.forEach(prod => {
-        const qty = parseInt(document.getElementById(`qty-${prod.id}`).value) || 0;
-        catalogoTotal += qty * prod.precio;
+        catalogoTotal += (parseInt(document.getElementById(`qty-${prod.id}`).value) || 0) * prod.precio;
     });
     document.getElementById('catalogoTotalDisplay').textContent = '$' + catalogoTotal.toFixed(2);
 }
@@ -1634,9 +939,9 @@ function downloadPresupuestoPDF() {
     doc.line(20, 58, 190, 58);
     doc.setFontSize(11);
     doc.setTextColor(50);
-    doc.text(`Cliente: ${clientName}`, 20, 68);
-    doc.text(`Teléfono: ${clientPhone}`, 20, 76);
-    doc.text(`Fecha: ${new Date().toLocaleDateString('es')}`, 20, 84);
+    doc.text('Cliente: ' + clientName, 20, 68);
+    doc.text('Teléfono: ' + clientPhone, 20, 76);
+    doc.text('Fecha: ' + new Date().toLocaleDateString('es'), 20, 84);
 
     doc.setTextColor(30, 75, 150);
     doc.setFontSize(14);
@@ -1644,9 +949,9 @@ function downloadPresupuestoPDF() {
     doc.line(20, 103, 190, 103);
     doc.setFontSize(11);
     doc.setTextColor(50);
-    doc.text(`Subtotal: ${document.getElementById('subtotalDisplay').textContent}`, 20, 115);
-    doc.text(`Impuestos: ${document.getElementById('displayImpuestos').textContent}`, 20, 125);
-    doc.text(`Descuento: ${document.getElementById('displayDescuento').textContent}`, 20, 135);
+    doc.text('Subtotal: ' + document.getElementById('subtotalDisplay').textContent, 20, 115);
+    doc.text('Impuestos: ' + document.getElementById('displayImpuestos').textContent, 20, 125);
+    doc.text('Descuento: ' + document.getElementById('displayDescuento').textContent, 20, 135);
 
     doc.setFillColor(140, 182, 78);
     doc.rect(20, 150, 170, 30, 'F');
@@ -1658,18 +963,13 @@ function downloadPresupuestoPDF() {
 
     doc.setTextColor(100);
     doc.setFontSize(9);
-    doc.text(`Validez: ${document.getElementById('validez').value} días | Plazo: ${document.getElementById('plazo').value} días | Garantía: ${document.getElementById('garantia').value} meses`, 105, 245, {align:'center'});
-    doc.text(`Anticipo: ${document.getElementById('displayAnticipo').textContent} | Saldo: ${document.getElementById('displaySaldo').textContent}`, 105, 252, {align:'center'});
+    doc.text('Validez: ' + document.getElementById('validez').value + ' días | Plazo: ' + document.getElementById('plazo').value + ' días | Garantía: ' + document.getElementById('garantia').value + ' meses', 105, 245, {align:'center'});
+    doc.text('Anticipo: ' + document.getElementById('displayAnticipo').textContent + ' | Saldo: ' + document.getElementById('displaySaldo').textContent, 105, 252, {align:'center'});
 
     const notas = document.getElementById('notas').value;
-    if (notas) {
-        doc.setFontSize(9);
-        doc.setTextColor(80);
-        doc.text('Observaciones:', 20, 265);
-        doc.text(notas.substring(0, 100), 20, 272);
-    }
+    if (notas) { doc.setFontSize(9); doc.setTextColor(80); doc.text('Observaciones:', 20, 265); doc.text(notas.substring(0, 100), 20, 272); }
 
-    doc.save(`Presupuesto_${clientName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`);
+    doc.save('Presupuesto_' + clientName.replace(/\s+/g, '_') + '_' + new Date().toISOString().split('T')[0] + '.pdf');
     closeModal('entregaModal');
 }
 
@@ -1680,10 +980,8 @@ function enviarWhatsApp() {
     const antic = document.getElementById('displayAnticipo').textContent;
     const saldo = document.getElementById('displaySaldo').textContent;
     const area = document.getElementById('valArea').textContent;
-
-    const msg = `*PRESUPUESTO CAMPRE*%0A%0A*Cliente:* ${name}%0A*Área del proyecto:* ${area}%0A%0A*TOTAL:* ${total}%0A*Anticipo:* ${antic}%0A*Saldo:* ${saldo}%0A%0A_Validez: ${document.getElementById('validez').value} días_`;
-
-    const url = phone ? `https://wa.me/${phone.replace(/\D/g, '')}?text=${msg}` : `https://wa.me/?text=${msg}`;
+    const msg = '*PRESUPUESTO CAMPRE*%0A%0A*Cliente:* ' + name + '%0A*Área del proyecto:* ' + area + '%0A%0A*TOTAL:* ' + total + '%0A*Anticipo:* ' + antic + '%0A*Saldo:* ' + saldo + '%0A%0A_Validez: ' + document.getElementById('validez').value + ' días_';
+    const url = phone ? 'https://wa.me/' + phone.replace(/\D/g, '') + '?text=' + msg : 'https://wa.me/?text=' + msg;
     window.open(url, '_blank');
     closeModal('entregaModal');
 }
@@ -1700,20 +998,12 @@ function downloadCoursePDF() {
     doc.text('Domina la Resina Epóxica de Principio a Fin', 105, 38, {align:'center'});
     doc.setTextColor(150);
     doc.setFontSize(8);
-    doc.text('© 2026 CAMPRE · C.A. Medina Plásticos Reforzados', 105, 285, {align:'center'});
+    doc.text('2026 CAMPRE - C.A. Medina Plásticos Reforzados', 105, 285, {align:'center'});
     doc.save('Curso_Completo_CAMPRE.pdf');
 }
 
 function downloadCourseWord() {
-    const content = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-<head><meta charset='utf-8'><title>Curso Completo CAMPRE</title></head>
-<body style="font-family: Calibri, sans-serif;">
-<h1 style="color: #1E4B96; text-align: center;">CURSO COMPLETO CAMPRE</h1>
-<h3 style="text-align: center; color: #666;">Domina la Resina Epóxica de Principio a Fin</h3>
-<hr style="border: 2px solid #8CB64E;">
-<p>Contenido completo disponible en la aplicación web.</p>
-<p>© 2026 CAMPRE · C.A. Medina Plásticos Reforzados</p>
-</body></html>`;
+    const content = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>Curso Completo CAMPRE</title></head><body style="font-family: Calibri, sans-serif;"><h1 style="color: #1E4B96; text-align: center;">CURSO COMPLETO CAMPRE</h1><h3 style="text-align: center; color: #666;">Domina la Resina Epóxica de Principio a Fin</h3><hr style="border: 2px solid #8CB64E;"><p>Contenido completo disponible en la aplicación web.</p><p>2026 CAMPRE - C.A. Medina Plásticos Reforzados</p></body></html>';
     const blob = new Blob(['\ufeff', content], {type:'application/msword'});
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
