@@ -16,7 +16,6 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #546
 .modal.active { display: flex; }
 .tab-btn { transition: all 0.2s ease; }
 .tab-btn.active { background-color: #1E4B96; color: white; }
-.tab-btn.catalogo-active { background-color: #8CB64E !important; color: white !important; }
 .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
 .collapsible-content.open { max-height: 5000px; }
 .param-card { transition: all 0.2s ease; }
@@ -105,7 +104,6 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #546
 <div class="flex border-b border-slate-200 bg-slate-50">
 <button onclick="switchTab('tabTecnico')" id="btnTabTecnico" class="tab-btn active flex-1 py-4 font-bold text-sm">CALCULO TECNICO</button>
 <button onclick="switchTab('tabPresupuesto')" id="btnTabPresupuesto" class="tab-btn flex-1 py-4 font-bold text-sm text-slate-500">PRESUPUESTO</button>
-<button onclick="switchTab('tabCatalogo')" id="btnTabCatalogo" class="tab-btn flex-1 py-4 font-bold text-sm text-slate-500">CATALOGO CAMPRE</button>
 </div>
 
 <div class="p-6 md:p-8">
@@ -230,62 +228,14 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #546
 </div>
 </div>
 
-<div class="mb-6">
-<button onclick="toggleCollapsible('colFinancieros')" class="w-full flex justify-between items-center bg-slate-100 p-3 rounded-xl hover:bg-slate-200 transition">
-<span class="font-bold text-campre-blue text-sm">Parámetros Financieros</span>
-<span id="arrowColFinancieros" class="text-slate-400">▼</span>
-</button>
-<div id="colFinancieros" class="collapsible-content">
-<div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3">
-<div class="param-card bg-white p-3 rounded-xl border border-slate-200">
-<label class="text-xs font-bold text-slate-500 uppercase block mb-1">Margen Ganancia (%)</label>
-<input type="number" id="margenGanancia" value="30" class="w-full p-2 border rounded-lg text-sm" oninput="calcular()">
-</div>
-<div class="param-card bg-white p-3 rounded-xl border border-slate-200">
-<label class="text-xs font-bold text-slate-500 uppercase block mb-1">Impuestos (%)</label>
-<input type="number" id="impuestos" value="16" class="w-full p-2 border rounded-lg text-sm" oninput="calcular()">
-</div>
-<div class="param-card bg-white p-3 rounded-xl border border-slate-200">
-<label class="text-xs font-bold text-slate-500 uppercase block mb-1">Descuento (%)</label>
-<input type="number" id="descuento" value="0" class="w-full p-2 border rounded-lg text-sm" oninput="calcular()">
-</div>
-<div class="param-card bg-white p-3 rounded-xl border border-slate-200">
-<label class="text-xs font-bold text-slate-500 uppercase block mb-1">Anticipo (%)</label>
-<input type="number" id="anticipo" value="50" class="w-full p-2 border rounded-lg text-sm" oninput="calcular()">
-</div>
-<div class="param-card bg-white p-3 rounded-xl border border-slate-200">
-<label class="text-xs font-bold text-slate-500 uppercase block mb-1">Transporte ($)</label>
-<input type="number" id="transporte" value="0" class="w-full p-2 border rounded-lg text-sm" oninput="calcular()">
-</div>
-<div class="param-card bg-white p-3 rounded-xl border border-slate-200">
-<label class="text-xs font-bold text-slate-500 uppercase block mb-1">Plazo (días)</label>
-<input type="number" id="plazo" value="7" class="w-full p-2 border rounded-lg text-sm">
-</div>
-<div class="param-card bg-white p-3 rounded-xl border border-slate-200">
-<label class="text-xs font-bold text-slate-500 uppercase block mb-1">Garantía (meses)</label>
-<input type="number" id="garantia" value="12" class="w-full p-2 border rounded-lg text-sm">
-</div>
-<div class="param-card bg-white p-3 rounded-xl border border-slate-200">
-<label class="text-xs font-bold text-slate-500 uppercase block mb-1">Validez (días)</label>
-<input type="number" id="validez" value="15" class="w-full p-2 border rounded-lg text-sm">
-</div>
-</div>
-</div>
-</div>
-
 <div class="bg-campre-blue p-6 rounded-2xl text-white text-center shadow-xl mb-6">
-<p class="text-xs uppercase tracking-widest opacity-70">Subtotal</p>
-<div id="subtotalDisplay" class="text-2xl font-bold">$0.00</div>
-<div class="grid grid-cols-3 gap-2 my-4 text-xs">
-<div class="bg-white/10 p-2 rounded"><span class="opacity-70">Ganancia:</span><br><span id="displayGanancia" class="font-bold">$0</span></div>
-<div class="bg-white/10 p-2 rounded"><span class="opacity-70">Impuestos:</span><br><span id="displayImpuestos" class="font-bold">$0</span></div>
-<div class="bg-white/10 p-2 rounded"><span class="opacity-70">Descuento:</span><br><span id="displayDescuento" class="font-bold">-$0</span></div>
-</div>
-<p class="text-xs uppercase tracking-widest opacity-70 mt-4">Total Final</p>
+<p class="text-xs uppercase tracking-widest opacity-70">Costo de Materiales</p>
+<div id="costoMaterialesDisplay" class="text-3xl font-bold my-2">$0.00</div>
+<p class="text-xs uppercase tracking-widest opacity-70 mt-4">Costo de Mano de Obra</p>
+<div id="costoManoObraDisplay" class="text-2xl font-bold my-2">$0.00</div>
+<div class="mt-6 pt-4 border-t border-white/20">
+<p class="text-xs uppercase tracking-widest opacity-70">TOTAL PRESUPUESTO</p>
 <div id="totalPresupuesto" class="text-5xl font-black my-2">$0.00</div>
-<div class="grid grid-cols-2 gap-2 mt-4 text-sm">
-<div class="bg-white/10 p-2 rounded"><span class="opacity-80">Anticipo:</span><br><span id="displayAnticipo" class="font-bold">$0</span></div>
-<div class="bg-white/10 p-2 rounded"><span class="opacity-80">Saldo:</span><br><span id="displaySaldo" class="font-bold">$0</span></div>
 </div>
 </div>
 
@@ -293,22 +243,6 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #546
 ENTREGAR PRESUPUESTO
 </button>
 
-</div>
-
-<!-- TAB 3: CATALOGO -->
-<div id="tabCatalogo" class="tab-content hidden">
-<div class="mb-6">
-<div class="flex items-center gap-2 mb-3">
-<h2 class="text-lg font-bold text-campre-blue">Catálogo de Productos CAMPRE</h2>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="catalogoCAMPRE"></div>
-
-<div class="mt-8 bg-campre-green p-6 rounded-2xl text-white text-center shadow-xl sticky bottom-4">
-<p class="text-xs uppercase tracking-widest opacity-80">Total de Productos Seleccionados</p>
-<div id="catalogoTotalDisplay" class="text-4xl font-black my-2">$0.00</div>
-<p class="text-xs opacity-80">Este total es independiente del presupuesto de servicios</p>
-</div>
-</div>
 </div>
 
 </div>
@@ -323,7 +257,7 @@ ENTREGAR PRESUPUESTO
 
 <div class="instruccion-seccion">
 <h2>Bienvenido a la Calculadora CAMPRE</h2>
-<p>Esta aplicación te permite calcular exactamente cuánta resina necesitas para tu proyecto, generar presupuestos profesionales y conocer los productos de CAMPRE. Sigue estas instrucciones paso a paso para aprovechar al máximo la herramienta.</p>
+<p>Esta aplicación te permite calcular exactamente cuánta resina necesitas para tu proyecto y generar presupuestos profesionales. Sigue estas instrucciones paso a paso para aprovechar al máximo la herramienta.</p>
 <div class="nota-info">
 <strong>Consejo:</strong> Si tienes dudas en cualquier momento, puedes contactar a nuestro equipo de asesorías técnicas al <strong>+58 412-8422026</strong> (WhatsApp).
 </div>
@@ -336,11 +270,11 @@ ENTREGAR PRESUPUESTO
 <h3>Paso 1: Selecciona la unidad de medida</h3>
 <p>En la parte superior derecha verás un menú desplegable con dos opciones:</p>
 <ul>
-<li><strong>Centímetros (cm):</strong> Úsalo si tus medidas están en centímetros (ejemplo: 61 cm x 80 cm)</li>
-<li><strong>Metros (m):</strong> Úsalo si tus medidas están en metros (ejemplo: 3 m x 4 m)</li>
+<li><strong>Centímetros (cm):</strong> Úsalo si tus medidas están en centímetros (ejemplo: 61 cm x 80 cm). Los resultados se mostrarán en <strong>gramos (g)</strong>.</li>
+<li><strong>Metros (m):</strong> Úsalo si tus medidas están en metros (ejemplo: 3 m x 4 m). Los resultados se mostrarán en <strong>kilogramos (kg)</strong>.</li>
 </ul>
 <div class="campo-ejemplo">
-<strong>Ejemplo:</strong> Si tu mesa mide 1 metro por 2 metros, selecciona "Metros (m)" e ingresa 1 y 2.
+<strong>Ejemplo:</strong> Si tu mesa mide 1 metro por 2 metros, selecciona "Metros (m)" e ingresa 1 y 2. Verás los resultados en kg automáticamente.
 </div>
 
 <h3>Paso 2: Ingresa las dimensiones</h3>
@@ -378,29 +312,32 @@ ENTREGAR PRESUPUESTO
 </div>
 
 <h3>Paso 3: Revisa los resultados</h3>
-<p>En el lado derecho verás los resultados del cálculo:</p>
+<p>En el lado derecho verás los resultados del cálculo. Las unidades de peso se ajustan automáticamente según la unidad de medida seleccionada:</p>
 <table class="tabla-ejemplo">
 <thead>
 <tr><th>Campo</th><th>Qué significa</th></tr>
 </thead>
 <tbody>
 <tr><td><strong>Área Total</strong></td><td>La superficie total en metros cuadrados (m²)</td></tr>
-<tr><td><strong>Total Base</strong></td><td>La cantidad de material necesaria sin margen de seguridad</td></tr>
-<tr><td><strong>Total con 5% seguridad</strong></td><td>La cantidad real que necesitas, incluyendo 5% extra por desperdicio</td></tr>
-<tr><td><strong>Resina Epoxi (A) - 2/3</strong></td><td>Cuántos gramos de resina necesitas (2/3 del total)</td></tr>
-<tr><td><strong>Catalizador (B) - 1/3</strong></td><td>Cuántos gramos de catalizador necesitas (1/3 del total)</td></tr>
-<tr><td><strong>TOTAL MATERIAL A MEZCLAR</strong></td><td>La suma total de resina + catalizador que debes mezclar</td></tr>
+<tr><td><strong>Total Base</strong></td><td>La cantidad de material necesaria sin margen de seguridad (en g o kg)</td></tr>
+<tr><td><strong>Total con 5% seguridad</strong></td><td>La cantidad real que necesitas, incluyendo 5% extra por desperdicio (en g o kg)</td></tr>
+<tr><td><strong>Resina Epoxi (A) - 2/3</strong></td><td>Cuánta resina necesitas (2/3 del total) en g o kg</td></tr>
+<tr><td><strong>Catalizador (B) - 1/3</strong></td><td>Cuánto catalizador necesitas (1/3 del total) en g o kg</td></tr>
+<tr><td><strong>TOTAL MATERIAL A MEZCLAR</strong></td><td>La suma total de resina + catalizador que debes mezclar (en g o kg)</td></tr>
 </tbody>
 </table>
 
 <div class="nota-exito">
-<strong>Ejemplo práctico:</strong> Si tienes una mesa de 1m x 2m con espesor de 2mm y 1 capa, el cálculo será: Área = 2 m², Total con seguridad = 4,200g, Resina A = 2,800g, Catalizador B = 1,400g.
+<strong>Ejemplo práctico (cm):</strong> Si tienes una mesa de 61 cm x 80 cm con espesor de 1mm y 1 capa, el cálculo será: Área = 0.488 m², Total con seguridad = 488g, Resina A = 326g, Catalizador B = 162g.
+</div>
+<div class="nota-exito">
+<strong>Ejemplo práctico (m):</strong> Si tienes un piso de 3 m x 4 m con espesor de 2mm y 1 capa, el cálculo será: Área = 12 m², Total con seguridad = 25.2 kg, Resina A = 16.8 kg, Catalizador B = 8.4 kg.
 </div>
 </div>
 
 <div class="instruccion-seccion">
 <h2>2. PRESUPUESTO - Cómo generar un presupuesto profesional</h2>
-<p>Esta sección te permite crear presupuestos completos incluyendo costos de materiales, mano de obra y parámetros financieros.</p>
+<p>Esta sección te permite crear presupuestos completos incluyendo costos de materiales y mano de obra.</p>
 
 <h3>Paso 1: Costos Base de Materiales</h3>
 <p>Ingresa el precio por kilogramo de cada material:</p>
@@ -440,21 +377,8 @@ ENTREGAR PRESUPUESTO
 <h3>Paso 3: Mano de Obra</h3>
 <p>Registra los servicios y trabajos necesarios (preparación de superficie, aplicación, lijado, etc.). Funciona igual que Materiales Adicionales: usa "+ Ejemplos" para cargar servicios comunes o "+ Agregar" para servicios personalizados.</p>
 
-<h3>Paso 4: Parámetros Financieros</h3>
-<p>Haz clic en "Parámetros Financieros" para expandir esta sección. Configura:</p>
-<ul>
-<li><strong>Margen Ganancia (%):</strong> Porcentaje de ganancia que quieres obtener</li>
-<li><strong>Impuestos (%):</strong> Porcentaje de impuestos a aplicar</li>
-<li><strong>Descuento (%):</strong> Porcentaje de descuento si aplica</li>
-<li><strong>Anticipo (%):</strong> Porcentaje que el cliente debe pagar por adelantado</li>
-<li><strong>Transporte ($):</strong> Costo de envío o transporte en dólares</li>
-<li><strong>Plazo (días):</strong> Cuántos días tardarás en completar el trabajo</li>
-<li><strong>Garantía (meses):</strong> Cuántos meses de garantía ofreces</li>
-<li><strong>Validez (días):</strong> Cuántos días es válido este presupuesto</li>
-</ul>
-
-<h3>Paso 5: Revisa el resumen financiero</h3>
-<p>En la parte inferior verás un resumen que muestra: Subtotal, Ganancia, Impuestos, Descuento, Total Final, Anticipo y Saldo.</p>
+<h3>Paso 4: Revisa el resumen</h3>
+<p>En la parte inferior verás un resumen que muestra: Costo de Materiales, Costo de Mano de Obra y el TOTAL del presupuesto.</p>
 
 <div class="nota-exito">
 <strong>Listo:</strong> Cuando estés satisfecho con el presupuesto, haz clic en el botón verde "ENTREGAR PRESUPUESTO" para continuar.
@@ -462,28 +386,7 @@ ENTREGAR PRESUPUESTO
 </div>
 
 <div class="instruccion-seccion">
-<h2>3. CATALOGO CAMPRE - Cómo comprar productos</h2>
-<p>Aquí puedes ver todos los productos que CAMPRE tiene disponibles y calcular el total de tu compra.</p>
-
-<h3>Paso 1: Explora los productos</h3>
-<p>Los productos están organizados en categorías:</p>
-<ul>
-<li><strong>Productos Terminados:</strong> Kayaks, Botes, Cavas Térmicas, Autopartes</li>
-<li><strong>Materias Primas:</strong> Fibra de Vidrio (Roving y Mat), Gel Coat</li>
-<li><strong>Resinas:</strong> Resina Epoxi A, Catalizador B, Resina Poliéster</li>
-<li><strong>Aditivos:</strong> Pigmentos en Pasta, Alcohol Isopropílico</li>
-</ul>
-
-<h3>Paso 2: Selecciona cantidades</h3>
-<p>Para cada producto, usa los botones + y - para ajustar la cantidad o escribe directamente el número en el campo. El total se calcula automáticamente.</p>
-
-<div class="nota-info">
-<strong>Nota importante:</strong> El total del catálogo es independiente del presupuesto de servicios. Son cálculos separados.
-</div>
-</div>
-
-<div class="instruccion-seccion">
-<h2>4. ENTREGA DE PRESUPUESTO - Cómo enviar al cliente</h2>
+<h2>3. ENTREGA DE PRESUPUESTO - Cómo enviar al cliente</h2>
 <p>Después de hacer clic en "ENTREGAR PRESUPUESTO", se abrirá un formulario donde debes completar la información del cliente y contratista.</p>
 <ul>
 <li><strong>Datos del Cliente:</strong> Nombre, teléfono, email y dirección del proyecto</li>
@@ -494,7 +397,7 @@ ENTREGAR PRESUPUESTO
 </div>
 
 <div class="instruccion-seccion">
-<h2>5. CONTACTO</h2>
+<h2>4. CONTACTO</h2>
 <ul>
 <li><strong>Ventas:</strong> +58 424-6579531</li>
 <li><strong>Gerencia de Ventas:</strong> +58 424-6832430</li>
@@ -505,7 +408,7 @@ ENTREGAR PRESUPUESTO
 </div>
 
 <div class="instruccion-seccion">
-<h2>6. CONSEJOS TECNICOS IMPORTANTES</h2>
+<h2>5. CONSEJOS TECNICOS IMPORTANTES</h2>
 <ul>
 <li><strong>Temperatura ideal:</strong> 20-30°C</li>
 <li><strong>Humedad ideal:</strong> 40-60%</li>
@@ -515,7 +418,7 @@ ENTREGAR PRESUPUESTO
 <li><strong>Curado total:</strong> 48+ horas</li>
 </ul>
 <div class="nota-importante">
-<strong>CRITICO:</strong> SIEMPRE mide por PESO (gramos) usando balanza digital, NUNCA por volumen. Si la mezcla no es uniforme o la proporción es incorrecta, aparecerán zonas pegajosas que NO curarán.
+<strong>CRITICO:</strong> SIEMPRE mide por PESO (gramos o kg) usando balanza digital, NUNCA por volumen. Si la mezcla no es uniforme o la proporción es incorrecta, aparecerán zonas pegajosas que NO curarán.
 </div>
 </div>
 
@@ -722,86 +625,25 @@ ENTREGAR PRESUPUESTO
 <script>
 let currentTab = 'tabTecnico';
 
-const productosCAMPRE = [
-    { id: 1, nombre: "Kayak PRFV", descripcion: "Kayaks en plástico reforzado con fibra de vidrio.", precio: 450.00, unidad: "Unidad", categoria: "Productos Terminados" },
-    { id: 2, nombre: "Bote PRFV", descripcion: "Embarcaciones ligeras para pesca y recreación.", precio: 850.00, unidad: "Unidad", categoria: "Productos Terminados" },
-    { id: 3, nombre: "Cava Térmica PRFV", descripcion: "Cavas con excelente aislamiento térmico.", precio: 120.00, unidad: "Unidad", categoria: "Productos Terminados" },
-    { id: 4, nombre: "Autoparte PRFV", descripcion: "Parachoques, spoilers y piezas automotrices.", precio: 180.00, unidad: "Unidad", categoria: "Productos Terminados" },
-    { id: 5, nombre: "Fibra de Vidrio (Roving)", descripcion: "Refuerzo estructural. Presentación 25kg.", precio: 95.00, unidad: "Rollo", categoria: "Materias Primas" },
-    { id: 6, nombre: "Fibra de Vidrio (Mat)", descripcion: "Fieltro para laminado. Presentación 50kg.", precio: 110.00, unidad: "Rollo", categoria: "Materias Primas" },
-    { id: 7, nombre: "Gel Coat", descripcion: "Acabado superficial de alta resistencia UV.", precio: 45.00, unidad: "Galón", categoria: "Materias Primas" },
-    { id: 8, nombre: "Resina Epoxi A (Kit 3kg)", descripcion: "Alta resistencia, acabado brillante.", precio: 60.00, unidad: "Kit", categoria: "Resinas" },
-    { id: 9, nombre: "Catalizador B (Kit 3kg)", descripcion: "Endurecedor de secado rápido.", precio: 40.00, unidad: "Kit", categoria: "Resinas" },
-    { id: 10, nombre: "Resina Poliéster", descripcion: "Pre-acelerada para laminado general.", precio: 35.00, unidad: "Galón", categoria: "Resinas" },
-    { id: 11, nombre: "Pigmento en Pasta (250g)", descripcion: "Alta concentración, varios colores.", precio: 15.00, unidad: "Unidad", categoria: "Aditivos" },
-    { id: 12, nombre: "Alcohol Isopropílico (>95%)", descripcion: "Eliminador de burbujas. 1 Litro.", precio: 12.00, unidad: "Litro", categoria: "Aditivos" }
-];
-
 function showModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
 function switchTab(tab) {
     currentTab = tab;
-    ['tabTecnico', 'tabPresupuesto', 'tabCatalogo'].forEach(t => {
+    ['tabTecnico', 'tabPresupuesto'].forEach(t => {
         document.getElementById(t).classList.toggle('hidden', t !== tab);
         const btn = document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1));
         btn.classList.toggle('active', t === tab);
         btn.classList.toggle('text-slate-500', t !== tab);
-        if (t === 'tabCatalogo' && t === tab) {
-            btn.classList.add('catalogo-active');
-        } else {
-            btn.classList.remove('catalogo-active');
-        }
     });
     calcular();
     window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function toggleCollapsible(id) {
-    const el = document.getElementById(id);
-    el.classList.toggle('open');
-    const arrow = document.getElementById('arrow' + id.charAt(0).toUpperCase() + id.slice(1));
-    arrow.textContent = el.classList.contains('open') ? '▲' : '▼';
 }
 
 function actualizarUnidadesUI() {
     const unidad = document.getElementById('unidadMedida').value;
     document.getElementById('labelLargo').textContent = unidad === 'cm' ? 'Largo (cm)' : 'Largo (m)';
     document.getElementById('labelAncho').textContent = unidad === 'cm' ? 'Ancho (cm)' : 'Ancho (m)';
-}
-
-function renderizarCatalogo() {
-    const grid = document.getElementById('catalogoCAMPRE');
-    grid.innerHTML = '';
-    productosCAMPRE.forEach(prod => {
-        const card = document.createElement('div');
-        card.className = 'param-card bg-white p-4 rounded-xl border border-slate-200 flex flex-col justify-between';
-        card.innerHTML = `
-            <div>
-                <span class="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded mb-2">${prod.categoria}</span>
-                <h3 class="font-bold text-campre-blue text-sm mb-1">${prod.nombre}</h3>
-                <p class="text-xs text-slate-500 mb-3 min-h-[40px]">${prod.descripcion}</p>
-            </div>
-            <div class="flex items-center justify-between mt-2 pt-3 border-t border-slate-100">
-                <span class="font-bold text-campre-green text-lg">$${prod.precio.toFixed(2)}</span>
-                <div class="flex items-center border rounded-lg overflow-hidden">
-                    <button onclick="updateQty(${prod.id}, -1)" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold">-</button>
-                    <input type="number" id="qty-${prod.id}" value="0" min="0" class="w-12 text-center text-sm border-x py-1 outline-none" onchange="calcular()">
-                    <button onclick="updateQty(${prod.id}, 1)" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold">+</button>
-                </div>
-            </div>
-            <p class="text-xs text-slate-400 text-right mt-1">por ${prod.unidad}</p>
-        `;
-        grid.appendChild(card);
-    });
-}
-
-function updateQty(id, change) {
-    const input = document.getElementById(`qty-${id}`);
-    let newVal = parseInt(input.value) + change;
-    if (newVal < 0) newVal = 0;
-    input.value = newVal;
-    calcular();
 }
 
 function addRow(type) {
@@ -864,57 +706,56 @@ function calcular() {
     if (unidad === 'cm') { areaM2 = (largo / 100) * (ancho / 100); }
     else { areaM2 = largo * ancho; }
     
+    // Cálculo base en gramos: área m² * 1000 g * espesor mm * capas
     const gramosBase = areaM2 * 1000 * espesor * capas;
     const gramosTotal = Math.ceil(gramosBase * 1.05);
-    const catalizadorB = Math.ceil(gramosTotal / 3);
-    const resinaA = gramosTotal - catalizadorB;
+    const catalizadorB_g = Math.ceil(gramosTotal / 3);
+    const resinaA_g = gramosTotal - catalizadorB_g;
+
+    // Determinar unidad de peso según la unidad de medida
+    const unidadPeso = unidad === 'cm' ? 'g' : 'kg';
+    const divisor = unidad === 'cm' ? 1 : 1000;
+    const decimales = unidad === 'cm' ? 0 : 2;
+
+    const valBase = (gramosBase / divisor).toFixed(decimales);
+    const valTotal = (gramosTotal / divisor).toFixed(decimales);
+    const valResina = (resinaA_g / divisor).toFixed(decimales);
+    const valCatalizador = (catalizadorB_g / divisor).toFixed(decimales);
+    const displayTotal = (gramosTotal / divisor).toFixed(decimales);
 
     document.getElementById('valArea').textContent = areaM2.toFixed(4) + ' m²';
-    document.getElementById('valBase').textContent = Math.round(gramosBase) + ' g';
-    document.getElementById('valTotal').textContent = gramosTotal + ' g';
+    document.getElementById('valBase').textContent = valBase + ' ' + unidadPeso;
+    document.getElementById('valTotal').textContent = valTotal + ' ' + unidadPeso;
     document.getElementById('labelComponente1').textContent = 'Resina Epoxi (A) - 2/3:';
     document.getElementById('labelComponente2').textContent = 'Catalizador (B) - 1/3:';
-    document.getElementById('valResina').textContent = resinaA + ' g';
-    document.getElementById('valCatalizador').textContent = catalizadorB + ' g';
-    document.getElementById('displayTotal').textContent = gramosTotal + ' g';
+    document.getElementById('valResina').textContent = valResina + ' ' + unidadPeso;
+    document.getElementById('valCatalizador').textContent = valCatalizador + ' ' + unidadPeso;
+    document.getElementById('displayTotal').textContent = displayTotal + ' ' + unidadPeso;
 
     if (currentTab === 'tabPresupuesto') {
-        let subtotal = 0;
+        let costoMateriales = 0;
         const cR = parseFloat(document.getElementById('costoResina').value) || 0;
         const cC = parseFloat(document.getElementById('costoCatalizador').value) || 0;
-        subtotal += ((resinaA/1000) * cR) + ((catalizadorB/1000) * cC);
-        ['materials', 'services'].forEach(type => {
-            document.getElementById(type + 'List').querySelectorAll('div').forEach(row => {
-                subtotal += (parseFloat(row.querySelector('.qty')?.value) || 0) * (parseFloat(row.querySelector('.price')?.value) || 0);
-            });
+        costoMateriales += ((resinaA_g/1000) * cR) + ((catalizadorB_g/1000) * cC);
+        
+        let costoAdicionales = 0;
+        document.getElementById('materialsList').querySelectorAll('div').forEach(row => {
+            costoAdicionales += (parseFloat(row.querySelector('.qty')?.value) || 0) * (parseFloat(row.querySelector('.price')?.value) || 0);
         });
-        subtotal += parseFloat(document.getElementById('transporte').value) || 0;
-        const margen = parseFloat(document.getElementById('margenGanancia').value) || 0;
-        const ganancia = subtotal * (margen / 100);
-        const conGanancia = subtotal + ganancia;
-        const desc = parseFloat(document.getElementById('descuento').value) || 0;
-        const montoDesc = conGanancia * (desc / 100);
-        const conDescuento = conGanancia - montoDesc;
-        const imp = parseFloat(document.getElementById('impuestos').value) || 0;
-        const montoImp = conDescuento * (imp / 100);
-        const totalFinal = conDescuento + montoImp;
-        const ant = parseFloat(document.getElementById('anticipo').value) || 0;
-        const anticipo = totalFinal * (ant / 100);
+        
+        const totalMateriales = costoMateriales + costoAdicionales;
+        
+        let costoManoObra = 0;
+        document.getElementById('servicesList').querySelectorAll('div').forEach(row => {
+            costoManoObra += (parseFloat(row.querySelector('.qty')?.value) || 0) * (parseFloat(row.querySelector('.price')?.value) || 0);
+        });
+        
+        const totalFinal = totalMateriales + costoManoObra;
 
-        document.getElementById('subtotalDisplay').textContent = '$' + subtotal.toFixed(2);
-        document.getElementById('displayGanancia').textContent = '$' + ganancia.toFixed(2);
-        document.getElementById('displayImpuestos').textContent = '$' + montoImp.toFixed(2);
-        document.getElementById('displayDescuento').textContent = '-$' + montoDesc.toFixed(2);
+        document.getElementById('costoMaterialesDisplay').textContent = '$' + totalMateriales.toFixed(2);
+        document.getElementById('costoManoObraDisplay').textContent = '$' + costoManoObra.toFixed(2);
         document.getElementById('totalPresupuesto').textContent = '$' + totalFinal.toFixed(2);
-        document.getElementById('displayAnticipo').textContent = '$' + anticipo.toFixed(2);
-        document.getElementById('displaySaldo').textContent = '$' + (totalFinal - anticipo).toFixed(2);
     }
-
-    let catalogoTotal = 0;
-    productosCAMPRE.forEach(prod => {
-        catalogoTotal += (parseInt(document.getElementById(`qty-${prod.id}`).value) || 0) * prod.precio;
-    });
-    document.getElementById('catalogoTotalDisplay').textContent = '$' + catalogoTotal.toFixed(2);
 }
 
 function downloadPresupuestoPDF() {
@@ -923,6 +764,9 @@ function downloadPresupuestoPDF() {
     const clientName = document.getElementById('clientName').value || 'Cliente';
     const clientPhone = document.getElementById('clientPhone').value || '';
     const total = document.getElementById('totalPresupuesto').textContent;
+    const costoMat = document.getElementById('costoMaterialesDisplay').textContent;
+    const costoMO = document.getElementById('costoManoObraDisplay').textContent;
+    const area = document.getElementById('valArea').textContent;
 
     doc.setFillColor(30, 75, 150);
     doc.rect(0, 0, 210, 40, 'F');
@@ -942,16 +786,16 @@ function downloadPresupuestoPDF() {
     doc.text('Cliente: ' + clientName, 20, 68);
     doc.text('Teléfono: ' + clientPhone, 20, 76);
     doc.text('Fecha: ' + new Date().toLocaleDateString('es'), 20, 84);
+    doc.text('Área del proyecto: ' + area, 20, 92);
 
     doc.setTextColor(30, 75, 150);
     doc.setFontSize(14);
-    doc.text('RESUMEN FINANCIERO', 20, 100);
-    doc.line(20, 103, 190, 103);
+    doc.text('RESUMEN DE COSTOS', 20, 110);
+    doc.line(20, 113, 190, 113);
     doc.setFontSize(11);
     doc.setTextColor(50);
-    doc.text('Subtotal: ' + document.getElementById('subtotalDisplay').textContent, 20, 115);
-    doc.text('Impuestos: ' + document.getElementById('displayImpuestos').textContent, 20, 125);
-    doc.text('Descuento: ' + document.getElementById('displayDescuento').textContent, 20, 135);
+    doc.text('Costo de Materiales: ' + costoMat, 20, 125);
+    doc.text('Costo de Mano de Obra: ' + costoMO, 20, 135);
 
     doc.setFillColor(140, 182, 78);
     doc.rect(20, 150, 170, 30, 'F');
@@ -961,13 +805,19 @@ function downloadPresupuestoPDF() {
     doc.setFontSize(20);
     doc.text(total, 180, 170, {align:'right'});
 
+    const notas = document.getElementById('notas').value;
+    if (notas) { 
+        doc.setFontSize(9); 
+        doc.setTextColor(80); 
+        doc.text('Observaciones:', 20, 200); 
+        const lineas = doc.splitTextToSize(notas, 170);
+        doc.text(lineas, 20, 207); 
+    }
+
     doc.setTextColor(100);
     doc.setFontSize(9);
-    doc.text('Validez: ' + document.getElementById('validez').value + ' días | Plazo: ' + document.getElementById('plazo').value + ' días | Garantía: ' + document.getElementById('garantia').value + ' meses', 105, 245, {align:'center'});
-    doc.text('Anticipo: ' + document.getElementById('displayAnticipo').textContent + ' | Saldo: ' + document.getElementById('displaySaldo').textContent, 105, 252, {align:'center'});
-
-    const notas = document.getElementById('notas').value;
-    if (notas) { doc.setFontSize(9); doc.setTextColor(80); doc.text('Observaciones:', 20, 265); doc.text(notas.substring(0, 100), 20, 272); }
+    doc.text('C.A. Medina Plásticos Reforzados | CAMPRE', 105, 280, {align:'center'});
+    doc.text('info@campre.net | +58 412-8422026', 105, 286, {align:'center'});
 
     doc.save('Presupuesto_' + clientName.replace(/\s+/g, '_') + '_' + new Date().toISOString().split('T')[0] + '.pdf');
     closeModal('entregaModal');
@@ -977,10 +827,10 @@ function enviarWhatsApp() {
     const name = document.getElementById('clientName').value || 'Cliente';
     const phone = document.getElementById('clientPhone').value || '';
     const total = document.getElementById('totalPresupuesto').textContent;
-    const antic = document.getElementById('displayAnticipo').textContent;
-    const saldo = document.getElementById('displaySaldo').textContent;
+    const costoMat = document.getElementById('costoMaterialesDisplay').textContent;
+    const costoMO = document.getElementById('costoManoObraDisplay').textContent;
     const area = document.getElementById('valArea').textContent;
-    const msg = '*PRESUPUESTO CAMPRE*%0A%0A*Cliente:* ' + name + '%0A*Área del proyecto:* ' + area + '%0A%0A*TOTAL:* ' + total + '%0A*Anticipo:* ' + antic + '%0A*Saldo:* ' + saldo + '%0A%0A_Validez: ' + document.getElementById('validez').value + ' días_';
+    const msg = '*PRESUPUESTO CAMPRE*%0A%0A*Cliente:* ' + name + '%0A*Área del proyecto:* ' + area + '%0A%0A*Costo Materiales:* ' + costoMat + '%0A*Costo Mano de Obra:* ' + costoMO + '%0A%0A*TOTAL:* ' + total + '%0A%0A_Gracias por confiar en CAMPRE_';
     const url = phone ? 'https://wa.me/' + phone.replace(/\D/g, '') + '?text=' + msg : 'https://wa.me/?text=' + msg;
     window.open(url, '_blank');
     closeModal('entregaModal');
@@ -1012,7 +862,6 @@ function downloadCourseWord() {
 }
 
 actualizarUnidadesUI();
-renderizarCatalogo();
 calcular();
 </script>
 </body>
